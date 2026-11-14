@@ -172,16 +172,33 @@ func newLoginID() string {
 }
 
 // velaClient is the account API client for a credential: its egress, and
-// the API origin its login reported (the default before signing in).
+// the API origin its login reported (the default before signing in; see
+// accountAPIURL).
 func (a *Adapter) velaClient(proxyURL, apiURL string) (vela.Client, error) {
 	client, errProxy := a.host.Client(proxyURL)
 	if errProxy != nil {
 		return vela.Client{}, errProxy
 	}
-	if strings.TrimSpace(apiURL) == "" {
-		apiURL = a.velaAPIURL
+	return withAPIURL(vela.Client{HTTP: client}, a.accountAPIURL(apiURL)), nil
+}
+
+// accountAPIURL resolves the account API origin of keys issued with apiURL
+// (a token's apiUrl, saved as account_api_url): that origin, or else the
+// adapter's default (velaAPIURL; vela's production origin when that is
+// empty too). Every account API call goes through it, so keys are read and
+// revoked where they were issued.
+func (a *Adapter) accountAPIURL(apiURL string) string {
+	if strings.TrimSpace(apiURL) != "" {
+		return apiURL
 	}
-	return vela.Client{HTTP: client, APIURL: apiURL}, nil
+	return a.velaAPIURL
+}
+
+// withAPIURL is client talking to another account API origin through the
+// same egress.
+func withAPIURL(client vela.Client, apiURL string) vela.Client {
+	client.APIURL = apiURL
+	return client
 }
 
 // startAccountLogin starts a device authorization for a credential
@@ -295,7 +312,7 @@ func (a *Adapter) pollLogin(ctx context.Context, login *loginSession) {
 			} else if token.Validate() == nil {
 				// Cancelled just as it was approved: drop the issued keys.
 				revokeCtx, cancel := context.WithTimeout(a.host.Env().Context, provider.AccountCallTimeout)
-				_ = login.client.Logout(revokeCtx, token.ControlKey, token.ControlKeyID, token.User.ID)
+				_ = withAPIURL(login.client, a.accountAPIURL(token.APIURL)).Logout(revokeCtx, token.ControlKey, token.ControlKeyID, token.User.ID)
 				cancel()
 			}
 		case vela.StatusCancelled:
@@ -319,10 +336,7 @@ func (a *Adapter) saveApprovedLogin(ctx context.Context, login *loginSession, to
 		login.finish(loginFailed, errValid.Error(), "", a.now())
 		return
 	}
-	client := login.client
-	if strings.TrimSpace(token.APIURL) != "" {
-		client.APIURL = token.APIURL
-	}
+	client := withAPIURL(login.client, a.accountAPIURL(token.APIURL))
 	revoke := func() {
 		revokeCtx, cancel := context.WithTimeout(a.host.Env().Context, provider.AccountCallTimeout)
 		defer cancel()
@@ -385,8 +399,7 @@ func (a *Adapter) saveApprovedLogin(ctx context.Context, login *loginSession, to
 
 	// A sign-in that replaced an older one revokes the older keys.
 	if previous.LoggedIn() && previous.ControlKey != token.ControlKey {
-		old := login.client
-		old.APIURL = previous.APIURL
+		old := withAPIURL(login.client, a.accountAPIURL(previous.APIURL))
 		revokeCtx, cancel := context.WithTimeout(a.host.Env().Context, provider.AccountCallTimeout)
 		defer cancel()
 		if errRevoke := old.Logout(revokeCtx, previous.ControlKey, previous.ControlKeyID, previous.UserID); errRevoke != nil && !vela.Unauthorized(errRevoke) {

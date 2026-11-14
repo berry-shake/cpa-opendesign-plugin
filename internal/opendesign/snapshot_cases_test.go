@@ -156,8 +156,8 @@ func snapAccount(workspace bool) map[string]any {
 	fields := map[string]any{
 		"account_control_key": "ck-snap-old", "account_control_key_id": "ck-snap-old-id", "account_user_id": "user-1",
 		"account_email": "me@example.com", "account_name": "Me", "account_logged_in_at": "2025-12-31T00:00:00Z",
-		// The API origin the login reported. Without it the revoke of replaced
-		// keys goes to vela.DefaultAPIURL, which the test seam cannot redirect.
+		// The API origin the login reported (without it the adapter's default,
+		// which the test seam points at the fake upstream too).
 		"account_api_url": "{{UPSTREAM}}",
 	}
 	if workspace {
@@ -168,11 +168,10 @@ func snapAccount(workspace bool) map[string]any {
 }
 
 // TestSnapshotAccountAPIPinned keeps every case off the production account
-// API. The seam only redirects vela's default origin; replaced keys are
-// revoked at the origin their auth file names (account_api_url). So every
-// signed-in auth file a fixture seeds or sends names the fake upstream, and
-// a case approves at most one sign-in unless each approval names it too: an
-// approval without apiUrl saves a file without account_api_url.
+// API. The seam points the adapter's default origin at the fake upstream,
+// and account calls go to the origin an auth file names (account_api_url)
+// or a sign-in reports (apiUrl) when there is one. So every origin a fixture
+// seeds, sends or approves is the fake upstream.
 func TestSnapshotAccountAPIPinned(t *testing.T) {
 	paths, errGlob := filepath.Glob(filepath.Join(snapshotDir, "*.json"))
 	if errGlob != nil {
@@ -207,8 +206,8 @@ func TestSnapshotAccountAPIPinned(t *testing.T) {
 				}
 				check(where, decoded)
 			case map[string]any:
-				if _, signedIn := typed["account_control_key"]; signedIn && typed["account_api_url"] != "{{UPSTREAM}}" {
-					t.Errorf("%s: %s has a signed-in account without account_api_url {{UPSTREAM}}", file, where)
+				if origin, named := typed["account_api_url"]; named && origin != "{{UPSTREAM}}" {
+					t.Errorf("%s: %s names account_api_url %v, not {{UPSTREAM}}", file, where, origin)
 				}
 				for _, item := range typed {
 					check(where, item)
@@ -223,22 +222,17 @@ func TestSnapshotAccountAPIPinned(t *testing.T) {
 		for i, step := range fixture.Steps {
 			check(fmt.Sprintf("steps[%d].rpc", i), step.RPC)
 		}
-		approvals, unpinned := 0, 0
-		for _, reply := range fixture.UpstreamScript {
+		for i, reply := range fixture.UpstreamScript {
 			var token struct {
-				Status string  `json:"status"`
-				APIURL *string `json:"apiUrl"`
+				Status string `json:"status"`
+				APIURL string `json:"apiUrl"`
 			}
 			if json.Unmarshal([]byte(reply.Body), &token) != nil || token.Status != "approved" {
 				continue
 			}
-			approvals++
-			if token.APIURL == nil || *token.APIURL != "{{UPSTREAM}}" {
-				unpinned++
+			if token.APIURL != "" && token.APIURL != "{{UPSTREAM}}" {
+				t.Errorf("%s: upstream_script[%d] approves a sign-in at %s, not {{UPSTREAM}}", file, i, token.APIURL)
 			}
-		}
-		if approvals > 1 && unpinned > 0 {
-			t.Errorf("%s: %d sign-in approvals, %d without apiUrl {{UPSTREAM}}", file, approvals, unpinned)
 		}
 	}
 }
