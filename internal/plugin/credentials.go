@@ -279,14 +279,21 @@ func (s *Service) credentialViewByName(name string) *credentialView {
 	return &view
 }
 
-// usageView is a credential's usage summed from the request log. OpenDesign
-// reports no quota to API keys, so this is all the key card can show.
+// usageView is a credential's usage summed from the request log, and the
+// plan windows of the OpenDesign account signed in on it. API keys
+// themselves report no quota.
 type usageView struct {
 	requestlog.Usage
-	FetchedAt string `json:"fetched_at"`
+	FetchedAt string            `json:"fetched_at"`
+	Account   *accountUsageView `json:"account,omitempty"`
+	// LogError says why the log figures are missing (log turned off or
+	// unreadable) when the account's windows are shown anyway.
+	LogError string `json:"log_error,omitempty"`
 }
 
-func (s *Service) credentialQuota(authIndex string) pluginapi.ManagementResponse {
+// credentialQuota serves a card's figures; force skips the short cache of
+// the account's windows.
+func (s *Service) credentialQuota(authIndex string, force bool) pluginapi.ManagementResponse {
 	entries, errList := s.listOpenDesignAuths()
 	if errList != nil {
 		return jsonResponse(http.StatusBadGateway, errorBody{Error: "host_unavailable", Message: errList.Error()})
@@ -297,8 +304,13 @@ func (s *Service) credentialQuota(authIndex string) pluginapi.ManagementResponse
 	}
 	now := s.now()
 	usage, errUsage := s.reqlog.Usage(entry.AuthIndex, entry.ID, now)
-	if errUsage != "" {
+	var account *accountUsageView
+	if entry.readError == "" {
+		account = s.accountUsage(entry, force)
+	}
+	if errUsage != "" && account == nil {
 		return jsonResponse(http.StatusServiceUnavailable, errorBody{Error: "log_unavailable", Message: errUsage})
 	}
-	return jsonResponse(http.StatusOK, usageView{Usage: usage, FetchedAt: now.UTC().Format(time.RFC3339)})
+	// Without the log a signed-in card still shows the account's windows.
+	return jsonResponse(http.StatusOK, usageView{Usage: usage, FetchedAt: now.UTC().Format(time.RFC3339), Account: account, LogError: errUsage})
 }

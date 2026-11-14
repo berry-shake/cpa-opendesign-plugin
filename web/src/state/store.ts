@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from "react";
 import { createApi, errorMessage, errorStatus, isAuthError } from "../api/client";
 import { readPanelKey } from "../api/panelKey";
-import type { CredentialView, LogEntry, LogPage, ModelsResponse, ProxiesResponse, ProxyView, StatusView } from "../api/types";
+import type { CredentialView, LogEntry, LoginView, LogPage, ModelsResponse, ProxiesResponse, ProxyView, StatusView } from "../api/types";
 import { initialLang, saveLang, translate, type Lang, type Params } from "../i18n";
 import {
   credentialsOf, defaultPrefix, displayName, quotaKeys, statusHealth,
@@ -25,6 +25,8 @@ export const TAB_KEY = "cliproxy-opendesign-tab";
 const REFRESH_MS = 30000;
 /** How many egress checks "check all" runs at once. */
 const CHECK_CONCURRENCY = 4;
+/** How often an open sign-in dialog asks whether the user confirmed. */
+const LOGIN_POLL_MS = 2000;
 
 export interface Message {
   key: string;
@@ -33,6 +35,18 @@ export interface Message {
 
 export interface Notice extends Message {
   state: "ok" | "warn" | "error";
+}
+
+/** The account sign-in dialog of a key card. */
+export interface AccountLoginState {
+  seq: number;
+  authIndex: string;
+  /** The card's display name. */
+  name: string;
+  /** null while the sign-in is being started. */
+  view: LoginView | null;
+  /** Why starting or checking the sign-in failed. */
+  error: string | null;
 }
 
 export interface LogsState {
@@ -93,6 +107,8 @@ export interface State {
   busy: Record<string, true>;
   /** The open editor; null while the dialog is closed. */
   editor: EditorState | null;
+  /** The open account sign-in dialog; null while closed. */
+  accountLogin: AccountLoginState | null;
   logs: LogsState;
   /** Bumped when the custom range opens so its start input takes focus. */
   focusRangeStart: number;
@@ -146,6 +162,7 @@ export function initialState(now = Date.now()): State {
     armedDelete: null,
     busy: {},
     editor: null,
+    accountLogin: null,
     logs: {
       page: null,
       offset: 0,
@@ -184,6 +201,8 @@ export class Store {
   private editorSeq = 0;
   private proxySeq = 0;
   private proxyDialogSeq = 0;
+  private loginSeq = 0;
+  private loginTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor(state: State = initialState()) {
     this.state = state;
@@ -416,12 +435,12 @@ export class Store {
   }
 
   // Keeps the last result on screen while it reloads.
-  async loadQuota(authIndex: string): Promise<void> {
+  async loadQuota(authIndex: string, force = false): Promise<void> {
     if (!authIndex) return;
     const prev = this.state.quota[authIndex];
     this.setQuota(authIndex, { state: "loading", data: prev && prev.data });
     try {
-      const data = await this.api.quota(authIndex);
+      const data = await this.api.quota(authIndex, force);
       this.setQuota(authIndex, { state: "ok", data });
     } catch (error) {
       if (isAuthError(error)) {
@@ -440,7 +459,7 @@ export class Store {
       const prev = this.state.quota[authIndex];
       this.setQuota(authIndex, { state: "loading", data: prev && prev.data });
     }
-    await Promise.all(keys.map((authIndex) => (this.key ? this.loadQuota(authIndex) : undefined)));
+    await Promise.all(keys.map((authIndex) => (this.key ? this.loadQuota(authIndex, force) : undefined)));
   }
 
   async refreshQuotas(): Promise<void> {
@@ -533,6 +552,122 @@ export class Store {
       const ed = this.state.editor;
       if (ed && ed.authIndex === cred.auth_index) this.closeEditor();
       this.notify("ok", "log.deleted", { name: displayName(cred) });
+      await this.refresh(true);
+    } catch (error) {
+      this.handleError(error);
+    } finally {
+      this.setBusy(busy, false);
+    }
+  }
+
+  // ---- account sign-in ----
+
+  private loginOpen(seq: number): boolean {
+    const login = this.state.accountLogin;
+    return !!login && login.seq === seq;
+  }
+
+  private patchLogin(seq: number, patch: Partial<AccountLoginState>): void {
+    this.set((s) => (s.accountLogin && s.accountLogin.seq === seq ? { accountLogin: { ...s.accountLogin, ...patch } } : {}));
+  }
+
+  private stopLoginPoll(): void {
+    if (this.loginTimer) clearTimeout(this.loginTimer);
+    this.loginTimer = null;
+  }
+
+  /**
+   * Signs an OpenDesign account in on a card: the plugin starts a device
+   * authorization and the dialog shows its link and code until the user
+   * confirms on the website.
+   */
+  async startAccountLogin(cred: CredentialView): Promise<void> {
+    if (!cred.auth_index) return;
+    this.stopLoginPoll();
+    const previous = this.state.accountLogin;
+    if (previous && previous.view && previous.view.state === "pending") void this.api.cancelLogin(previous.view.id).catch(() => {});
+    const seq = ++this.loginSeq;
+    this.set({ accountLogin: { seq, authIndex: cred.auth_index, name: displayName(cred), view: null, error: null } });
+    try {
+      const view = await this.api.startLogin(cred.auth_index);
+      if (!this.loginOpen(seq)) {
+        void this.api.cancelLogin(view.id).catch(() => {});
+        return;
+      }
+      this.patchLogin(seq, { view });
+      this.scheduleLoginPoll(seq);
+    } catch (error) {
+      if (isAuthError(error)) {
+        this.set({ accountLogin: null });
+        this.showLogin("login.expired", errorMessage(error));
+        return;
+      }
+      this.patchLogin(seq, { error: errorMessage(error) });
+    }
+  }
+
+  private scheduleLoginPoll(seq: number): void {
+    this.stopLoginPoll();
+    this.loginTimer = setTimeout(() => void this.pollAccountLogin(seq), LOGIN_POLL_MS);
+  }
+
+  private async pollAccountLogin(seq: number): Promise<void> {
+    const login = this.state.accountLogin;
+    if (!login || login.seq !== seq || !login.view) return;
+    try {
+      const view = await this.api.loginStatus(login.view.id);
+      if (!this.loginOpen(seq)) return;
+      this.patchLogin(seq, { view, error: null });
+      if (view.state === "pending") {
+        this.scheduleLoginPoll(seq);
+        return;
+      }
+      if (view.state === "approved") {
+        this.notify("ok", "log.accountSignedIn", { name: login.name, email: view.email || "" });
+        // Dropping the old figures makes the refresh load them anew, windows included.
+        this.setQuota(login.authIndex, undefined);
+        await this.refresh(true);
+      }
+    } catch (error) {
+      if (!this.loginOpen(seq)) return;
+      if (isAuthError(error)) {
+        this.set({ accountLogin: null });
+        this.showLogin("login.expired", errorMessage(error));
+        return;
+      }
+      this.patchLogin(seq, { error: errorMessage(error) });
+      // The plugin forgot the sign-in (it restarted): stop asking.
+      if (errorStatus(error) !== 404) this.scheduleLoginPoll(seq);
+    }
+  }
+
+  /** Closes the sign-in dialog; a sign-in still waiting is cancelled. */
+  closeAccountLogin(): void {
+    const login = this.state.accountLogin;
+    this.stopLoginPoll();
+    if (!login) return;
+    this.set({ accountLogin: null });
+    if (login.view && login.view.state === "pending") void this.api.cancelLogin(login.view.id).catch(() => {});
+  }
+
+  /** Signs the account out of a card; like deleting, it takes two clicks. */
+  async logoutAccount(cred: CredentialView): Promise<void> {
+    if (!cred.auth_index || !cred.name) return;
+    const armedKey = "logout:" + cred.name;
+    if (this.state.armedDelete !== armedKey) {
+      this.disarmDelete();
+      this.set({ armedDelete: armedKey });
+      this.deleteTimer = setTimeout(() => this.disarmDelete(), 4000);
+      return;
+    }
+    this.disarmDelete();
+    const busy = "logout:" + cred.name;
+    this.setBusy(busy, true);
+    try {
+      const result = await this.api.logout(cred.auth_index);
+      if (result.revoked) this.notify("ok", "log.accountSignedOut", { name: displayName(cred) });
+      else this.notify("warn", "log.accountSignOutUnrevoked", { name: displayName(cred), msg: result.revoke_error || "" });
+      this.setQuota(cred.auth_index, undefined);
       await this.refresh(true);
     } catch (error) {
       this.handleError(error);

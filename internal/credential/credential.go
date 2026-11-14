@@ -34,7 +34,58 @@ const (
 	KeyDisabled      = "disabled"
 	KeyNote          = "note"
 	KeyModelRevision = "model_revision"
+
+	// The OpenDesign account signed in on the credential's card (vela device
+	// authorization). The control key reads the account's plan windows; it is
+	// never sent to the management page.
+	KeyAccountControlKey    = "account_control_key"
+	KeyAccountControlKeyID  = "account_control_key_id"
+	KeyAccountAPIURL        = "account_api_url"
+	KeyAccountUserID        = "account_user_id"
+	KeyAccountEmail         = "account_email"
+	KeyAccountName          = "account_name"
+	KeyAccountWorkspaceID   = "account_workspace_id"
+	KeyAccountWorkspaceName = "account_workspace_name"
+	KeyAccountLoggedInAt    = "account_logged_in_at"
 )
+
+// AccountKeys are the auth file keys of a signed-in account; signing out
+// removes them all.
+var AccountKeys = []string{
+	KeyAccountControlKey, KeyAccountControlKeyID, KeyAccountAPIURL, KeyAccountUserID, KeyAccountEmail,
+	KeyAccountName, KeyAccountWorkspaceID, KeyAccountWorkspaceName, KeyAccountLoggedInAt,
+}
+
+// Account is the OpenDesign account signed in on a credential.
+type Account struct {
+	ControlKey    string
+	ControlKeyID  string
+	APIURL        string
+	UserID        string
+	Email         string
+	Name          string
+	WorkspaceID   string
+	WorkspaceName string
+	LoggedInAt    string
+}
+
+// LoggedIn reports whether the credential has an account control key.
+func (a Account) LoggedIn() bool { return a.ControlKey != "" }
+
+// AccountFromMap reads the signed-in account from an auth file's fields.
+func AccountFromMap(fields map[string]any) Account {
+	return Account{
+		ControlKey:    jsonfield.String(fields, KeyAccountControlKey),
+		ControlKeyID:  jsonfield.String(fields, KeyAccountControlKeyID),
+		APIURL:        jsonfield.String(fields, KeyAccountAPIURL),
+		UserID:        jsonfield.String(fields, KeyAccountUserID),
+		Email:         jsonfield.String(fields, KeyAccountEmail),
+		Name:          jsonfield.String(fields, KeyAccountName),
+		WorkspaceID:   jsonfield.String(fields, KeyAccountWorkspaceID),
+		WorkspaceName: jsonfield.String(fields, KeyAccountWorkspaceName),
+		LoggedInAt:    jsonfield.String(fields, KeyAccountLoggedInAt),
+	}
+}
 
 // refreshHorizon is how far ahead auth.parse and auth.refresh schedule the next
 // refresh. API keys do not expire, so this only keeps CPA from polling.
@@ -57,6 +108,8 @@ type Credential struct {
 	AllModels     bool
 	ProxyURL      string
 	ModelRevision string
+	// Account is the OpenDesign account signed in on the card, if any.
+	Account Account
 }
 
 // FromMaps merges the persisted auth file with CPA's mutable auth
@@ -86,6 +139,7 @@ func FromMap(fields map[string]any) Credential {
 		BaseURL:       jsonfield.String(fields, KeyBaseURL, "base-url"),
 		ProxyURL:      jsonfield.String(fields, KeyProxyURL, "proxy-url"),
 		ModelRevision: jsonfield.String(fields, KeyModelRevision),
+		Account:       AccountFromMap(fields),
 	}
 	if raw, ok := fields[KeyPrefix]; ok && raw != nil {
 		if text, okText := raw.(string); okText {

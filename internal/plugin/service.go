@@ -15,6 +15,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -95,6 +96,15 @@ type Service struct {
 	// request interceptor only touches requests routed to this plugin.
 	authIDs sync.Map
 	reqlog  *requestlog.Log
+
+	// logins holds the account sign-ins started from the key cards.
+	logins *loginRegistry
+	// accounts caches each signed-in account's plan windows briefly.
+	accounts *accountCache
+	// hostname names this machine to OpenDesign when an account signs in,
+	// as vela does; velaAPIURL overrides the account API origin in tests.
+	hostname   func() (string, error)
+	velaAPIURL string
 }
 
 // New builds a service. host may be nil in tests.
@@ -117,6 +127,10 @@ func New(version string, host HostCaller) *Service {
 
 		proxies:         proxystore.New(),
 		egressCheckURLs: defaultEgressCheckURLs,
+
+		logins:   newLoginRegistry(),
+		accounts: newAccountCache(),
+		hostname: os.Hostname,
 	}
 	svc.reqlog = requestlog.New(func(message string) { svc.logf("warn", message, nil) })
 	return svc

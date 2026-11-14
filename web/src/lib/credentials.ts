@@ -1,4 +1,4 @@
-import type { CredentialView, ModelView, PluginConfigView, QuotaView, StatusView, UsageWindow } from "../api/types";
+import type { AccountUsage, CredentialView, ModelView, PlanWindow, PluginConfigView, QuotaView, StatusView, UsageWindow } from "../api/types";
 import { fileStem } from "./format";
 
 export interface QuotaEntry {
@@ -196,4 +196,27 @@ export function filterModels<M extends { id: string; inputs?: string[] }>(models
   return models.filter((m) => !filter ||
     m.id.toLowerCase().includes(filter) ||
     (Array.isArray(m.inputs) ? m.inputs : []).some((c) => c.toLowerCase().includes(filter)));
+}
+
+export interface BarView {
+  /** Share left, 0..1. */
+  fraction: number;
+  /** " bad" under 10 % left, " warn" under 30 %, else "". */
+  level: string;
+  width: string;
+}
+
+/** How full a remaining-allowance bar is and its colour. */
+export function barView(left: unknown, total: unknown): BarView {
+  const max = Number(total) || 0;
+  const rest = Number(left) || 0;
+  const fraction = max > 0 ? Math.max(0, Math.min(1, rest / max)) : 0;
+  const level = fraction < 0.1 ? " bad" : fraction < 0.3 ? " warn" : "";
+  return { fraction, level, width: (fraction * 100).toFixed(1) + "%" };
+}
+
+/** The account's plan windows with a limit, shortest first. */
+export function planWindows(a: AccountUsage | undefined): PlanWindow[] {
+  if (!a || !Array.isArray(a.windows)) return [];
+  return a.windows.filter((w) => Number(w.limit) > 0).sort((x, y) => x.duration_seconds - y.duration_seconds);
 }

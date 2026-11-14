@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { ConfigPanel } from "./components/config/ConfigPanel";
 import { EditorDialog } from "./components/editor/EditorDialog";
 import { Header } from "./components/Header";
+import { AccountLoginDialog } from "./components/keys/AccountLoginDialog";
 import { KeysPanel } from "./components/keys/KeysPanel";
 import { LoginCard } from "./components/LoginCard";
 import { LogsPanel } from "./components/logs/LogsPanel";
@@ -38,6 +39,7 @@ export function App() {
       </div>
       <EditorDialog t={t} s={s} />
       <ProxyDialog t={t} s={s} />
+      <AccountLoginDialog t={t} s={s} />
       <Toast t={t} toast={s.toast} />
       <Footer t={t} />
     </>

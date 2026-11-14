@@ -73,6 +73,7 @@ function KeysBody({ t, s }: { t: T; s: State }) {
           cred={cred}
           q={s.quota[cred.auth_index]}
           armed={s.armedDelete === cred.name}
+          logoutArmed={s.armedDelete === "logout:" + cred.name}
           busy={s.busy}
           locale={locale}
         />

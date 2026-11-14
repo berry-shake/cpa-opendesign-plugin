@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { CredentialView, ModelView, QuotaView, UsageWindow } from "../api/types";
-import { listedFor, modelUsage, quotaKeys, summarizeKeys, windowTokens } from "./credentials";
+import { listedFor, modelUsage, quotaKeys, summarizeKeys, windowTokens, barView, planWindows } from "./credentials";
 import { pickerRows } from "./editor";
 
 function cred(over: Partial<CredentialView>): CredentialView {
@@ -69,5 +69,19 @@ describe("usage", () => {
     expect(quotaKeys(creds, {}, false)).toEqual(["a1", "a3"]);
     expect(quotaKeys(creds, { a1: { state: "ok" } }, false)).toEqual(["a3"]);
     expect(quotaKeys(creds, { a1: { state: "ok" } }, true)).toEqual(["a1", "a3"]);
+  });
+
+  it("colours a remaining bar by the share left", () => {
+    expect(barView(620, 1000)).toEqual({ fraction: 0.62, level: "", width: "62.0%" });
+    expect(barView(180, 1000).level).toBe(" warn");
+    expect(barView(50, 1000).level).toBe(" bad");
+    expect(barView(5, 0)).toEqual({ fraction: 0, level: " bad", width: "0.0%" });
+  });
+
+  it("lists the account's windows with a limit, shortest first", () => {
+    const w = (kind: string, duration_seconds: number, limit: number) => ({ kind, duration_seconds, used: 0, limit, remaining: limit });
+    const windows = planWindows({ eligible: true, windows: [w("7d", 604800, 5000), w("0", 60, 0), w("5h", 18000, 1000)] });
+    expect(windows.map((x) => x.kind)).toEqual(["5h", "7d"]);
+    expect(planWindows(undefined)).toEqual([]);
   });
 });

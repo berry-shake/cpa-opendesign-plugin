@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
-import type { CredentialView, QuotaView, UsageWindow } from "../../api/types";
+import type { AccountUsage, CredentialView, PlanWindow, QuotaView, UsageWindow } from "../../api/types";
 import type { T } from "../../i18n";
-import { credState, credSubline, displayName, isDirect, USAGE_WINDOWS, windowTokens, type QuotaEntry } from "../../lib/credentials";
-import { fmtTokens, formatShort, formatTime } from "../../lib/format";
+import { barView, credState, credSubline, displayName, isDirect, planWindows, USAGE_WINDOWS, windowTokens, type QuotaEntry } from "../../lib/credentials";
+import { fmtCount, fmtTokens, fmtUSD, formatShort, formatTime } from "../../lib/format";
 import { store } from "../../state/store";
 
 /** Requests and the token breakdown of a window, for its tooltip. */
@@ -91,6 +91,70 @@ function Facts({ t, cred }: { t: T; cred: CredentialView }) {
   );
 }
 
+// A remaining-allowance bar: the window and when it resets on the left, what
+// is left on the right, coloured like the bar.
+function Bar({ t, label, left, total, value, tip }: { t: T; label: string; left: number; total: number; value: string; tip?: string }) {
+  const bar = barView(left, total);
+  return (
+    <div className={"cap" + bar.level} title={tip}>
+      <div className="cap-head">
+        <span className="cap-label">{label}</span>
+        <span className="cap-left">{t("account.left")} <strong>{value}</strong></span>
+      </div>
+      <div className="track" role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(bar.fraction * 100)}>
+        <span className="fill" style={{ width: bar.width }}></span>
+      </div>
+    </div>
+  );
+}
+
+function windowLabel(t: T, w: PlanWindow, locale: string): string {
+  const name = w.kind === "5h" || w.kind === "7d"
+    ? t("account.window." + w.kind)
+    : t("account.window.other", { h: Math.round((w.duration_seconds / 3600) * 10) / 10 });
+  return w.resets_at ? name + " · " + t("account.resets", { time: formatShort(w.resets_at, locale) }) : name;
+}
+
+// The plan windows of the account signed in on the card, then a line with
+// the account, plan and balance.
+function AccountParts({ t, cred, a, locale }: { t: T; cred: CredentialView; a: AccountUsage | undefined; locale: string }) {
+  if (!cred.account) return null;
+  if (!a) return null;
+  if (a.expired) return <div className="usage-note warn-text">{t("account.expired")}</div>;
+  const facts = [
+    t("account.line", { email: a.email || cred.account.email || "—" }),
+    a.tier ? t("account.tier", { tier: a.tier.charAt(0).toUpperCase() + a.tier.slice(1) }) : "",
+    a.balance_usd ? t("account.balance", { v: fmtUSD(a.balance_usd) }) : "",
+    a.today_consumed_usd ? t("account.today", { v: fmtUSD(a.today_consumed_usd) }) : "",
+  ].filter(Boolean).join(" · ");
+  const tip = [
+    a.workspace_name ? t("account.workspace", { name: a.workspace_name }) : "",
+    a.membership_tier ? t("account.membership", { tier: a.membership_tier }) : "",
+    a.period_end ? t("account.periodEnd", { time: formatShort(a.period_end, locale) }) : "",
+    a.total_consumed_usd ? t("account.total", { v: fmtUSD(a.total_consumed_usd), n: fmtCount(a.usage_count || 0) }) : "",
+    a.fetched_at ? t("usage.fetched", { time: formatTime(a.fetched_at, locale) }) : "",
+  ].filter(Boolean).join("\n");
+  const windows = planWindows(a);
+  return (
+    <>
+      {windows.map((w) => (
+        <Bar
+          key={w.kind}
+          t={t}
+          label={windowLabel(t, w, locale)}
+          left={w.remaining}
+          total={w.limit}
+          value={w.limit > 0 ? Math.round((Math.max(0, w.remaining) / w.limit) * 100) + "%" : "—"}
+          tip={t("account.used", { used: fmtCount(w.used), limit: fmtCount(w.limit), left: fmtCount(w.remaining) })}
+        />
+      ))}
+      {!a.error && !windows.length ? <div className="usage-note sub">{t(a.eligible ? "account.noWindows" : "account.noPlan")}</div> : null}
+      <div className="usage-note sub" title={tip}>{facts}</div>
+      {a.error ? <div className="usage-note danger-text">{t("account.failed", { msg: a.error })}</div> : null}
+    </>
+  );
+}
+
 // The card's figures (or why there are none), then a note when they failed
 // to reload.
 function UsageParts({ t, cred, q }: { t: T; cred: CredentialView; q: QuotaEntry | undefined }) {
@@ -120,6 +184,14 @@ function UsageParts({ t, cred, q }: { t: T; cred: CredentialView; q: QuotaEntry 
       </>
     );
   }
+  if (d.log_error) {
+    return (
+      <>
+        <div className="usage-state"><span className="warn-text" title={d.log_error}>{t("usage.logOff")}</span></div>
+        {q && q.state === "error" ? <div className="usage-note danger-text">{t("usage.failed", { msg: q.error })}</div> : null}
+      </>
+    );
+  }
   return (
     <>
       <div className="meters">
@@ -137,11 +209,12 @@ function UsageParts({ t, cred, q }: { t: T; cred: CredentialView; q: QuotaEntry 
   );
 }
 
-export function CredCard({ t, cred, q, armed, busy, locale }: {
+export function CredCard({ t, cred, q, armed, logoutArmed, busy, locale }: {
   t: T;
   cred: CredentialView;
   q: QuotaEntry | undefined;
   armed: boolean;
+  logoutArmed: boolean;
   busy: Record<string, true>;
   locale: string;
 }) {
@@ -165,6 +238,7 @@ export function CredCard({ t, cred, q, armed, busy, locale }: {
       <div className="cred-body">
         {cred.read_error ? null : <Facts t={t} cred={cred} />}
         <UsageParts t={t} cred={cred} q={q} />
+        <AccountParts t={t} cred={cred} a={q && q.data ? q.data.account : undefined} locale={locale} />
         {cred.note ? <div className="usage-note sub" title={cred.note}>{t("card.noteLine", { msg: cred.note })}</div> : null}
         {stateNote ? <div className={"usage-note " + (cred.read_error ? "danger-text" : "warn-text")}>{t("card.statusNote", { msg: stateNote })}</div> : null}
       </div>
@@ -180,6 +254,21 @@ export function CredCard({ t, cred, q, armed, busy, locale }: {
           ) : null}
         </div>
         <div className="row-actions">
+          {cred.read_error ? null : cred.account ? (
+            <button
+              type="button"
+              className={"btn btn-secondary btn-sm" + (logoutArmed ? " armed" : "")}
+              disabled={!!busy["logout:" + cred.name]}
+              title={t("account.signedInAs", { email: cred.account.email || "—" })}
+              onClick={() => void store.logoutAccount(cred)}
+            >
+              {t(logoutArmed ? "account.confirmSignOut" : "account.signOut")}
+            </button>
+          ) : (
+            <button type="button" className="btn btn-secondary btn-sm" title={t("account.signInHint")} onClick={() => void store.startAccountLogin(cred)}>
+              {t("account.signIn")}
+            </button>
+          )}
           <button type="button" className="btn btn-secondary btn-sm" disabled={!!cred.read_error} onClick={() => store.openEditor("edit", cred)}>
             {t("row.edit")}
           </button>

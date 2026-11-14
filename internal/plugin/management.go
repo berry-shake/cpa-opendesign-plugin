@@ -51,7 +51,11 @@ func managementRoutes() managementRegistration {
 			{Method: http.MethodPost, Path: modelsRefresh, Description: "Reload every key's OpenDesign model list and re-register changed models."},
 			{Method: http.MethodPost, Path: credentialsPath, Description: `Add an OpenDesign API key. Body: {"api_key","label","note","models","prefix","proxy_url"|"proxy_id"}.`},
 			{Method: http.MethodPatch, Path: credentialsPath, Description: `Edit an OpenDesign credential. Body: {"auth_index","label","note","models","prefix","proxy_url"|"proxy_id","priority"}.`},
-			{Method: http.MethodGet, Path: quotaPath, Description: "Requests and tokens of one credential over the last 24 hours, 7 days and 30 days, summed from the request log (?auth_index=)."},
+			{Method: http.MethodGet, Path: quotaPath, Description: "Requests and tokens of one credential over the last 5 hours, 24 hours, 7 days and 30 days, summed from the request log, and the plan windows of the OpenDesign account signed in on it (?auth_index=&refresh=1)."},
+			{Method: http.MethodPost, Path: accountLoginPath, Description: `Start signing an OpenDesign account in on a credential (device authorization, as vela login). Body: {"auth_index"}. Answers the activation link and code.`},
+			{Method: http.MethodGet, Path: accountLoginPath, Description: "State of a sign-in (?id=): pending, approved, denied, expired, cancelled or failed."},
+			{Method: http.MethodDelete, Path: accountLoginPath, Description: "Cancel a pending sign-in (?id=)."},
+			{Method: http.MethodDelete, Path: accountPath, Description: "Sign the OpenDesign account out of a credential and revoke its key (?auth_index=)."},
 			{Method: http.MethodGet, Path: logsPath, Description: "Request log, newest first (?search=&status=all|success|error&from=&to=&request_id=&limit=&offset=), with a summary."},
 			{Method: http.MethodDelete, Path: logsPath, Description: "Clear the request log."},
 			{Method: http.MethodGet, Path: proxiesPath, Description: "Proxy list (URLs redacted) and CPA's global proxy."},
@@ -120,7 +124,20 @@ func (s *Service) handleManagement(req pluginapi.ManagementRequest) pluginapi.Ma
 		}
 	case quotaPath:
 		if method == http.MethodGet {
-			return s.credentialQuota(req.Query.Get("auth_index"))
+			return s.credentialQuota(req.Query.Get("auth_index"), req.Query.Get("refresh") == "1")
+		}
+	case accountLoginPath:
+		switch method {
+		case http.MethodPost:
+			return s.startAccountLogin(req.Body)
+		case http.MethodGet:
+			return s.accountLoginStatus(req.Query.Get("id"))
+		case http.MethodDelete:
+			return s.cancelAccountLogin(req.Query.Get("id"))
+		}
+	case accountPath:
+		if method == http.MethodDelete {
+			return s.logoutAccount(req.Query.Get("auth_index"))
 		}
 	case logsPath:
 		switch method {

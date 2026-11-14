@@ -82,6 +82,8 @@ type credentialView struct {
 	Success          int64    `json:"success"`
 	Failed           int64    `json:"failed"`
 	ReadError        string   `json:"read_error,omitempty"`
+	// Account is the OpenDesign account signed in on the card, if any.
+	Account *accountLink `json:"account,omitempty"`
 }
 
 func (s *Service) status() statusView {
@@ -161,6 +163,7 @@ func credentialViewOf(entry opendesignAuth, cfg config.Config, snapshot catalog.
 	view.Label = cred.Label
 	view.KeyMasked = credential.MaskKey(cred.APIKey)
 	view.KeyID = keyID(cred)
+	view.Account = accountLinkOf(cred.Account)
 	if snapshot.KnowsKey(view.KeyID) {
 		listed := 0
 		for _, model := range snapshot.Models {

@@ -2,6 +2,8 @@ import type {
   CredentialSaveRequest,
   CredentialSaveResponse,
   ErrorResponse,
+  LoginView,
+  LogoutResult,
   LogPage,
   ModelsResponse,
   ProxiesResponse,
@@ -84,7 +86,12 @@ export function createApi(getKey: () => string) {
     status: () => api<StatusView>("/status"),
     models: () => api<ModelsResponse>("/models"),
     refreshModels: () => api<ModelsResponse>("/models/refresh", { method: "POST", body: {} }),
-    quota: (authIndex: string) => api<QuotaView>("/credentials/quota?auth_index=" + encodeURIComponent(authIndex)),
+    quota: (authIndex: string, refresh = false) =>
+      api<QuotaView>("/credentials/quota?auth_index=" + encodeURIComponent(authIndex) + (refresh ? "&refresh=1" : "")),
+    startLogin: (authIndex: string) => api<LoginView>("/account/login", { method: "POST", body: { auth_index: authIndex } }),
+    loginStatus: (id: string) => api<LoginView>("/account/login?id=" + encodeURIComponent(id)),
+    cancelLogin: (id: string) => api<LoginView>("/account/login?id=" + encodeURIComponent(id), { method: "DELETE" }),
+    logout: (authIndex: string) => api<LogoutResult>("/account?auth_index=" + encodeURIComponent(authIndex), { method: "DELETE" }),
     saveCredential: (adding: boolean, body: CredentialSaveRequest) =>
       api<CredentialSaveResponse>("/credentials", { method: adding ? "POST" : "PATCH", body }),
     proxies: () => api<ProxiesResponse>("/proxies"),

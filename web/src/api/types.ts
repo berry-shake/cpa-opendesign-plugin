@@ -54,6 +54,70 @@ export interface CredentialView {
   success: number;
   failed: number;
   read_error?: string;
+  /** The OpenDesign account signed in on the card, if any. */
+  account?: AccountLink;
+}
+
+/** A signed-in OpenDesign account; its key never reaches the page. */
+export interface AccountLink {
+  email?: string;
+  name?: string;
+  workspace_name?: string;
+  logged_in_at?: string;
+}
+
+/** One coding plan window of the account, in credits. */
+export interface PlanWindow {
+  /** "5h", "7d" or "<seconds>s". */
+  kind: string;
+  duration_seconds: number;
+  used: number;
+  limit: number;
+  remaining: number;
+  window_start?: string;
+  resets_at?: string;
+}
+
+/** The account's plan windows and spending, read with its login. */
+export interface AccountUsage {
+  email?: string;
+  workspace_name?: string;
+  /** go, plus, pro or max. */
+  tier?: string;
+  eligible: boolean;
+  funding?: string;
+  balance_usd?: string;
+  windows: PlanWindow[];
+  membership_tier?: string;
+  subscription_status?: string;
+  period_end?: string;
+  today_consumed_usd?: string;
+  total_consumed_usd?: string;
+  usage_count?: number;
+  fetched_at?: string;
+  error?: string;
+  /** The login expired or was revoked. */
+  expired?: boolean;
+}
+
+export type LoginState = "pending" | "approved" | "denied" | "expired" | "cancelled" | "failed";
+
+/** A sign-in started from a key card. */
+export interface LoginView {
+  id: string;
+  auth_index: string;
+  state: LoginState;
+  user_code?: string;
+  activation_url?: string;
+  expires_at?: string;
+  email?: string;
+  message?: string;
+}
+
+export interface LogoutResult {
+  ok: boolean;
+  revoked: boolean;
+  revoke_error?: string;
 }
 
 export interface StatusView {
@@ -113,6 +177,10 @@ export interface QuotaView {
   /** When the oldest entry of the log was made; absent for an empty log. */
   log_since?: string;
   fetched_at: string;
+  /** The signed-in account's plan windows. */
+  account?: AccountUsage;
+  /** Why the log figures are missing while the account's windows show. */
+  log_error?: string;
 }
 
 /** Body of POST (add) and PATCH (edit) /credentials. */

@@ -5,7 +5,7 @@
 - 每个 OpenDesign API Key 是一个认证文件（`{"type":"opendesign","api_key":"..."}`），和其他凭证一样参与 CPA 的选号、冷却和故障转移；
 - 用每个 Key 拉取它的模型列表（`GET /v1/models`，套餐不同列出的模型不同）并注册到 CPA，带上下文长度、单次输出上限和输入类型；前缀走 CPA 通用的 `prefix` 机制，默认 `opendesign/<模型 ID>`；每个 Key 可以只注册选中的模型；
 - 请求按客户端格式原样转发到 OpenDesign 对应的接口，不做协议转换（OpenDesign 自己会在三种协议之间转换，所以每个模型三种协议都能调）；
-- OpenDesign 不向 API Key 提供额度查询，管理页按插件自己的请求日志统计每个 Key 近 5 小时 / 24 小时 / 7 天 / 30 天的请求数和 Token；套餐限额用完时 OpenDesign 返回 429，CPA 按 `Retry-After` 冷却这个 Key；
+- OpenDesign 不向 API Key 提供额度查询，管理页按插件自己的请求日志统计每个 Key 近 5 小时 / 24 小时 / 7 天 / 30 天的请求数和 Token；也可以在 Key 卡片上登录 OpenDesign 账号（和官方 `vela login` 一样的设备授权），显示官方的 5 小时 / 7 天剩余额度和余额；套餐限额用完时 OpenDesign 返回 429，CPA 按 `Retry-After` 冷却这个 Key；
 - 每个 Key 可以单独配置出口代理（CPA 通用认证文件字段 `proxy_url`）；
 - 自带管理页：添加、编辑、启停、删除 Key，选择上游模型，查看用量，管理代理列表，查看请求日志。
 
@@ -193,13 +193,27 @@ OpenAI 风格的错误信息前面带的 `[code=xxx] ` 会去掉，错误码单�
 
 ## 用量
 
-OpenDesign 的额度（钱包余额、套餐 5 小时 / 7 天 / 每月的剩余额度）只能用 `vela login` 的登录凭据在控制台接口里查，API Key 查不到，所以插件不接 CPA 原生额度面板。
+OpenDesign 的额度（钱包余额、套餐 5 小时 / 7 天的剩余额度）只能用账号登录凭据在控制台接口里查，API Key 查不到，所以插件不接 CPA 原生额度面板。
+
+### 登录账号看官方额度
+
+Key 卡片上的「登录账号」按钮走的是官方命令行工具 `vela login` 的设备授权流程，请求内容和 vela 0.1.10 一致（请求体字段、请求头、Go 默认的 User-Agent 都不改）：
+
+1. 插件向 `https://amr-api.open-design.ai/api/v1/cli/device-authorizations` 发起授权，`host` 填运行 CPA 的机器的主机名（Docker 里是容器 ID），会出现在账号的设备列表里；
+2. 管理页显示授权链接和验证码，在浏览器里登录账号、核对验证码并确认；
+3. 插件按接口要求的间隔轮询，确认后把账号的 `controlKey` 存进这个 Key 的认证文件（字段 `account_control_key` 等），再向接口确认完成。`runtimeKey` 不保存。
+
+之后卡片读取 `GET /api/v1/workspaces/{id}/billing/funding-check`（套餐等级、5 小时 / 7 天窗口的已用 / 上限 / 剩余 credits 和重置时间、余额）和 `GET /api/v1/billing/summary`（会员、今日和累计消费），结果缓存 30 秒，「刷新用量」会强制重新读取。账号接口返回 401 / 403 时卡片提示登录失效。「退出账号」会调用 `/api/v1/cli/logout` 吊销凭据，再从认证文件里删掉这些字段；吊销失败时字段照样删掉，可以到 OpenDesign 网站的设备列表手动移除。
+
+注意：账号凭据是账号级的，比 API Key 权限大（能查询账单、发起付款等），和 API Key 一样存在 CPA 的认证文件里。账号凭据只发给 OpenDesign 的账号接口，走这个 Key 的出口代理，管理页拿不到它。
+
+### 请求日志统计
 
 管理页的用量来自插件自己的请求日志：每个 Key 近 5 小时、24 小时、7 天、30 天的 Token（输入 + 输出），鼠标悬停能看到请求数、失败数、缓存 Token 和思考 Token。需要注意：
 
 - 只统计经过本插件的请求，同一个 Key 在别处的调用不算；
-- 套餐按金额限额，这里只能看 Token，不能换算剩余额度；
-- 日志关闭（`log-retention: 0`）时没有用量；日志保留不足 30 天时，更早的请求不在统计内（鼠标悬停"统计于"能看到日志从什么时候开始）。
+- 日志只有 Token，不能换算剩余额度；要看剩余额度请登录账号；
+- 日志关闭（`log-retention: 0`）时没有日志统计（登录了账号的卡片照样显示官方额度）；日志保留不足 30 天时，更早的请求不在统计内（鼠标悬停"统计于"能看到日志从什么时候开始）。
 
 ## 管理页
 
@@ -212,7 +226,7 @@ OpenDesign 的额度（钱包余额、套餐 5 小时 / 7 天 / 每月的剩余�
 - 从管理面板里打开时复用面板"记住密码"保存的管理密钥；直接打开时手动输入，只保存在页面内存里。
 - **凭据管理** 页：
   - 顶部一条统计条：Key 数（启用的数量），以及全部 Key 近 5 小时 / 7 天 / 30 天的 Token 和请求数。
-  - Key 以卡片网格展示（宽屏一行三张，窄屏单列）。每张卡片从上到下依次是：名称（默认是认证文件名，不带 `.json`）、状态、打码后的 Key 和优先级；左边是模型、前缀、出口代理和成功 / 失败次数（2×2），右边是近 5 小时 / 24 小时 / 7 天 / 30 天的 Token（同样 2×2，卡片较窄时移到下方），请求数和明细在鼠标悬停提示里；这四列都按内容宽度排，第一列贴左、最后一列贴右，多出的宽度平均分到列与列之间；再下面是备注和状态（被限流冷却时这里显示 OpenDesign 的报错）；底部是统计时间和操作按钮。
+  - Key 以卡片网格展示（宽屏一行三张，窄屏单列）。每张卡片从上到下依次是：名称（默认是认证文件名，不带 `.json`）、状态、打码后的 Key 和优先级；左边是模型、前缀、出口代理和成功 / 失败次数（2×2），右边是近 5 小时 / 24 小时 / 7 天 / 30 天的 Token（同样 2×2，卡片较窄时移到下方），请求数和明细在鼠标悬停提示里；这四列都按内容宽度排，第一列贴左、最后一列贴右，多出的宽度平均分到列与列之间；登录了 OpenDesign 账号的卡片在这下面多出 5 小时 / 7 天两条剩余额度进度条（剩余不足 30% 变黄、不足 10% 变红，悬停看已用和上限 credits）和一行账号、套餐、余额、今日消费；再下面是备注和状态（被限流冷却时这里显示 OpenDesign 的报错）；底部是统计时间和操作按钮（登录账号 / 退出账号、编辑、启停、删除，退出和删除都要点两次确认）。
   - 卡片上可以编辑、启用/停用、删除（删除需要 4 秒内再点一次确认）；可以按名称、Key 或文件名搜索。
   - 打开页面时自动读取所有 Key 的用量（停用的也读），"刷新用量"重新读取全部。用量从本地日志统计，不访问 OpenDesign。
 - 添加和编辑在弹窗里进行：名称、出口代理（继承 CPA 全局代理 / 直连 / 代理列表里的代理 / 自定义地址）、模型前缀、优先级，以及"全部对话模型 / 只用选中的模型"，选模型时可以按 ID 或输入类型搜索，并对比上下文长度和单次输出上限；编辑时只列出这个 Key 的套餐里的模型。添加 Key 时默认先用它拉一次模型列表来校验（OpenDesign 暂时连不上时可以勾选"跳过 Key 校验"）；名称留空时用认证文件名。
@@ -254,7 +268,11 @@ GET   /v0/management/plugins/opendesign/models           所有 Key 的模型（
 POST  /v0/management/plugins/opendesign/models/refresh   重新拉取所有 Key 的模型列表
 POST  /v0/management/plugins/opendesign/credentials      添加 Key
 PATCH /v0/management/plugins/opendesign/credentials      编辑 Key
-GET   /v0/management/plugins/opendesign/credentials/quota?auth_index=...   Key 近 5 小时 / 24 小时 / 7 天 / 30 天的用量（来自请求日志）
+GET   /v0/management/plugins/opendesign/credentials/quota?auth_index=...&refresh=1   Key 近 5 小时 / 24 小时 / 7 天 / 30 天的用量（来自请求日志），登录了账号时带上官方额度窗口
+POST  /v0/management/plugins/opendesign/account/login    给 Key 登录 OpenDesign 账号 {"auth_index"}，返回授权链接和验证码
+GET   /v0/management/plugins/opendesign/account/login?id=...    登录状态：pending / approved / denied / expired / cancelled / failed
+DELETE /v0/management/plugins/opendesign/account/login?id=...   取消还在等待的登录
+DELETE /v0/management/plugins/opendesign/account?auth_index=... 退出账号并吊销凭据
 GET   /v0/management/plugins/opendesign/logs?search=&status=all|success|error&from=&to=&limit=50&offset=0   请求日志（最新的在前）和统计；from / to 是 RFC 3339 时间，按请求开始时间筛选，含 from 不含 to
 DELETE /v0/management/plugins/opendesign/logs            清空请求日志
 GET   /v0/management/plugins/opendesign/proxies          代理列表（地址隐藏密码、上一次检测结果）和 CPA 全局代理
@@ -290,7 +308,7 @@ curl -X PATCH -H "Authorization: Bearer $MANAGEMENT_KEY" \
 
 - 读取和修改 Key 的接口都需要 CPA 管理密钥；公开的只有不含数据的页面外壳、logo 和国旗图标。
 - 管理页设置了 `frame-ancestors 'self'`，其他站点不能嵌入。
-- 接口和页面只显示打码后的 Key 和隐藏了密码的代理地址。
+- 接口和页面只显示打码后的 Key 和隐藏了密码的代理地址；登录账号得到的账号凭据不会返回给页面。
 - Key 只发给它自己的 `base-url`（拉模型列表和转发请求），用的是这个 Key 自己的出口。
 
 ## 本地构建
