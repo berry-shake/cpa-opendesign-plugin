@@ -44,7 +44,8 @@
           "application/json"
         ]
       },
-      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-a\",\"object\":\"model\",\"created\":1767000000,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"image\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"Low\",\"capability\":\"standard\",\"context_limit\":200000,\"context_budget\":160000,\"output_budget\":32000},\"default\":true,\"enabled\":true},{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"image-gen\",\"object\":\"model\",\"created\":1767000002,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"image\"]},\"metadata\":{\"cost\":\"medium\"},\"enabled\":true}]}"
+      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-a\",\"object\":\"model\",\"created\":1767000000,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"image\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"Low\",\"capability\":\"standard\",\"context_limit\":200000,\"context_budget\":160000,\"output_budget\":32000},\"default\":true,\"enabled\":true},{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"image-gen\",\"object\":\"model\",\"created\":1767000002,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"image\"]},\"metadata\":{\"cost\":\"medium\"},\"enabled\":true}]}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -55,7 +56,8 @@
           "application/json"
         ]
       },
-      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"model-c\",\"object\":\"model\",\"created\":1767000003,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"application/pdf\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"medium\",\"capability\":\"standard\",\"context_limit\":64000,\"context_budget\":60000,\"output_budget\":8000},\"enabled\":false}]}"
+      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"model-c\",\"object\":\"model\",\"created\":1767000003,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"application/pdf\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"medium\",\"capability\":\"standard\",\"context_limit\":64000,\"context_budget\":60000,\"output_budget\":8000},\"enabled\":false}]}",
+      "chunks": []
     }
   ],
   "steps": [
@@ -63,17 +65,21 @@
       "rpc": {
         "method": "model.for_auth",
         "request": {
-          "Attributes": {
-            "path": "/auths/opendesign-k1.json"
+          "Plugin": {
+            "Name": "",
+            "Version": "",
+            "Author": "",
+            "GitHubRepository": "",
+            "Logo": "",
+            "ConfigFields": null
           },
           "AuthID": "opendesign-k1.json",
           "AuthProvider": "opendesign",
-          "Host": {
-            "AuthDir": "/auths",
-            "ExcludedModels": null,
-            "ForceModelPrefix": false,
-            "OAuthModelAlias": null,
-            "ProxyURL": ""
+          "StorageJSON": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
           },
           "Metadata": {
             "api_key": "sk-amr-snap-key-one-0001",
@@ -81,19 +87,15 @@
             "proxy_url": "direct",
             "type": "opendesign"
           },
-          "Plugin": {
-            "Author": "",
-            "ConfigFields": null,
-            "GitHubRepository": "",
-            "Logo": "",
-            "Name": "",
-            "Version": ""
+          "Attributes": {
+            "path": "/auths/opendesign-k1.json"
           },
-          "StorageJSON": {
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
+          "Host": {
+            "AuthDir": "/auths",
+            "ProxyURL": "",
+            "ForceModelPrefix": false,
+            "OAuthModelAlias": null,
+            "ExcludedModels": null
           },
           "host_callback_id": "cb-models"
         }
@@ -125,33 +127,24 @@
         "response": {
           "ok": true,
           "result": {
-            "AuthUpdate": {
-              "Attributes": null,
-              "Disabled": false,
-              "FileName": "",
-              "ID": "",
-              "Label": "",
-              "Metadata": null,
-              "NextRefreshAfter": "0001-01-01T00:00:00Z",
-              "Prefix": "",
-              "Provider": "",
-              "ProxyURL": "",
-              "StorageJSON": null
-            },
+            "Provider": "opendesign",
             "Models": [
               {
-                "ContextLength": 200000,
-                "Created": 1767000000,
-                "Description": "OpenDesign · model-a",
-                "DisplayName": "model-a",
                 "ID": "model-a",
-                "InputTokenLimit": 200000,
-                "MaxCompletionTokens": 32000,
-                "Name": "model-a",
                 "Object": "model",
-                "OutputTokenLimit": 32000,
+                "Created": 1767000000,
                 "OwnedBy": "opendesign",
+                "Type": "opendesign",
+                "DisplayName": "model-a",
+                "Name": "model-a",
+                "Version": "",
+                "Description": "OpenDesign · model-a",
+                "InputTokenLimit": 200000,
+                "OutputTokenLimit": 32000,
                 "SupportedGenerationMethods": null,
+                "ContextLength": 200000,
+                "MaxCompletionTokens": 32000,
+                "SupportedParameters": null,
                 "SupportedInputModalities": [
                   "text",
                   "image"
@@ -159,39 +152,48 @@
                 "SupportedOutputModalities": [
                   "text"
                 ],
-                "SupportedParameters": null,
                 "Thinking": null,
-                "Type": "opendesign",
-                "UserDefined": true,
-                "Version": ""
+                "UserDefined": true
               },
               {
-                "ContextLength": 128000,
-                "Created": 1767000001,
-                "Description": "OpenDesign · model-b",
-                "DisplayName": "model-b",
                 "ID": "model-b",
-                "InputTokenLimit": 128000,
-                "MaxCompletionTokens": 16000,
-                "Name": "model-b",
                 "Object": "model",
-                "OutputTokenLimit": 16000,
+                "Created": 1767000001,
                 "OwnedBy": "opendesign",
+                "Type": "opendesign",
+                "DisplayName": "model-b",
+                "Name": "model-b",
+                "Version": "",
+                "Description": "OpenDesign · model-b",
+                "InputTokenLimit": 128000,
+                "OutputTokenLimit": 16000,
                 "SupportedGenerationMethods": null,
+                "ContextLength": 128000,
+                "MaxCompletionTokens": 16000,
+                "SupportedParameters": null,
                 "SupportedInputModalities": [
                   "text"
                 ],
                 "SupportedOutputModalities": [
                   "text"
                 ],
-                "SupportedParameters": null,
                 "Thinking": null,
-                "Type": "opendesign",
-                "UserDefined": true,
-                "Version": ""
+                "UserDefined": true
               }
             ],
-            "Provider": "opendesign"
+            "AuthUpdate": {
+              "Provider": "",
+              "ID": "",
+              "FileName": "",
+              "Label": "",
+              "Prefix": "",
+              "ProxyURL": "",
+              "Disabled": false,
+              "StorageJSON": null,
+              "Metadata": null,
+              "Attributes": null,
+              "NextRefreshAfter": "0001-01-01T00:00:00Z"
+            }
           }
         }
       }
@@ -200,17 +202,26 @@
       "rpc": {
         "method": "model.for_auth",
         "request": {
-          "Attributes": {
-            "path": "/auths/opendesign-k2.json"
+          "Plugin": {
+            "Name": "",
+            "Version": "",
+            "Author": "",
+            "GitHubRepository": "",
+            "Logo": "",
+            "ConfigFields": null
           },
           "AuthID": "opendesign-k2.json",
           "AuthProvider": "opendesign",
-          "Host": {
-            "AuthDir": "/auths",
-            "ExcludedModels": null,
-            "ForceModelPrefix": false,
-            "OAuthModelAlias": null,
-            "ProxyURL": ""
+          "StorageJSON": {
+            "api_key": "sk-amr-snap-key-two-0002",
+            "models": [
+              "model-b",
+              "model-z"
+            ],
+            "note": "second key",
+            "prefix": "od2",
+            "priority": 2,
+            "type": "opendesign"
           },
           "Metadata": {
             "api_key": "sk-amr-snap-key-two-0002",
@@ -223,24 +234,15 @@
             "priority": 2,
             "type": "opendesign"
           },
-          "Plugin": {
-            "Author": "",
-            "ConfigFields": null,
-            "GitHubRepository": "",
-            "Logo": "",
-            "Name": "",
-            "Version": ""
+          "Attributes": {
+            "path": "/auths/opendesign-k2.json"
           },
-          "StorageJSON": {
-            "api_key": "sk-amr-snap-key-two-0002",
-            "models": [
-              "model-b",
-              "model-z"
-            ],
-            "note": "second key",
-            "prefix": "od2",
-            "priority": 2,
-            "type": "opendesign"
+          "Host": {
+            "AuthDir": "/auths",
+            "ProxyURL": "",
+            "ForceModelPrefix": false,
+            "OAuthModelAlias": null,
+            "ExcludedModels": null
           },
           "host_callback_id": "cb-models"
         }
@@ -272,72 +274,72 @@
         "response": {
           "ok": true,
           "result": {
-            "AuthUpdate": {
-              "Attributes": null,
-              "Disabled": false,
-              "FileName": "",
-              "ID": "",
-              "Label": "",
-              "Metadata": null,
-              "NextRefreshAfter": "0001-01-01T00:00:00Z",
-              "Prefix": "",
-              "Provider": "",
-              "ProxyURL": "",
-              "StorageJSON": null
-            },
+            "Provider": "opendesign",
             "Models": [
               {
-                "ContextLength": 128000,
-                "Created": 1767000001,
-                "Description": "OpenDesign · model-b",
-                "DisplayName": "model-b",
                 "ID": "model-b",
-                "InputTokenLimit": 128000,
-                "MaxCompletionTokens": 16000,
-                "Name": "model-b",
                 "Object": "model",
-                "OutputTokenLimit": 16000,
+                "Created": 1767000001,
                 "OwnedBy": "opendesign",
+                "Type": "opendesign",
+                "DisplayName": "model-b",
+                "Name": "model-b",
+                "Version": "",
+                "Description": "OpenDesign · model-b",
+                "InputTokenLimit": 128000,
+                "OutputTokenLimit": 16000,
                 "SupportedGenerationMethods": null,
+                "ContextLength": 128000,
+                "MaxCompletionTokens": 16000,
+                "SupportedParameters": null,
                 "SupportedInputModalities": [
                   "text"
                 ],
                 "SupportedOutputModalities": [
                   "text"
                 ],
-                "SupportedParameters": null,
                 "Thinking": null,
-                "Type": "opendesign",
-                "UserDefined": true,
-                "Version": ""
+                "UserDefined": true
               },
               {
-                "ContextLength": 0,
-                "Created": 0,
-                "Description": "OpenDesign · model-z",
-                "DisplayName": "model-z",
                 "ID": "model-z",
-                "InputTokenLimit": 0,
-                "MaxCompletionTokens": 0,
-                "Name": "model-z",
                 "Object": "model",
-                "OutputTokenLimit": 0,
+                "Created": 0,
                 "OwnedBy": "opendesign",
+                "Type": "opendesign",
+                "DisplayName": "model-z",
+                "Name": "model-z",
+                "Version": "",
+                "Description": "OpenDesign · model-z",
+                "InputTokenLimit": 0,
+                "OutputTokenLimit": 0,
                 "SupportedGenerationMethods": null,
+                "ContextLength": 0,
+                "MaxCompletionTokens": 0,
+                "SupportedParameters": null,
                 "SupportedInputModalities": [
                   "text"
                 ],
                 "SupportedOutputModalities": [
                   "text"
                 ],
-                "SupportedParameters": null,
                 "Thinking": null,
-                "Type": "opendesign",
-                "UserDefined": true,
-                "Version": ""
+                "UserDefined": true
               }
             ],
-            "Provider": "opendesign"
+            "AuthUpdate": {
+              "Provider": "",
+              "ID": "",
+              "FileName": "",
+              "Label": "",
+              "Prefix": "",
+              "ProxyURL": "",
+              "Disabled": false,
+              "StorageJSON": null,
+              "Metadata": null,
+              "Attributes": null,
+              "NextRefreshAfter": "0001-01-01T00:00:00Z"
+            }
           }
         }
       }
@@ -346,15 +348,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/models",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/models",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -364,93 +366,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "catalog": {
-                "checked_at": "2026-01-01T00:00:00Z",
-                "count": 4,
-                "fetched_at": "2026-01-01T00:00:00Z",
-                "keys": 2,
-                "revision": "ad564412b50b7b9a"
-              },
-              "models": [
-                {
-                  "chat": false,
-                  "cost_tier": "medium",
-                  "enabled": true,
-                  "id": "image-gen",
-                  "inputs": [
-                    "text"
-                  ],
-                  "keys": [
-                    "89a142c2e7"
-                  ],
-                  "outputs": [
-                    "image"
-                  ]
-                },
-                {
-                  "capability": "standard",
-                  "chat": true,
-                  "context_budget": 160000,
-                  "context_length": 200000,
-                  "cost_tier": "low",
-                  "default": true,
-                  "enabled": true,
-                  "id": "model-a",
-                  "inputs": [
-                    "text",
-                    "image"
-                  ],
-                  "keys": [
-                    "89a142c2e7"
-                  ],
-                  "max_output": 32000,
-                  "outputs": [
-                    "text"
-                  ]
-                },
-                {
-                  "capability": "reasoning",
-                  "chat": true,
-                  "context_budget": 100000,
-                  "context_length": 128000,
-                  "cost_tier": "high",
-                  "enabled": true,
-                  "id": "model-b",
-                  "inputs": [
-                    "text"
-                  ],
-                  "keys": [
-                    "89a142c2e7",
-                    "9687cdae8c"
-                  ],
-                  "max_output": 16000,
-                  "outputs": [
-                    "text"
-                  ]
-                },
-                {
-                  "capability": "standard",
-                  "chat": false,
-                  "context_budget": 60000,
-                  "context_length": 64000,
-                  "cost_tier": "medium",
-                  "enabled": false,
-                  "id": "model-c",
-                  "inputs": [
-                    "text",
-                    "file"
-                  ],
-                  "keys": [
-                    "9687cdae8c"
-                  ],
-                  "max_output": 8000,
-                  "outputs": [
-                    "text"
-                  ]
-                }
-              ]
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -459,7 +375,93 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "catalog": {
+                "count": 4,
+                "keys": 2,
+                "revision": "ad564412b50b7b9a",
+                "fetched_at": "2026-01-02T03:04:05Z",
+                "checked_at": "2026-01-02T03:04:05Z"
+              },
+              "models": [
+                {
+                  "id": "image-gen",
+                  "chat": false,
+                  "enabled": true,
+                  "inputs": [
+                    "text"
+                  ],
+                  "outputs": [
+                    "image"
+                  ],
+                  "cost_tier": "medium",
+                  "keys": [
+                    "89a142c2e7"
+                  ]
+                },
+                {
+                  "id": "model-a",
+                  "chat": true,
+                  "enabled": true,
+                  "default": true,
+                  "inputs": [
+                    "text",
+                    "image"
+                  ],
+                  "outputs": [
+                    "text"
+                  ],
+                  "context_length": 200000,
+                  "context_budget": 160000,
+                  "max_output": 32000,
+                  "cost_tier": "low",
+                  "capability": "standard",
+                  "keys": [
+                    "89a142c2e7"
+                  ]
+                },
+                {
+                  "id": "model-b",
+                  "chat": true,
+                  "enabled": true,
+                  "inputs": [
+                    "text"
+                  ],
+                  "outputs": [
+                    "text"
+                  ],
+                  "context_length": 128000,
+                  "context_budget": 100000,
+                  "max_output": 16000,
+                  "cost_tier": "high",
+                  "capability": "reasoning",
+                  "keys": [
+                    "89a142c2e7",
+                    "9687cdae8c"
+                  ]
+                },
+                {
+                  "id": "model-c",
+                  "chat": false,
+                  "enabled": false,
+                  "inputs": [
+                    "text",
+                    "file"
+                  ],
+                  "outputs": [
+                    "text"
+                  ],
+                  "context_length": 64000,
+                  "context_budget": 60000,
+                  "max_output": 8000,
+                  "cost_tier": "medium",
+                  "capability": "standard",
+                  "keys": [
+                    "9687cdae8c"
+                  ]
+                }
+              ]
+            }
           }
         }
       }
@@ -468,15 +470,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/status",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/status",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -507,76 +509,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "catalog": {
-                "checked_at": "2026-01-01T00:00:00Z",
-                "count": 4,
-                "fetched_at": "2026-01-01T00:00:00Z",
-                "keys": 2,
-                "revision": "ad564412b50b7b9a"
-              },
-              "config": {
-                "base_url": "{{UPSTREAM}}",
-                "default_prefix": "opendesign",
-                "force_model_prefix": false,
-                "models_refresh_minutes": 60,
-                "request_timeout_seconds": 600,
-                "stream_idle_timeout_seconds": 300
-              },
-              "credentials": [
-                {
-                  "all_models": true,
-                  "auth_index": "idx-1",
-                  "disabled": false,
-                  "effective_prefix": "opendesign",
-                  "failed": 0,
-                  "id": "opendesign-k1.json",
-                  "key_id": "89a142c2e7",
-                  "key_masked": "sk-amr…0001",
-                  "label": "Key One",
-                  "listed_models": 2,
-                  "models": [],
-                  "name": "opendesign-k1.json",
-                  "prefix": null,
-                  "priority": 0,
-                  "proxy_url": "direct",
-                  "registered_known": true,
-                  "registered_models": 0,
-                  "success": 0,
-                  "unavailable": false
-                },
-                {
-                  "all_models": false,
-                  "auth_index": "idx-2",
-                  "disabled": false,
-                  "effective_prefix": "od2",
-                  "failed": 0,
-                  "id": "opendesign-k2.json",
-                  "key_id": "9687cdae8c",
-                  "key_masked": "sk-amr…0002",
-                  "label": "",
-                  "listed_models": 1,
-                  "missing_models": [
-                    "model-z"
-                  ],
-                  "models": [
-                    "model-b",
-                    "model-z"
-                  ],
-                  "name": "opendesign-k2.json",
-                  "note": "second key",
-                  "prefix": "od2",
-                  "priority": 2,
-                  "registered_known": true,
-                  "registered_models": 0,
-                  "success": 0,
-                  "unavailable": false
-                }
-              ],
-              "now": "2026-01-01T00:00:00Z",
-              "plugin": "opendesign",
-              "version": "9.9.9-snapshot"
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -585,7 +518,76 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "plugin": "opendesign",
+              "version": "9.9.9-snapshot",
+              "now": "2026-01-02T03:04:05Z",
+              "config": {
+                "base_url": "{{UPSTREAM}}",
+                "default_prefix": "opendesign",
+                "force_model_prefix": false,
+                "models_refresh_minutes": 60,
+                "request_timeout_seconds": 600,
+                "stream_idle_timeout_seconds": 300
+              },
+              "catalog": {
+                "count": 4,
+                "keys": 2,
+                "revision": "ad564412b50b7b9a",
+                "fetched_at": "2026-01-02T03:04:05Z",
+                "checked_at": "2026-01-02T03:04:05Z"
+              },
+              "credentials": [
+                {
+                  "auth_index": "idx-1",
+                  "id": "opendesign-k1.json",
+                  "name": "opendesign-k1.json",
+                  "label": "Key One",
+                  "key_masked": "sk-amr…0001",
+                  "key_id": "89a142c2e7",
+                  "listed_models": 2,
+                  "disabled": false,
+                  "unavailable": false,
+                  "priority": 0,
+                  "proxy_url": "direct",
+                  "prefix": null,
+                  "effective_prefix": "opendesign",
+                  "all_models": true,
+                  "models": [],
+                  "registered_models": 0,
+                  "registered_known": true,
+                  "success": 0,
+                  "failed": 0
+                },
+                {
+                  "auth_index": "idx-2",
+                  "id": "opendesign-k2.json",
+                  "name": "opendesign-k2.json",
+                  "label": "",
+                  "key_masked": "sk-amr…0002",
+                  "key_id": "9687cdae8c",
+                  "listed_models": 1,
+                  "disabled": false,
+                  "unavailable": false,
+                  "priority": 2,
+                  "note": "second key",
+                  "prefix": "od2",
+                  "effective_prefix": "od2",
+                  "all_models": false,
+                  "models": [
+                    "model-b",
+                    "model-z"
+                  ],
+                  "missing_models": [
+                    "model-z"
+                  ],
+                  "registered_models": 0,
+                  "registered_known": true,
+                  "success": 0,
+                  "failed": 0
+                }
+              ]
+            }
           }
         }
       }

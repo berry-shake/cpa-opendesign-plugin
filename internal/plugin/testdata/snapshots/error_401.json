@@ -30,7 +30,8 @@
           "application/json"
         ]
       },
-      "body": "{\"error\":{\"message\":\"Invalid API key\",\"type\":\"authentication_error\",\"code\":\"invalid_api_key\"}}"
+      "body": "{\"error\":{\"message\":\"Invalid API key\",\"type\":\"authentication_error\",\"code\":\"invalid_api_key\"}}",
+      "chunks": []
     }
   ],
   "steps": [
@@ -38,19 +39,12 @@
       "rpc": {
         "method": "executor.execute_stream",
         "request": {
-          "Alt": "",
-          "AuthAttributes": {
-            "path": "/auths/opendesign-k1.json"
-          },
           "AuthID": "opendesign-k1.json",
-          "AuthMetadata": {
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
-          },
           "AuthProvider": "opendesign",
+          "Model": "model-a",
           "Format": "openai",
+          "Stream": true,
+          "Alt": "",
           "Headers": {
             "Authorization": [
               "Bearer sk-client-snapshot"
@@ -62,26 +56,51 @@
               "snapshot-client/1.0"
             ]
           },
+          "Query": null,
+          "OriginalRequest": {
+            "model": "opendesign/model-a",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hello"
+              }
+            ],
+            "stream": true
+          },
+          "SourceFormat": "openai",
+          "Payload": {
+            "model": "model-a",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hello"
+              }
+            ],
+            "stream": true
+          },
           "Metadata": {
             "request_path": "/v1/chat/completions",
             "requested_model": "opendesign/model-a",
             "selected_auth_id": "opendesign-k1.json",
             "selected_auth_index": "idx-1"
           },
-          "Model": "model-a",
-          "OriginalRequest": "{\"model\":\"opendesign/model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"stream\":true}",
-          "Payload": "{\"model\":\"model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"stream\":true}",
-          "Query": null,
-          "SourceFormat": "openai",
           "StorageJSON": {
             "api_key": "sk-amr-snap-key-one-0001",
             "label": "Key One",
             "proxy_url": "direct",
             "type": "opendesign"
           },
-          "Stream": true,
-          "host_callback_id": "cb-exec",
-          "stream_id": "stream-err-401"
+          "AuthMetadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k1.json"
+          },
+          "stream_id": "stream-err-401",
+          "host_callback_id": "cb-exec"
         }
       },
       "output": {
@@ -115,12 +134,12 @@
         ],
         "host_calls": [],
         "response": {
+          "ok": false,
           "error": {
             "code": "invalid_api_key",
-            "http_status": 401,
-            "message": "opendesign: Invalid API key"
-          },
-          "ok": false
+            "message": "opendesign: Invalid API key",
+            "http_status": 401
+          }
         }
       }
     },
@@ -128,15 +147,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/logs",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/logs",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -146,48 +165,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "items": [
-                {
-                  "attempts": 1,
-                  "auth_id": "opendesign-k1.json",
-                  "auth_index": "idx-1",
-                  "cached_tokens": 0,
-                  "client_path": "/v1/chat/completions",
-                  "credential": "sk-amr…0001",
-                  "duration_ms": "<volatile>",
-                  "egress": "direct",
-                  "endpoint": "/v1/chat/completions",
-                  "error": "opendesign: Invalid API key",
-                  "error_code": "invalid_api_key",
-                  "error_phase": "request",
-                  "http_status": 401,
-                  "id": "1",
-                  "input_tokens": 0,
-                  "model": "opendesign/model-a",
-                  "output_tokens": 0,
-                  "status": "error",
-                  "stream": true,
-                  "time": "<volatile>",
-                  "upstream_model": "model-a",
-                  "upstream_status": 401,
-                  "user_agent": "snapshot-client/1.0"
-                }
-              ],
-              "offset": 0,
-              "retention": 100000,
-              "retention_days": 30,
-              "summary": {
-                "cache_hit_rate": null,
-                "cached_tokens": 0,
-                "failed": 1,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "requests": 1,
-                "success": 0
-              },
-              "total": 1
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -196,7 +174,50 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "items": [
+                {
+                  "id": "1",
+                  "time": "<volatile>",
+                  "endpoint": "/v1/chat/completions",
+                  "model": "opendesign/model-a",
+                  "upstream_model": "model-a",
+                  "stream": true,
+                  "status": "error",
+                  "http_status": 401,
+                  "credential": "sk-amr…0001",
+                  "auth_id": "opendesign-k1.json",
+                  "duration_ms": "<volatile>",
+                  "input_tokens": 0,
+                  "output_tokens": 0,
+                  "cached_tokens": 0,
+                  "error_code": "invalid_api_key",
+                  "error": "opendesign: Invalid API key",
+                  "error_phase": "request",
+                  "client_path": "/v1/chat/completions",
+                  "user_agent": "snapshot-client/1.0",
+                  "auth_index": "idx-1",
+                  "egress": "direct",
+                  "upstream_status": 401,
+                  "attempts": 1
+                }
+              ],
+              "total": 1,
+              "offset": 0,
+              "retention": 100000,
+              "retention_days": 30,
+              "summary": {
+                "requests": 1,
+                "success": 0,
+                "failed": 1,
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "cached_tokens": 0,
+                "cache_hit_rate": null,
+                "output_tokens_per_second": "<volatile>",
+                "e2e_tokens_per_second": "<volatile>"
+              }
+            }
           }
         }
       }

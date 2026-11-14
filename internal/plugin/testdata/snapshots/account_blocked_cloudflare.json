@@ -42,7 +42,8 @@
           "cloudflare"
         ]
       },
-      "body": "<!DOCTYPE html>\n<html><head><title>Attention Required! | Cloudflare</title></head><body>Sorry, you have been blocked</body></html>"
+      "body": "<!DOCTYPE html>\n<html><head><title>Attention Required! | Cloudflare</title></head><body>Sorry, you have been blocked</body></html>",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -53,7 +54,8 @@
           "application/json"
         ]
       },
-      "body": "{\"schemaVersion\":1,\"workspaceId\":\"ws-me\",\"workspaceMemberId\":\"m2\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"balanceUsd\":\"1.25\",\"codingPlan\":{\"workspaceId\":\"ws-me\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"eligible\":true,\"tier\":\"go\",\"windows\":[{\"policyId\":\"p5\",\"durationSeconds\":18000,\"resetMode\":\"activity_triggered\",\"usedCredits\":\"250\",\"limitCredits\":\"1000\",\"remainingCredits\":\"750\",\"windowStart\":\"2025-12-31T21:00:00Z\",\"resetsAt\":\"2026-01-01T02:00:00Z\"},{\"policyId\":\"p7\",\"durationSeconds\":604800,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"4000\",\"limitCredits\":\"5000\",\"remainingCredits\":\"1000\",\"windowStart\":null,\"resetsAt\":null},{\"policyId\":\"pm\",\"durationSeconds\":2592000,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"0\",\"limitCredits\":\"0\",\"remainingCredits\":\"0\",\"windowStart\":null,\"resetsAt\":null}]},\"modelCovered\":true,\"funding\":\"coding_plan\",\"fundingCheck\":null}"
+      "body": "{\"schemaVersion\":1,\"workspaceId\":\"ws-me\",\"workspaceMemberId\":\"m2\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"balanceUsd\":\"1.25\",\"codingPlan\":{\"workspaceId\":\"ws-me\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"eligible\":true,\"tier\":\"go\",\"windows\":[{\"policyId\":\"p5\",\"durationSeconds\":18000,\"resetMode\":\"activity_triggered\",\"usedCredits\":\"250\",\"limitCredits\":\"1000\",\"remainingCredits\":\"750\",\"windowStart\":\"2025-12-31T21:00:00Z\",\"resetsAt\":\"2026-01-01T02:00:00Z\"},{\"policyId\":\"p7\",\"durationSeconds\":604800,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"4000\",\"limitCredits\":\"5000\",\"remainingCredits\":\"1000\",\"windowStart\":null,\"resetsAt\":null},{\"policyId\":\"pm\",\"durationSeconds\":2592000,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"0\",\"limitCredits\":\"0\",\"remainingCredits\":\"0\",\"windowStart\":null,\"resetsAt\":null}]},\"modelCovered\":true,\"funding\":\"coding_plan\",\"fundingCheck\":null}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -67,7 +69,8 @@
           "cloudflare"
         ]
       },
-      "body": "<!DOCTYPE html>\n<html><head><title>Attention Required! | Cloudflare</title></head><body>Sorry, you have been blocked</body></html>"
+      "body": "<!DOCTYPE html>\n<html><head><title>Attention Required! | Cloudflare</title></head><body>Sorry, you have been blocked</body></html>",
+      "chunks": []
     }
   ],
   "steps": [
@@ -75,14 +78,13 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Query": {
             "auth_index": [
               "idx-1"
@@ -91,6 +93,7 @@
               "1"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -132,49 +135,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "account": {
-                "eligible": false,
-                "email": "me@example.com",
-                "error": "read plan windows: blocked before reaching the OpenDesign account API (HTTP 403: Attention Required! | Cloudflare)",
-                "fetched_at": "2026-01-01T00:00:00Z",
-                "windows": [],
-                "workspace_name": "Personal"
-              },
-              "day": {
-                "cached_tokens": 0,
-                "failed": 0,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 0
-              },
-              "fetched_at": "2026-01-01T00:00:00Z",
-              "five_hours": {
-                "cached_tokens": 0,
-                "failed": 0,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 0
-              },
-              "month": {
-                "cached_tokens": 0,
-                "failed": 0,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 0
-              },
-              "week": {
-                "cached_tokens": 0,
-                "failed": 0,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 0
-              }
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -183,7 +144,49 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "five_hours": {
+                "requests": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "cached_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0
+              },
+              "day": {
+                "requests": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "cached_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0
+              },
+              "week": {
+                "requests": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "cached_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0
+              },
+              "month": {
+                "requests": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "cached_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0
+              },
+              "fetched_at": "2026-01-02T03:04:05Z",
+              "account": {
+                "email": "me@example.com",
+                "workspace_name": "Personal",
+                "eligible": false,
+                "windows": [],
+                "fetched_at": "2026-01-02T03:04:05Z",
+                "error": "read plan windows: blocked before reaching the OpenDesign account API (HTTP 403: Attention Required! | Cloudflare)"
+              }
+            }
           }
         }
       }
@@ -192,31 +195,8 @@
       "rpc": {
         "method": "quota.fetch",
         "request": {
-          "auth_id": "opendesign-k1.json",
           "auth_index": "idx-1",
-          "host": {
-            "AuthDir": "/auths",
-            "ExcludedModels": null,
-            "ForceModelPrefix": false,
-            "OAuthModelAlias": null,
-            "ProxyURL": ""
-          },
-          "host_callback_id": "cb-quota",
-          "metadata": {
-            "account_api_url": "{{UPSTREAM}}",
-            "account_control_key": "ck-snap-old",
-            "account_control_key_id": "ck-snap-old-id",
-            "account_email": "me@example.com",
-            "account_logged_in_at": "2025-12-31T00:00:00Z",
-            "account_name": "Me",
-            "account_user_id": "user-1",
-            "account_workspace_id": "ws-me",
-            "account_workspace_name": "Personal",
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
-          },
+          "auth_id": "opendesign-k1.json",
           "provider": "opendesign",
           "storage_json": {
             "account_api_url": "{{UPSTREAM}}",
@@ -232,7 +212,30 @@
             "label": "Key One",
             "proxy_url": "direct",
             "type": "opendesign"
-          }
+          },
+          "metadata": {
+            "account_api_url": "{{UPSTREAM}}",
+            "account_control_key": "ck-snap-old",
+            "account_control_key_id": "ck-snap-old-id",
+            "account_email": "me@example.com",
+            "account_logged_in_at": "2025-12-31T00:00:00Z",
+            "account_name": "Me",
+            "account_user_id": "user-1",
+            "account_workspace_id": "ws-me",
+            "account_workspace_name": "Personal",
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "host": {
+            "AuthDir": "/auths",
+            "ProxyURL": "",
+            "ForceModelPrefix": false,
+            "OAuthModelAlias": null,
+            "ExcludedModels": null
+          },
+          "host_callback_id": "cb-quota"
         }
       },
       "output": {
@@ -293,33 +296,33 @@
         "response": {
           "ok": true,
           "result": {
-            "groups": [
-              {
-                "buckets": [
-                  {
-                    "remainingFraction": 0.75,
-                    "resetTime": "2026-01-01T02:00:00Z",
-                    "window": "5h"
-                  },
-                  {
-                    "remainingFraction": 0.2,
-                    "window": "7d"
-                  }
-                ],
-                "displayName": "OpenDesign"
-              }
-            ],
             "subscription": {
               "plan": "Go",
               "tierId": "go"
             },
             "summary": [
               {
-                "currency": "USD",
-                "format": "currency",
                 "key": "balance",
                 "label": "Balance",
-                "value": 1.25
+                "value": 1.25,
+                "format": "currency",
+                "currency": "USD"
+              }
+            ],
+            "groups": [
+              {
+                "displayName": "OpenDesign",
+                "buckets": [
+                  {
+                    "window": "5h",
+                    "remainingFraction": 0.75,
+                    "resetTime": "2026-01-01T02:00:00Z"
+                  },
+                  {
+                    "window": "7d",
+                    "remainingFraction": 0.2
+                  }
+                ]
               }
             ]
           }

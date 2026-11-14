@@ -30,7 +30,8 @@
           "application/json"
         ]
       },
-      "body": "{\"deviceId\":\"dev-1\",\"userCode\":\"WXYZ-1234\",\"deviceSecret\":\"secret-dev-1\",\"activationUrl\":\"https://open-design.ai/cli/activate?deviceId=dev-1\",\"pollIntervalSeconds\":1,\"status\":\"pending\",\"expiresAt\":\"2026-01-01T00:10:00Z\"}"
+      "body": "{\"deviceId\":\"dev-1\",\"userCode\":\"WXYZ-1234\",\"deviceSecret\":\"secret-dev-1\",\"activationUrl\":\"https://open-design.ai/cli/activate?deviceId=dev-1\",\"pollIntervalSeconds\":1,\"status\":\"pending\",\"expiresAt\":\"2026-01-02T03:14:05Z\"}",
+      "chunks": []
     },
     {
       "method": "POST",
@@ -41,7 +42,8 @@
           "application/json"
         ]
       },
-      "body": "{\"status\":\"approved\",\"controlKey\":\"ck-snap-new\",\"controlKeyId\":\"ck-snap-new-id\",\"runtimeKey\":\"rk-snap\",\"user\":{\"id\":\"user-1\",\"authUserId\":\"auth-1\",\"email\":\"me@example.com\",\"name\":\"Me\"},\"apiUrl\":\"\",\"linkUrl\":\"\"}"
+      "body": "{\"status\":\"approved\",\"controlKey\":\"ck-snap-new\",\"controlKeyId\":\"ck-snap-new-id\",\"runtimeKey\":\"rk-snap\",\"user\":{\"id\":\"user-1\",\"authUserId\":\"auth-1\",\"email\":\"me@example.com\",\"name\":\"Me\"},\"apiUrl\":\"\",\"linkUrl\":\"\"}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -52,7 +54,8 @@
           "application/json"
         ]
       },
-      "body": "{\"items\":[{\"workspaceId\":\"ws-team\",\"workspaceName\":\"Team\",\"workspaceType\":\"team\",\"workspaceMemberId\":\"m1\",\"role\":\"owner\",\"memberStatus\":\"active\",\"lifecycleState\":\"active\",\"isDefault\":true},{\"workspaceId\":\"ws-me\",\"workspaceName\":\"Personal\",\"workspaceType\":\"personal\",\"workspaceMemberId\":\"m2\",\"role\":\"owner\",\"memberStatus\":\"active\",\"lifecycleState\":\"active\",\"isDefault\":false}]}"
+      "body": "{\"items\":[{\"workspaceId\":\"ws-team\",\"workspaceName\":\"Team\",\"workspaceType\":\"team\",\"workspaceMemberId\":\"m1\",\"role\":\"owner\",\"memberStatus\":\"active\",\"lifecycleState\":\"active\",\"isDefault\":true},{\"workspaceId\":\"ws-me\",\"workspaceName\":\"Personal\",\"workspaceType\":\"personal\",\"workspaceMemberId\":\"m2\",\"role\":\"owner\",\"memberStatus\":\"active\",\"lifecycleState\":\"active\",\"isDefault\":false}]}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -63,7 +66,8 @@
           "application/json"
         ]
       },
-      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-a\",\"object\":\"model\",\"created\":1767000000,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"image\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"Low\",\"capability\":\"standard\",\"context_limit\":200000,\"context_budget\":160000,\"output_budget\":32000},\"default\":true,\"enabled\":true},{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"image-gen\",\"object\":\"model\",\"created\":1767000002,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"image\"]},\"metadata\":{\"cost\":\"medium\"},\"enabled\":true}]}"
+      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-a\",\"object\":\"model\",\"created\":1767000000,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"image\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"Low\",\"capability\":\"standard\",\"context_limit\":200000,\"context_budget\":160000,\"output_budget\":32000},\"default\":true,\"enabled\":true},{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"image-gen\",\"object\":\"model\",\"created\":1767000002,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"image\"]},\"metadata\":{\"cost\":\"medium\"},\"enabled\":true}]}",
+      "chunks": []
     },
     {
       "method": "POST",
@@ -74,7 +78,8 @@
           "application/json"
         ]
       },
-      "body": "{\"error\":{\"code\":\"internal_error\",\"message\":\"device authorization store unavailable\"}}"
+      "body": "{\"error\":{\"code\":\"internal_error\",\"message\":\"device authorization store unavailable\"}}",
+      "chunks": []
     },
     {
       "method": "POST",
@@ -85,7 +90,8 @@
           "application/json"
         ]
       },
-      "body": "{\"error\":{\"code\":\"invalid_control_key\",\"message\":\"control key revoked\"}}"
+      "body": "{\"error\":{\"code\":\"invalid_control_key\",\"message\":\"control key revoked\"}}",
+      "chunks": []
     }
   ],
   "steps": [
@@ -93,17 +99,17 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": {
-            "auth_index": "idx-1"
-          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/account/login",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "POST",
-          "Path": "/v0/management/plugins/opendesign/account/login",
           "Query": null,
+          "Body": {
+            "auth_index": "idx-1"
+          },
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -244,11 +250,11 @@
           {
             "method": "host.log",
             "request": {
+              "level": "info",
+              "message": "opendesign: account sign-in started",
               "fields": {
                 "auth_index": "idx-1"
-              },
-              "level": "info",
-              "message": "opendesign: account sign-in started"
+              }
             }
           },
           {
@@ -260,11 +266,12 @@
           {
             "method": "host.auth.save",
             "request": {
+              "name": "opendesign-k1.json",
               "json": {
                 "account_control_key": "ck-snap-new",
                 "account_control_key_id": "ck-snap-new-id",
                 "account_email": "me@example.com",
-                "account_logged_in_at": "2026-01-01T00:00:00Z",
+                "account_logged_in_at": "2026-01-02T03:04:05Z",
                 "account_name": "Me",
                 "account_user_id": "user-1",
                 "account_workspace_id": "ws-me",
@@ -273,45 +280,37 @@
                 "label": "Key One",
                 "proxy_url": "direct",
                 "type": "opendesign"
-              },
-              "name": "opendesign-k1.json"
+              }
             }
           },
           {
             "method": "host.auth.save",
             "request": {
+              "name": "opendesign-k1.json",
               "json": {
                 "api_key": "sk-amr-snap-key-one-0001",
                 "label": "Key One",
                 "proxy_url": "direct",
                 "type": "opendesign"
-              },
-              "name": "opendesign-k1.json"
+              }
             }
           },
           {
             "method": "host.log",
             "request": {
+              "level": "warn",
+              "message": "opendesign: cannot revoke unsaved account keys",
               "fields": {
                 "auth_index": "idx-1",
                 "error": "OpenDesign account API HTTP 401: invalid_control_key: control key revoked"
-              },
-              "level": "warn",
-              "message": "opendesign: cannot revoke unsaved account keys"
+              }
             }
           }
         ],
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "activation_url": "https://open-design.ai/cli/activate?deviceId=dev-1",
-              "auth_index": "idx-1",
-              "expires_at": "2026-01-01T00:10:00Z",
-              "id": "<volatile>",
-              "state": "pending",
-              "user_code": "WXYZ-1234"
-            },
+            "StatusCode": 201,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -320,7 +319,14 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 201
+            "Body": {
+              "id": "<volatile>",
+              "auth_index": "idx-1",
+              "state": "pending",
+              "user_code": "WXYZ-1234",
+              "activation_url": "https://open-design.ai/cli/activate?deviceId=dev-1",
+              "expires_at": "2026-01-02T03:14:05Z"
+            }
           }
         }
       }
@@ -329,19 +335,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/account/login",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/account/login",
           "Query": {
             "id": [
               "{{login_id}}"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -351,12 +357,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "auth_index": "idx-1",
-              "id": "<volatile>",
-              "message": "confirm saved credentials: OpenDesign account API HTTP 500: internal_error: device authorization store unavailable",
-              "state": "failed"
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -365,7 +366,12 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "id": "<volatile>",
+              "auth_index": "idx-1",
+              "state": "failed",
+              "message": "confirm saved credentials: OpenDesign account API HTTP 500: internal_error: device authorization store unavailable"
+            }
           }
         }
       }

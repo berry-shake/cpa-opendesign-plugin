@@ -26,29 +26,29 @@
       "rpc": {
         "method": "quota.fetch",
         "request": {
-          "auth_id": "opendesign-k1.json",
           "auth_index": "idx-1",
-          "host": {
-            "AuthDir": "/auths",
-            "ExcludedModels": null,
-            "ForceModelPrefix": false,
-            "OAuthModelAlias": null,
-            "ProxyURL": ""
-          },
-          "host_callback_id": "cb-quota",
-          "metadata": {
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
-          },
+          "auth_id": "opendesign-k1.json",
           "provider": "opendesign",
           "storage_json": {
             "api_key": "sk-amr-snap-key-one-0001",
             "label": "Key One",
             "proxy_url": "direct",
             "type": "opendesign"
-          }
+          },
+          "metadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "host": {
+            "AuthDir": "/auths",
+            "ProxyURL": "",
+            "ForceModelPrefix": false,
+            "OAuthModelAlias": null,
+            "ExcludedModels": null
+          },
+          "host_callback_id": "cb-quota"
         }
       },
       "output": {
@@ -66,12 +66,12 @@
           }
         ],
         "response": {
+          "ok": false,
           "error": {
             "code": "account_not_signed_in",
-            "http_status": 404,
-            "message": "OpenDesign API keys report no allowance; sign an OpenDesign account in on this key's card on the OpenDesign plugin page to show the plan's 5-hour and 7-day windows"
-          },
-          "ok": false
+            "message": "OpenDesign API keys report no allowance; sign an OpenDesign account in on this key's card on the OpenDesign plugin page to show the plan's 5-hour and 7-day windows",
+            "http_status": 404
+          }
         }
       }
     },
@@ -79,41 +79,41 @@
       "rpc": {
         "method": "quota.fetch",
         "request": {
-          "auth_id": "opendesign-k1.json",
           "auth_index": "idx-1",
-          "host": {
-            "AuthDir": "/auths",
-            "ExcludedModels": null,
-            "ForceModelPrefix": false,
-            "OAuthModelAlias": null,
-            "ProxyURL": ""
-          },
-          "host_callback_id": "cb-quota",
-          "metadata": {
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
-          },
+          "auth_id": "opendesign-k1.json",
           "provider": "codex",
           "storage_json": {
             "api_key": "sk-amr-snap-key-one-0001",
             "label": "Key One",
             "proxy_url": "direct",
             "type": "opendesign"
-          }
+          },
+          "metadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "host": {
+            "AuthDir": "/auths",
+            "ProxyURL": "",
+            "ForceModelPrefix": false,
+            "OAuthModelAlias": null,
+            "ExcludedModels": null
+          },
+          "host_callback_id": "cb-quota"
         }
       },
       "output": {
         "upstream_requests": [],
         "host_calls": [],
         "response": {
+          "ok": false,
           "error": {
             "code": "invalid_request",
-            "http_status": 400,
-            "message": "not an OpenDesign credential"
-          },
-          "ok": false
+            "message": "not an OpenDesign credential",
+            "http_status": 400
+          }
         }
       }
     },
@@ -121,41 +121,41 @@
       "rpc": {
         "method": "quota.fetch",
         "request": {
-          "auth_id": "opendesign-k1.json",
           "auth_index": "",
-          "host": {
-            "AuthDir": "/auths",
-            "ExcludedModels": null,
-            "ForceModelPrefix": false,
-            "OAuthModelAlias": null,
-            "ProxyURL": ""
-          },
-          "host_callback_id": "cb-quota",
-          "metadata": {
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
-          },
+          "auth_id": "opendesign-k1.json",
           "provider": "opendesign",
           "storage_json": {
             "api_key": "sk-amr-snap-key-one-0001",
             "label": "Key One",
             "proxy_url": "direct",
             "type": "opendesign"
-          }
+          },
+          "metadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "host": {
+            "AuthDir": "/auths",
+            "ProxyURL": "",
+            "ForceModelPrefix": false,
+            "OAuthModelAlias": null,
+            "ExcludedModels": null
+          },
+          "host_callback_id": "cb-quota"
         }
       },
       "output": {
         "upstream_requests": [],
         "host_calls": [],
         "response": {
+          "ok": false,
           "error": {
             "code": "invalid_request",
-            "http_status": 400,
-            "message": "auth_index is required"
-          },
-          "ok": false
+            "message": "auth_index is required",
+            "http_status": 400
+          }
         }
       }
     },
@@ -163,29 +163,29 @@
       "rpc": {
         "method": "quota.fetch",
         "request": {
-          "auth_id": "gone.json",
           "auth_index": "idx-9",
-          "host": {
-            "AuthDir": "/auths",
-            "ExcludedModels": null,
-            "ForceModelPrefix": false,
-            "OAuthModelAlias": null,
-            "ProxyURL": ""
-          },
-          "host_callback_id": "cb-quota",
-          "metadata": {
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
-          },
+          "auth_id": "gone.json",
           "provider": "opendesign",
           "storage_json": {
             "api_key": "sk-amr-snap-key-one-0001",
             "label": "Key One",
             "proxy_url": "direct",
             "type": "opendesign"
-          }
+          },
+          "metadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "host": {
+            "AuthDir": "/auths",
+            "ProxyURL": "",
+            "ForceModelPrefix": false,
+            "OAuthModelAlias": null,
+            "ExcludedModels": null
+          },
+          "host_callback_id": "cb-quota"
         }
       },
       "output": {
@@ -203,12 +203,12 @@
           }
         ],
         "response": {
+          "ok": false,
           "error": {
             "code": "credential_not_found",
-            "http_status": 404,
-            "message": "no OpenDesign credential matches auth_index"
-          },
-          "ok": false
+            "message": "no OpenDesign credential matches auth_index",
+            "http_status": 404
+          }
         }
       }
     }

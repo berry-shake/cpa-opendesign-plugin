@@ -47,7 +47,8 @@
           "up-log-1"
         ]
       },
-      "body": "{\"id\":\"chatcmpl-1\",\"object\":\"chat.completion\",\"created\":1767225600,\"model\":\"model-a-2026\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"Hi there\"},\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":12,\"completion_tokens\":3,\"total_tokens\":15,\"prompt_tokens_details\":{\"cached_tokens\":4},\"completion_tokens_details\":{\"reasoning_tokens\":1}}}"
+      "body": "{\"id\":\"chatcmpl-1\",\"object\":\"chat.completion\",\"created\":1767225600,\"model\":\"model-a-2026\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"Hi there\"},\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":12,\"completion_tokens\":3,\"total_tokens\":15,\"prompt_tokens_details\":{\"cached_tokens\":4},\"completion_tokens_details\":{\"reasoning_tokens\":1}}}",
+      "chunks": []
     },
     {
       "method": "POST",
@@ -90,7 +91,8 @@
           "up-log-3"
         ]
       },
-      "body": "{\"error\":{\"message\":\"weekly limit reached\",\"code\":\"usage_limit\"}}"
+      "body": "{\"error\":{\"message\":\"weekly limit reached\",\"code\":\"usage_limit\"}}",
+      "chunks": []
     }
   ],
   "steps": [
@@ -98,19 +100,12 @@
       "rpc": {
         "method": "executor.execute",
         "request": {
-          "Alt": "",
-          "AuthAttributes": {
-            "path": "/auths/opendesign-k1.json"
-          },
           "AuthID": "opendesign-k1.json",
-          "AuthMetadata": {
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
-          },
           "AuthProvider": "opendesign",
+          "Model": "model-a",
           "Format": "openai",
+          "Stream": false,
+          "Alt": "",
           "Headers": {
             "Authorization": [
               "Bearer sk-client-snapshot"
@@ -125,24 +120,49 @@
               "req-log-1"
             ]
           },
+          "Query": null,
+          "OriginalRequest": {
+            "model": "opendesign/model-a",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hello"
+              }
+            ],
+            "reasoning_effort": "low"
+          },
+          "SourceFormat": "openai",
+          "Payload": {
+            "model": "model-a",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hello"
+              }
+            ],
+            "reasoning_effort": "low"
+          },
           "Metadata": {
             "request_path": "/v1/chat/completions",
             "requested_model": "opendesign/model-a",
             "selected_auth_id": "opendesign-k1.json",
             "selected_auth_index": "idx-1"
           },
-          "Model": "model-a",
-          "OriginalRequest": "{\"model\":\"opendesign/model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"reasoning_effort\":\"low\"}",
-          "Payload": "{\"model\":\"model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"reasoning_effort\":\"low\"}",
-          "Query": null,
-          "SourceFormat": "openai",
           "StorageJSON": {
             "api_key": "sk-amr-snap-key-one-0001",
             "label": "Key One",
             "proxy_url": "direct",
             "type": "opendesign"
           },
-          "Stream": false,
+          "AuthMetadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k1.json"
+          },
           "host_callback_id": "cb-exec"
         }
       },
@@ -179,6 +199,33 @@
         "response": {
           "ok": true,
           "result": {
+            "Payload": {
+              "id": "chatcmpl-1",
+              "object": "chat.completion",
+              "created": 1767225600,
+              "model": "model-a-2026",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "Hi there"
+                  },
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 12,
+                "completion_tokens": 3,
+                "total_tokens": 15,
+                "prompt_tokens_details": {
+                  "cached_tokens": 4
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 1
+                }
+              }
+            },
             "Headers": {
               "Content-Type": [
                 "application/json"
@@ -187,8 +234,7 @@
                 "up-log-1"
               ]
             },
-            "Metadata": null,
-            "Payload": "{\"id\":\"chatcmpl-1\",\"object\":\"chat.completion\",\"created\":1767225600,\"model\":\"model-a-2026\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"Hi there\"},\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":12,\"completion_tokens\":3,\"total_tokens\":15,\"prompt_tokens_details\":{\"cached_tokens\":4},\"completion_tokens_details\":{\"reasoning_tokens\":1}}}"
+            "Metadata": null
           }
         }
       }
@@ -197,19 +243,12 @@
       "rpc": {
         "method": "executor.execute_stream",
         "request": {
-          "Alt": "",
-          "AuthAttributes": {
-            "path": "/auths/opendesign-k1.json"
-          },
           "AuthID": "opendesign-k1.json",
-          "AuthMetadata": {
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
-          },
           "AuthProvider": "opendesign",
+          "Model": "model-a",
           "Format": "claude",
+          "Stream": true,
+          "Alt": "",
           "Headers": {
             "Authorization": [
               "Bearer sk-client-snapshot"
@@ -224,26 +263,53 @@
               "req-log-2"
             ]
           },
+          "Query": null,
+          "OriginalRequest": {
+            "model": "opendesign/model-a",
+            "max_tokens": 1024,
+            "stream": true,
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hello"
+              }
+            ]
+          },
+          "SourceFormat": "claude",
+          "Payload": {
+            "model": "model-a",
+            "max_tokens": 1024,
+            "stream": true,
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hello"
+              }
+            ]
+          },
           "Metadata": {
             "request_path": "/v1/messages",
             "requested_model": "opendesign/model-a",
             "selected_auth_id": "opendesign-k1.json",
             "selected_auth_index": "idx-1"
           },
-          "Model": "model-a",
-          "OriginalRequest": "{\"model\":\"opendesign/model-a\",\"max_tokens\":1024,\"stream\":true,\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}",
-          "Payload": "{\"model\":\"model-a\",\"max_tokens\":1024,\"stream\":true,\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}",
-          "Query": null,
-          "SourceFormat": "claude",
           "StorageJSON": {
             "api_key": "sk-amr-snap-key-one-0001",
             "label": "Key One",
             "proxy_url": "direct",
             "type": "opendesign"
           },
-          "Stream": true,
-          "host_callback_id": "cb-exec",
-          "stream_id": "stream-log-2"
+          "AuthMetadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k1.json"
+          },
+          "stream_id": "stream-log-2",
+          "host_callback_id": "cb-exec"
         }
       },
       "output": {
@@ -282,50 +348,50 @@
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: message_start\ndata: {\"type\":\"message_start\",\"message\":{\"id\":\"msg_2\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[],\"model\":\"model-a\",\"stop_reason\":null,\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":5,\"output_tokens\":1}}}\n\n",
-              "stream_id": "stream-log-2"
+              "stream_id": "stream-log-2",
+              "payload": "event: message_start\ndata: {\"type\":\"message_start\",\"message\":{\"id\":\"msg_2\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[],\"model\":\"model-a\",\"stop_reason\":null,\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":5,\"output_tokens\":1}}}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: ping\ndata: {\"type\":\"ping\"}\n\n",
-              "stream_id": "stream-log-2"
+              "stream_id": "stream-log-2",
+              "payload": "event: ping\ndata: {\"type\":\"ping\"}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: content_block_start\ndata: {\"type\":\"content_block_start\",\"index\":0,\"content_block\":{\"type\":\"text\",\"text\":\"\"}}\n\n",
-              "stream_id": "stream-log-2"
+              "stream_id": "stream-log-2",
+              "payload": "event: content_block_start\ndata: {\"type\":\"content_block_start\",\"index\":0,\"content_block\":{\"type\":\"text\",\"text\":\"\"}}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\"Hi\"}}\n\n",
-              "stream_id": "stream-log-2"
+              "stream_id": "stream-log-2",
+              "payload": "event: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\"Hi\"}}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: content_block_stop\ndata: {\"type\":\"content_block_stop\",\"index\":0}\n\n",
-              "stream_id": "stream-log-2"
+              "stream_id": "stream-log-2",
+              "payload": "event: content_block_stop\ndata: {\"type\":\"content_block_stop\",\"index\":0}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: message_delta\ndata: {\"type\":\"message_delta\",\"delta\":{\"stop_reason\":\"end_turn\",\"stop_sequence\":null},\"usage\":{\"output_tokens\":3}}\n\n",
-              "stream_id": "stream-log-2"
+              "stream_id": "stream-log-2",
+              "payload": "event: message_delta\ndata: {\"type\":\"message_delta\",\"delta\":{\"stop_reason\":\"end_turn\",\"stop_sequence\":null},\"usage\":{\"output_tokens\":3}}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: message_stop\ndata: {\"type\":\"message_stop\"}\n\n",
-              "stream_id": "stream-log-2"
+              "stream_id": "stream-log-2",
+              "payload": "event: message_stop\ndata: {\"type\":\"message_stop\"}\n\n"
             }
           },
           {
@@ -354,24 +420,12 @@
       "rpc": {
         "method": "executor.execute",
         "request": {
-          "Alt": "",
-          "AuthAttributes": {
-            "path": "/auths/opendesign-k2.json"
-          },
           "AuthID": "opendesign-k2.json",
-          "AuthMetadata": {
-            "api_key": "sk-amr-snap-key-two-0002",
-            "models": [
-              "model-b",
-              "model-z"
-            ],
-            "note": "second key",
-            "prefix": "od2",
-            "priority": 2,
-            "type": "opendesign"
-          },
           "AuthProvider": "opendesign",
+          "Model": "model-b",
           "Format": "openai",
+          "Stream": false,
+          "Alt": "",
           "Headers": {
             "Authorization": [
               "Bearer sk-client-snapshot"
@@ -386,17 +440,32 @@
               "req-log-3"
             ]
           },
+          "Query": null,
+          "OriginalRequest": {
+            "model": "od2/model-b",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hi"
+              }
+            ]
+          },
+          "SourceFormat": "openai",
+          "Payload": {
+            "model": "model-b",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hi"
+              }
+            ]
+          },
           "Metadata": {
             "request_path": "/v1/chat/completions",
             "requested_model": "od2/model-b",
             "selected_auth_id": "opendesign-k2.json",
             "selected_auth_index": "idx-2"
           },
-          "Model": "model-b",
-          "OriginalRequest": "{\"model\":\"od2/model-b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hi\"}]}",
-          "Payload": "{\"model\":\"model-b\",\"messages\":[{\"role\":\"user\",\"content\":\"Hi\"}]}",
-          "Query": null,
-          "SourceFormat": "openai",
           "StorageJSON": {
             "api_key": "sk-amr-snap-key-two-0002",
             "models": [
@@ -408,7 +477,20 @@
             "priority": 2,
             "type": "opendesign"
           },
-          "Stream": false,
+          "AuthMetadata": {
+            "api_key": "sk-amr-snap-key-two-0002",
+            "models": [
+              "model-b",
+              "model-z"
+            ],
+            "note": "second key",
+            "prefix": "od2",
+            "priority": 2,
+            "type": "opendesign"
+          },
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k2.json"
+          },
           "host_callback_id": "cb-exec"
         }
       },
@@ -443,14 +525,14 @@
         ],
         "host_calls": [],
         "response": {
+          "ok": false,
           "error": {
             "code": "usage_limit",
-            "http_status": 429,
             "message": "opendesign: weekly limit reached",
-            "retry_after_seconds": 120,
-            "retryable": true
-          },
-          "ok": false
+            "retryable": true,
+            "http_status": 429,
+            "retry_after_seconds": 120
+          }
         }
       }
     },
@@ -458,15 +540,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/logs",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/logs",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -476,110 +558,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "items": [
-                {
-                  "attempts": 1,
-                  "auth_id": "opendesign-k2.json",
-                  "auth_index": "idx-2",
-                  "cached_tokens": 0,
-                  "client_path": "/v1/chat/completions",
-                  "credential": "sk-amr…0002",
-                  "duration_ms": "<volatile>",
-                  "egress": "env",
-                  "endpoint": "/v1/chat/completions",
-                  "error": "opendesign: weekly limit reached",
-                  "error_code": "usage_limit",
-                  "error_phase": "request",
-                  "http_status": 429,
-                  "id": "3",
-                  "input_tokens": 0,
-                  "model": "od2/model-b",
-                  "output_tokens": 0,
-                  "request_id": "req-log-3",
-                  "retry_after": 120,
-                  "status": "error",
-                  "stream": false,
-                  "time": "<volatile>",
-                  "upstream_model": "model-b",
-                  "upstream_request_id": "up-log-3",
-                  "upstream_status": 429,
-                  "user_agent": "snapshot-client/1.0"
-                },
-                {
-                  "attempts": 1,
-                  "auth_id": "opendesign-k1.json",
-                  "auth_index": "idx-1",
-                  "cached_tokens": 5,
-                  "client_path": "/v1/messages",
-                  "credential": "sk-amr…0001",
-                  "duration_ms": "<volatile>",
-                  "egress": "direct",
-                  "endpoint": "/v1/messages",
-                  "finish_reason": "end_turn",
-                  "frames": 2,
-                  "http_status": 200,
-                  "id": "2",
-                  "input_tokens": 15,
-                  "last_frame_ms": "<volatile>",
-                  "model": "opendesign/model-a",
-                  "output_tokens": 3,
-                  "request_id": "req-log-2",
-                  "served_model": "model-a",
-                  "status": "success",
-                  "stream": true,
-                  "time": "<volatile>",
-                  "ttft_ms": "<volatile>",
-                  "upstream_model": "model-a",
-                  "upstream_request_id": "up-log-2",
-                  "upstream_status": 200,
-                  "usage_reported": true,
-                  "user_agent": "claude-cli/2.0.0 (external, cli)"
-                },
-                {
-                  "attempts": 1,
-                  "auth_id": "opendesign-k1.json",
-                  "auth_index": "idx-1",
-                  "cached_tokens": 4,
-                  "client_path": "/v1/chat/completions",
-                  "credential": "sk-amr…0001",
-                  "duration_ms": "<volatile>",
-                  "egress": "direct",
-                  "endpoint": "/v1/chat/completions",
-                  "finish_reason": "stop",
-                  "http_status": 200,
-                  "id": "1",
-                  "input_tokens": 12,
-                  "model": "opendesign/model-a",
-                  "output_tokens": 3,
-                  "reasoning_effort": "low",
-                  "reasoning_tokens": 1,
-                  "request_id": "req-log-1",
-                  "served_model": "model-a-2026",
-                  "status": "success",
-                  "stream": false,
-                  "time": "<volatile>",
-                  "upstream_model": "model-a",
-                  "upstream_request_id": "up-log-1",
-                  "upstream_status": 200,
-                  "usage_reported": true,
-                  "user_agent": "snapshot-client/1.0"
-                }
-              ],
-              "offset": 0,
-              "retention": 100000,
-              "retention_days": 30,
-              "summary": {
-                "cache_hit_rate": 0.3333333333333333,
-                "cached_tokens": 9,
-                "failed": 1,
-                "input_tokens": 27,
-                "output_tokens": 6,
-                "requests": 3,
-                "success": 2
-              },
-              "total": 3
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -588,7 +567,112 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "items": [
+                {
+                  "id": "3",
+                  "request_id": "req-log-3",
+                  "time": "<volatile>",
+                  "endpoint": "/v1/chat/completions",
+                  "model": "od2/model-b",
+                  "upstream_model": "model-b",
+                  "stream": false,
+                  "status": "error",
+                  "http_status": 429,
+                  "credential": "sk-amr…0002",
+                  "auth_id": "opendesign-k2.json",
+                  "duration_ms": "<volatile>",
+                  "input_tokens": 0,
+                  "output_tokens": 0,
+                  "cached_tokens": 0,
+                  "error_code": "usage_limit",
+                  "error": "opendesign: weekly limit reached",
+                  "error_phase": "request",
+                  "client_path": "/v1/chat/completions",
+                  "user_agent": "snapshot-client/1.0",
+                  "auth_index": "idx-2",
+                  "egress": "env",
+                  "upstream_status": 429,
+                  "upstream_request_id": "up-log-3",
+                  "retry_after": 120,
+                  "attempts": 1
+                },
+                {
+                  "id": "2",
+                  "request_id": "req-log-2",
+                  "time": "<volatile>",
+                  "endpoint": "/v1/messages",
+                  "model": "opendesign/model-a",
+                  "upstream_model": "model-a",
+                  "served_model": "model-a",
+                  "stream": true,
+                  "status": "success",
+                  "http_status": 200,
+                  "credential": "sk-amr…0001",
+                  "auth_id": "opendesign-k1.json",
+                  "duration_ms": "<volatile>",
+                  "ttft_ms": "<volatile>",
+                  "input_tokens": 15,
+                  "output_tokens": 3,
+                  "cached_tokens": 5,
+                  "client_path": "/v1/messages",
+                  "user_agent": "claude-cli/2.0.0 (external, cli)",
+                  "auth_index": "idx-1",
+                  "egress": "direct",
+                  "upstream_status": 200,
+                  "upstream_request_id": "up-log-2",
+                  "finish_reason": "end_turn",
+                  "frames": 2,
+                  "last_frame_ms": "<volatile>",
+                  "usage_reported": true,
+                  "attempts": 1
+                },
+                {
+                  "id": "1",
+                  "request_id": "req-log-1",
+                  "time": "<volatile>",
+                  "endpoint": "/v1/chat/completions",
+                  "model": "opendesign/model-a",
+                  "upstream_model": "model-a",
+                  "served_model": "model-a-2026",
+                  "reasoning_effort": "low",
+                  "stream": false,
+                  "status": "success",
+                  "http_status": 200,
+                  "credential": "sk-amr…0001",
+                  "auth_id": "opendesign-k1.json",
+                  "duration_ms": "<volatile>",
+                  "input_tokens": 12,
+                  "output_tokens": 3,
+                  "cached_tokens": 4,
+                  "reasoning_tokens": 1,
+                  "client_path": "/v1/chat/completions",
+                  "user_agent": "snapshot-client/1.0",
+                  "auth_index": "idx-1",
+                  "egress": "direct",
+                  "upstream_status": 200,
+                  "upstream_request_id": "up-log-1",
+                  "finish_reason": "stop",
+                  "usage_reported": true,
+                  "attempts": 1
+                }
+              ],
+              "total": 3,
+              "offset": 0,
+              "retention": 100000,
+              "retention_days": 30,
+              "summary": {
+                "requests": 3,
+                "success": 2,
+                "failed": 1,
+                "input_tokens": 27,
+                "output_tokens": 6,
+                "cached_tokens": 9,
+                "cache_hit_rate": 0.3333333333333333,
+                "output_tokens_per_second": "<volatile>",
+                "e2e_tokens_per_second": "<volatile>"
+              }
+            }
           }
         }
       }
@@ -597,19 +681,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/logs",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/logs",
           "Query": {
             "status": [
               "error"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -619,51 +703,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "items": [
-                {
-                  "attempts": 1,
-                  "auth_id": "opendesign-k2.json",
-                  "auth_index": "idx-2",
-                  "cached_tokens": 0,
-                  "client_path": "/v1/chat/completions",
-                  "credential": "sk-amr…0002",
-                  "duration_ms": "<volatile>",
-                  "egress": "env",
-                  "endpoint": "/v1/chat/completions",
-                  "error": "opendesign: weekly limit reached",
-                  "error_code": "usage_limit",
-                  "error_phase": "request",
-                  "http_status": 429,
-                  "id": "3",
-                  "input_tokens": 0,
-                  "model": "od2/model-b",
-                  "output_tokens": 0,
-                  "request_id": "req-log-3",
-                  "retry_after": 120,
-                  "status": "error",
-                  "stream": false,
-                  "time": "<volatile>",
-                  "upstream_model": "model-b",
-                  "upstream_request_id": "up-log-3",
-                  "upstream_status": 429,
-                  "user_agent": "snapshot-client/1.0"
-                }
-              ],
-              "offset": 0,
-              "retention": 100000,
-              "retention_days": 30,
-              "summary": {
-                "cache_hit_rate": null,
-                "cached_tokens": 0,
-                "failed": 1,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "requests": 1,
-                "success": 0
-              },
-              "total": 1
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -672,7 +712,53 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "items": [
+                {
+                  "id": "3",
+                  "request_id": "req-log-3",
+                  "time": "<volatile>",
+                  "endpoint": "/v1/chat/completions",
+                  "model": "od2/model-b",
+                  "upstream_model": "model-b",
+                  "stream": false,
+                  "status": "error",
+                  "http_status": 429,
+                  "credential": "sk-amr…0002",
+                  "auth_id": "opendesign-k2.json",
+                  "duration_ms": "<volatile>",
+                  "input_tokens": 0,
+                  "output_tokens": 0,
+                  "cached_tokens": 0,
+                  "error_code": "usage_limit",
+                  "error": "opendesign: weekly limit reached",
+                  "error_phase": "request",
+                  "client_path": "/v1/chat/completions",
+                  "user_agent": "snapshot-client/1.0",
+                  "auth_index": "idx-2",
+                  "egress": "env",
+                  "upstream_status": 429,
+                  "upstream_request_id": "up-log-3",
+                  "retry_after": 120,
+                  "attempts": 1
+                }
+              ],
+              "total": 1,
+              "offset": 0,
+              "retention": 100000,
+              "retention_days": 30,
+              "summary": {
+                "requests": 1,
+                "success": 0,
+                "failed": 1,
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "cached_tokens": 0,
+                "cache_hit_rate": null,
+                "output_tokens_per_second": "<volatile>",
+                "e2e_tokens_per_second": "<volatile>"
+              }
+            }
           }
         }
       }
@@ -681,14 +767,13 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/logs",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/logs",
           "Query": {
             "limit": [
               "1"
@@ -700,6 +785,7 @@
               "model-a"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -709,52 +795,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "items": [
-                {
-                  "attempts": 1,
-                  "auth_id": "opendesign-k1.json",
-                  "auth_index": "idx-1",
-                  "cached_tokens": 4,
-                  "client_path": "/v1/chat/completions",
-                  "credential": "sk-amr…0001",
-                  "duration_ms": "<volatile>",
-                  "egress": "direct",
-                  "endpoint": "/v1/chat/completions",
-                  "finish_reason": "stop",
-                  "http_status": 200,
-                  "id": "1",
-                  "input_tokens": 12,
-                  "model": "opendesign/model-a",
-                  "output_tokens": 3,
-                  "reasoning_effort": "low",
-                  "reasoning_tokens": 1,
-                  "request_id": "req-log-1",
-                  "served_model": "model-a-2026",
-                  "status": "success",
-                  "stream": false,
-                  "time": "<volatile>",
-                  "upstream_model": "model-a",
-                  "upstream_request_id": "up-log-1",
-                  "upstream_status": 200,
-                  "usage_reported": true,
-                  "user_agent": "snapshot-client/1.0"
-                }
-              ],
-              "offset": 1,
-              "retention": 100000,
-              "retention_days": 30,
-              "summary": {
-                "cache_hit_rate": 0.3333333333333333,
-                "cached_tokens": 9,
-                "failed": 0,
-                "input_tokens": 27,
-                "output_tokens": 6,
-                "requests": 2,
-                "success": 2
-              },
-              "total": 2
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -763,7 +804,54 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "items": [
+                {
+                  "id": "1",
+                  "request_id": "req-log-1",
+                  "time": "<volatile>",
+                  "endpoint": "/v1/chat/completions",
+                  "model": "opendesign/model-a",
+                  "upstream_model": "model-a",
+                  "served_model": "model-a-2026",
+                  "reasoning_effort": "low",
+                  "stream": false,
+                  "status": "success",
+                  "http_status": 200,
+                  "credential": "sk-amr…0001",
+                  "auth_id": "opendesign-k1.json",
+                  "duration_ms": "<volatile>",
+                  "input_tokens": 12,
+                  "output_tokens": 3,
+                  "cached_tokens": 4,
+                  "reasoning_tokens": 1,
+                  "client_path": "/v1/chat/completions",
+                  "user_agent": "snapshot-client/1.0",
+                  "auth_index": "idx-1",
+                  "egress": "direct",
+                  "upstream_status": 200,
+                  "upstream_request_id": "up-log-1",
+                  "finish_reason": "stop",
+                  "usage_reported": true,
+                  "attempts": 1
+                }
+              ],
+              "total": 2,
+              "offset": 1,
+              "retention": 100000,
+              "retention_days": 30,
+              "summary": {
+                "requests": 2,
+                "success": 2,
+                "failed": 0,
+                "input_tokens": 27,
+                "output_tokens": 6,
+                "cached_tokens": 9,
+                "cache_hit_rate": 0.3333333333333333,
+                "output_tokens_per_second": "<volatile>",
+                "e2e_tokens_per_second": "<volatile>"
+              }
+            }
           }
         }
       }
@@ -772,19 +860,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/logs",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/logs",
           "Query": {
             "request_id": [
               "req-log-2"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -794,53 +882,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "items": [
-                {
-                  "attempts": 1,
-                  "auth_id": "opendesign-k1.json",
-                  "auth_index": "idx-1",
-                  "cached_tokens": 5,
-                  "client_path": "/v1/messages",
-                  "credential": "sk-amr…0001",
-                  "duration_ms": "<volatile>",
-                  "egress": "direct",
-                  "endpoint": "/v1/messages",
-                  "finish_reason": "end_turn",
-                  "frames": 2,
-                  "http_status": 200,
-                  "id": "2",
-                  "input_tokens": 15,
-                  "last_frame_ms": "<volatile>",
-                  "model": "opendesign/model-a",
-                  "output_tokens": 3,
-                  "request_id": "req-log-2",
-                  "served_model": "model-a",
-                  "status": "success",
-                  "stream": true,
-                  "time": "<volatile>",
-                  "ttft_ms": "<volatile>",
-                  "upstream_model": "model-a",
-                  "upstream_request_id": "up-log-2",
-                  "upstream_status": 200,
-                  "usage_reported": true,
-                  "user_agent": "claude-cli/2.0.0 (external, cli)"
-                }
-              ],
-              "offset": 0,
-              "retention": 100000,
-              "retention_days": 30,
-              "summary": {
-                "cache_hit_rate": 0.3333333333333333,
-                "cached_tokens": 5,
-                "failed": 0,
-                "input_tokens": 15,
-                "output_tokens": 3,
-                "requests": 1,
-                "success": 1
-              },
-              "total": 1
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -849,7 +891,55 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "items": [
+                {
+                  "id": "2",
+                  "request_id": "req-log-2",
+                  "time": "<volatile>",
+                  "endpoint": "/v1/messages",
+                  "model": "opendesign/model-a",
+                  "upstream_model": "model-a",
+                  "served_model": "model-a",
+                  "stream": true,
+                  "status": "success",
+                  "http_status": 200,
+                  "credential": "sk-amr…0001",
+                  "auth_id": "opendesign-k1.json",
+                  "duration_ms": "<volatile>",
+                  "ttft_ms": "<volatile>",
+                  "input_tokens": 15,
+                  "output_tokens": 3,
+                  "cached_tokens": 5,
+                  "client_path": "/v1/messages",
+                  "user_agent": "claude-cli/2.0.0 (external, cli)",
+                  "auth_index": "idx-1",
+                  "egress": "direct",
+                  "upstream_status": 200,
+                  "upstream_request_id": "up-log-2",
+                  "finish_reason": "end_turn",
+                  "frames": 2,
+                  "last_frame_ms": "<volatile>",
+                  "usage_reported": true,
+                  "attempts": 1
+                }
+              ],
+              "total": 1,
+              "offset": 0,
+              "retention": 100000,
+              "retention_days": 30,
+              "summary": {
+                "requests": 1,
+                "success": 1,
+                "failed": 0,
+                "input_tokens": 15,
+                "output_tokens": 3,
+                "cached_tokens": 5,
+                "cache_hit_rate": 0.3333333333333333,
+                "output_tokens_per_second": "<volatile>",
+                "e2e_tokens_per_second": "<volatile>"
+              }
+            }
           }
         }
       }
@@ -858,19 +948,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/logs",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/logs",
           "Query": {
             "from": [
               "yesterday"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -880,10 +970,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "error": "invalid_range",
-              "message": "from and to must be RFC 3339 times"
-            },
+            "StatusCode": 400,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -892,7 +979,10 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 400
+            "Body": {
+              "error": "invalid_range",
+              "message": "from and to must be RFC 3339 times"
+            }
           }
         }
       }
@@ -901,19 +991,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Query": {
             "auth_index": [
               "idx-1"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -940,42 +1030,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "day": {
-                "cached_tokens": 9,
-                "failed": 0,
-                "input_tokens": 27,
-                "output_tokens": 6,
-                "reasoning_tokens": 1,
-                "requests": 2
-              },
-              "fetched_at": "2026-01-01T00:00:00Z",
-              "five_hours": {
-                "cached_tokens": 9,
-                "failed": 0,
-                "input_tokens": 27,
-                "output_tokens": 6,
-                "reasoning_tokens": 1,
-                "requests": 2
-              },
-              "log_since": "<volatile>",
-              "month": {
-                "cached_tokens": 9,
-                "failed": 0,
-                "input_tokens": 27,
-                "output_tokens": 6,
-                "reasoning_tokens": 1,
-                "requests": 2
-              },
-              "week": {
-                "cached_tokens": 9,
-                "failed": 0,
-                "input_tokens": 27,
-                "output_tokens": 6,
-                "reasoning_tokens": 1,
-                "requests": 2
-              }
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -984,7 +1039,42 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "five_hours": {
+                "requests": 2,
+                "failed": 0,
+                "input_tokens": 27,
+                "cached_tokens": 9,
+                "output_tokens": 6,
+                "reasoning_tokens": 1
+              },
+              "day": {
+                "requests": 2,
+                "failed": 0,
+                "input_tokens": 27,
+                "cached_tokens": 9,
+                "output_tokens": 6,
+                "reasoning_tokens": 1
+              },
+              "week": {
+                "requests": 2,
+                "failed": 0,
+                "input_tokens": 27,
+                "cached_tokens": 9,
+                "output_tokens": 6,
+                "reasoning_tokens": 1
+              },
+              "month": {
+                "requests": 2,
+                "failed": 0,
+                "input_tokens": 27,
+                "cached_tokens": 9,
+                "output_tokens": 6,
+                "reasoning_tokens": 1
+              },
+              "log_since": "<volatile>",
+              "fetched_at": "2026-01-02T03:04:05Z"
+            }
           }
         }
       }
@@ -993,19 +1083,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Query": {
             "auth_index": [
               "idx-2"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -1032,51 +1122,51 @@
         "response": {
           "ok": true,
           "result": {
+            "StatusCode": 200,
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
             "Body": {
-              "day": {
-                "cached_tokens": 0,
-                "failed": 1,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 1
-              },
-              "fetched_at": "2026-01-01T00:00:00Z",
               "five_hours": {
-                "cached_tokens": 0,
+                "requests": 1,
                 "failed": 1,
                 "input_tokens": 0,
+                "cached_tokens": 0,
                 "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 1
+                "reasoning_tokens": 0
               },
-              "log_since": "<volatile>",
-              "month": {
-                "cached_tokens": 0,
+              "day": {
+                "requests": 1,
                 "failed": 1,
                 "input_tokens": 0,
+                "cached_tokens": 0,
                 "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 1
+                "reasoning_tokens": 0
               },
               "week": {
-                "cached_tokens": 0,
+                "requests": 1,
                 "failed": 1,
                 "input_tokens": 0,
+                "cached_tokens": 0,
                 "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 1
-              }
-            },
-            "Headers": {
-              "Cache-Control": [
-                "no-store"
-              ],
-              "Content-Type": [
-                "application/json; charset=utf-8"
-              ]
-            },
-            "StatusCode": 200
+                "reasoning_tokens": 0
+              },
+              "month": {
+                "requests": 1,
+                "failed": 1,
+                "input_tokens": 0,
+                "cached_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0
+              },
+              "log_since": "<volatile>",
+              "fetched_at": "2026-01-02T03:04:05Z"
+            }
           }
         }
       }
@@ -1085,15 +1175,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
-          "Headers": {
-            "Accept": [
-              "application/json"
-            ]
-          },
           "Method": "DELETE",
           "Path": "/v0/management/plugins/opendesign/logs",
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -1103,9 +1193,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "ok": true
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -1114,7 +1202,9 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "ok": true
+            }
           }
         }
       }
@@ -1123,15 +1213,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/logs",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/logs",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -1141,31 +1231,33 @@
         "response": {
           "ok": true,
           "result": {
+            "StatusCode": 200,
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
             "Body": {
               "items": [],
+              "total": 0,
               "offset": 0,
               "retention": 100000,
               "retention_days": 30,
               "summary": {
-                "cache_hit_rate": null,
-                "cached_tokens": 0,
+                "requests": 0,
+                "success": 0,
                 "failed": 0,
                 "input_tokens": 0,
                 "output_tokens": 0,
-                "requests": 0,
-                "success": 0
-              },
-              "total": 0
-            },
-            "Headers": {
-              "Cache-Control": [
-                "no-store"
-              ],
-              "Content-Type": [
-                "application/json; charset=utf-8"
-              ]
-            },
-            "StatusCode": 200
+                "cached_tokens": 0,
+                "cache_hit_rate": null,
+                "output_tokens_per_second": "<volatile>",
+                "e2e_tokens_per_second": "<volatile>"
+              }
+            }
           }
         }
       }

@@ -3,72 +3,152 @@ package plugin
 import (
 	"runtime"
 	"strings"
+	"testing"
 	"time"
 )
 
-// The seams of the RPC snapshot tests: the only place they reach into the
-// plugin's unexported internals. Everything else drives Service.Call. When
-// the plugin moves onto the shared core, replace these functions with the
-// core's own hooks.
+// Snapshot seams: the only place the RPC snapshot tests reach into the
+// Service's unexported state. Everything else drives the plugin through
+// Service.Call and the host callbacks.
 
-// snapClock is the pinned clock of every snapshot service (Service.now). It
-// lies in the past: the usage windows have no upper bound, so they count the
-// requests the request log stamps with the real time.
-var snapClock = time.Date(2026, time.January, 1, 0, 0, 0, 0, time.UTC)
+// snapshotProviderID is the auth provider the fake host parses files for.
+const snapshotProviderID = ProviderID
 
-// snapHostname names the machine to the account API (Service.hostname).
-const snapHostname = "cpa-snapshot-host"
+// snapshotConcurrentPaths are the upstream routes the plugin calls
+// concurrently; OpenDesign has none.
+var snapshotConcurrentPaths []string
 
-// snapLongPoll is the shortest poll interval of a pending sign-in that counts
-// as settled: it cannot poll again while a case runs.
-const snapLongPoll = time.Minute
+// snapshotVolatileFields are OpenDesign's own volatile names: log_since is
+// when the oldest request log entry was written, by the wall clock.
+var snapshotVolatileFields = []string{"log_since"}
 
-// snapModule prefixes the plugin's own functions in goroutine stacks.
-const snapModule = "github.com/berry-shake/cpa-opendesign-plugin/internal/"
-
-// snapInstallSeams pins the clock, points the vela account API (hard-coded to
-// amr-api.open-design.ai) at the fake upstream and fixes the host name. It
-// runs before the first RPC, so no goroutine reads these fields yet.
-func snapInstallSeams(svc *Service, upstreamURL string) {
-	svc.now = func() time.Time { return snapClock }
-	svc.velaAPIURL = upstreamURL
-	svc.hostname = func() (string, error) { return snapHostname, nil }
+// snapshotGeneratedIDs are the random IDs of account sign-ins and of proxies.
+var snapshotGeneratedIDs = []snapshotGeneratedID{
+	{Placeholder: "{{login_id}}", Find: snapshotLoginIDs},
+	{Placeholder: "{{proxy_id}}", Find: snapshotProxyIDs},
 }
 
-// snapBusy says what background work of the plugin is still running, or ""
-// once everything has finished or is parked in a wait that cannot end while
-// a case runs (the catalog refresh loop between kicks, a sign-in whose poll
-// interval is at least snapLongPoll).
-func snapBusy(svc *Service) string {
-	if len(svc.kick) > 0 {
-		return "a catalog refresh is queued"
+// snapshotLoginIDs finds the ID of a sign-in view.
+func snapshotLoginIDs(body any) []string {
+	view, _ := body.(map[string]any)
+	if _, isLogin := view["state"]; !isLogin || view["auth_index"] == nil {
+		return nil
 	}
-	if reason := snapPollingSoon(svc); reason != "" {
+	id, _ := view["id"].(string)
+	return []string{id}
+}
+
+// snapshotProxyIDs finds the IDs of a proxy view or a proxy list.
+func snapshotProxyIDs(body any) []string {
+	view, _ := body.(map[string]any)
+	var out []string
+	add := func(item any) {
+		if proxy, ok := item.(map[string]any); ok {
+			id, _ := proxy["id"].(string)
+			out = append(out, id)
+		}
+	}
+	add(view["proxy"])
+	if proxies, ok := view["proxies"].([]any); ok {
+		for _, item := range proxies {
+			add(item)
+		}
+	}
+	return out
+}
+
+// snapshotHostname names the machine to the account API (Service.hostname).
+const snapshotHostname = "cpa-snapshot-host"
+
+// snapshotNewService builds the service the way main.go does, then pins the
+// clock and the host name, keeps plugin.register from starting the catalog
+// refresh loop and points the egress check and the vela account API
+// (hard-coded to amr-api.open-design.ai) at the fake upstream.
+func snapshotNewService(version string, host HostCaller, upstreamURL string) *Service {
+	svc := New(version, host)
+	svc.now = func() time.Time { return snapshotClock }
+	svc.loopOnce.Do(func() {})
+	svc.egressCheckURLs = []string{upstreamURL + "/json"}
+	svc.velaAPIURL = upstreamURL
+	svc.hostname = func() (string, error) { return snapshotHostname, nil }
+	return svc
+}
+
+// snapshotDropQueuedRefresh discards a queued catalog refresh without
+// running it.
+func snapshotDropQueuedRefresh(svc *Service) {
+	select {
+	case <-svc.kick:
+	default:
+	}
+}
+
+// snapshotRunQueuedRefresh runs, synchronously, the refresh the background
+// loop would run for a queued kick, and reports whether one was queued.
+func snapshotRunQueuedRefresh(svc *Service) bool {
+	select {
+	case <-svc.kick:
+		_, _ = svc.refreshCatalog(false)
+		return true
+	default:
+		return false
+	}
+}
+
+// snapshotWaitIdle blocks until the plugin's background work has finished:
+// stream pumps, and sign-in polls with the calls they lead to. A sign-in
+// that polls less often than snapshotLongPoll counts as idle; it cannot poll
+// again while a case runs.
+func snapshotWaitIdle(svc *Service) {
+	svc.streams.Wait()
+	deadline := time.Now().Add(30 * time.Second)
+	for {
+		reason := snapshotBusy(svc)
+		if reason == "" {
+			return
+		}
+		if time.Now().After(deadline) {
+			panic("snapshot: background work did not finish:\n" + reason)
+		}
+		time.Sleep(2 * time.Millisecond)
+	}
+}
+
+// snapshotLongPoll is the shortest poll interval of a pending sign-in that
+// counts as idle.
+const snapshotLongPoll = time.Minute
+
+// snapshotModule prefixes the plugin's own functions in goroutine stacks.
+const snapshotModule = "github.com/berry-shake/cpa-opendesign-plugin/internal/"
+
+// snapshotBusy says what background work is still running, or "".
+func snapshotBusy(svc *Service) string {
+	if reason := snapshotPollingSoon(svc); reason != "" {
 		return reason
 	}
-	return snapBusyGoroutine()
+	return snapshotBusyGoroutine()
 }
 
-// snapPollingSoon reports a pending sign-in that will poll the account API
-// again soon.
-func snapPollingSoon(svc *Service) string {
+// snapshotPollingSoon reports a pending sign-in that will poll the account
+// API again soon.
+func snapshotPollingSoon(svc *Service) string {
 	svc.logins.mu.Lock()
 	defer svc.logins.mu.Unlock()
 	for _, login := range svc.logins.items {
 		login.mu.Lock()
 		pending, interval := login.state == loginPending, login.interval
 		login.mu.Unlock()
-		if pending && interval < snapLongPoll {
+		if pending && interval < snapshotLongPoll {
 			return "a sign-in polls every " + interval.String()
 		}
 	}
 	return ""
 }
 
-// snapBusyGoroutine returns the stack of a goroutine running the plugin's
-// own (non-test) code, unless it is parked in the select of the catalog
-// refresh loop or of a sign-in poll.
-func snapBusyGoroutine() string {
+// snapshotBusyGoroutine returns the stack of a goroutine running the
+// plugin's own (non-test) code, unless it is parked in the select of a
+// sign-in poll.
+func snapshotBusyGoroutine() string {
 	buf := make([]byte, 1<<20)
 	for {
 		n := runtime.Stack(buf, true)
@@ -103,11 +183,11 @@ func snapBusyGoroutine() string {
 				file = lines[i+1]
 			}
 			funcs = append(funcs, line)
-			if strings.Contains(line, snapModule) && !strings.Contains(file, "_test.go:") {
+			if strings.Contains(line, snapshotModule) && !strings.Contains(file, "_test.go:") {
 				own = true
 			}
 		}
-		if !own || (state == "select" && snapParked(funcs)) {
+		if !own || (state == "select" && snapshotParked(funcs)) {
 			continue
 		}
 		return block
@@ -115,14 +195,19 @@ func snapBusyGoroutine() string {
 	return ""
 }
 
-// snapParked reports a goroutine blocked in the select of refreshLoop or
-// pollLogin itself, not in a call they make.
-func snapParked(funcs []string) bool {
+// snapshotParked reports a goroutine blocked in the select of pollLogin
+// itself, not in a call it makes.
+func snapshotParked(funcs []string) bool {
 	for _, fn := range funcs {
 		if strings.HasPrefix(fn, "runtime.") {
 			continue
 		}
-		return strings.Contains(fn, "(*Service).refreshLoop(") || strings.Contains(fn, "(*Service).pollLogin(")
+		return strings.Contains(fn, "(*Service).pollLogin(")
 	}
 	return false
+}
+
+// snapshotSkeletons are the generated inputs of the cases.
+func snapshotSkeletons(t *testing.T) []snapshotFixture {
+	return snapshotCases(t)
 }

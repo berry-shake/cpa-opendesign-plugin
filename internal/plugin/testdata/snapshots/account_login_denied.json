@@ -30,7 +30,8 @@
           "application/json"
         ]
       },
-      "body": "{\"deviceId\":\"dev-1\",\"userCode\":\"WXYZ-1234\",\"deviceSecret\":\"secret-dev-1\",\"activationUrl\":\"https://open-design.ai/cli/activate?deviceId=dev-1\",\"pollIntervalSeconds\":1,\"status\":\"pending\",\"expiresAt\":\"2026-01-01T00:10:00Z\"}"
+      "body": "{\"deviceId\":\"dev-1\",\"userCode\":\"WXYZ-1234\",\"deviceSecret\":\"secret-dev-1\",\"activationUrl\":\"https://open-design.ai/cli/activate?deviceId=dev-1\",\"pollIntervalSeconds\":1,\"status\":\"pending\",\"expiresAt\":\"2026-01-02T03:14:05Z\"}",
+      "chunks": []
     },
     {
       "method": "POST",
@@ -41,7 +42,8 @@
           "application/json"
         ]
       },
-      "body": "{\"status\":\"cancelled\"}"
+      "body": "{\"status\":\"cancelled\"}",
+      "chunks": []
     },
     {
       "method": "POST",
@@ -52,7 +54,8 @@
           "application/json"
         ]
       },
-      "body": "{\"deviceId\":\"dev-2\",\"userCode\":\"WXYZ-1234\",\"deviceSecret\":\"secret-dev-2\",\"activationUrl\":\"https://open-design.ai/cli/activate?deviceId=dev-2\",\"pollIntervalSeconds\":1,\"status\":\"pending\",\"expiresAt\":\"2026-01-01T00:10:00Z\"}"
+      "body": "{\"deviceId\":\"dev-2\",\"userCode\":\"WXYZ-1234\",\"deviceSecret\":\"secret-dev-2\",\"activationUrl\":\"https://open-design.ai/cli/activate?deviceId=dev-2\",\"pollIntervalSeconds\":1,\"status\":\"pending\",\"expiresAt\":\"2026-01-02T03:14:05Z\"}",
+      "chunks": []
     },
     {
       "method": "POST",
@@ -63,7 +66,8 @@
           "application/json"
         ]
       },
-      "body": "{\"code\":\"device_authorization_expired\",\"message\":\"device authorization expired\"}"
+      "body": "{\"code\":\"device_authorization_expired\",\"message\":\"device authorization expired\"}",
+      "chunks": []
     }
   ],
   "steps": [
@@ -71,17 +75,17 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": {
-            "auth_index": "idx-1"
-          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/account/login",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "POST",
-          "Path": "/v0/management/plugins/opendesign/account/login",
           "Query": null,
+          "Body": {
+            "auth_index": "idx-1"
+          },
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -142,25 +146,18 @@
           {
             "method": "host.log",
             "request": {
+              "level": "info",
+              "message": "opendesign: account sign-in started",
               "fields": {
                 "auth_index": "idx-1"
-              },
-              "level": "info",
-              "message": "opendesign: account sign-in started"
+              }
             }
           }
         ],
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "activation_url": "https://open-design.ai/cli/activate?deviceId=dev-1",
-              "auth_index": "idx-1",
-              "expires_at": "2026-01-01T00:10:00Z",
-              "id": "<volatile>",
-              "state": "pending",
-              "user_code": "WXYZ-1234"
-            },
+            "StatusCode": 201,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -169,7 +166,14 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 201
+            "Body": {
+              "id": "<volatile>",
+              "auth_index": "idx-1",
+              "state": "pending",
+              "user_code": "WXYZ-1234",
+              "activation_url": "https://open-design.ai/cli/activate?deviceId=dev-1",
+              "expires_at": "2026-01-02T03:14:05Z"
+            }
           }
         }
       }
@@ -178,19 +182,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/account/login",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/account/login",
           "Query": {
             "id": [
               "{{login_id}}"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -200,11 +204,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "auth_index": "idx-1",
-              "id": "<volatile>",
-              "state": "denied"
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -213,7 +213,11 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "id": "<volatile>",
+              "auth_index": "idx-1",
+              "state": "denied"
+            }
           }
         }
       }
@@ -222,17 +226,17 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": {
-            "auth_index": "idx-1"
-          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/account/login",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "POST",
-          "Path": "/v0/management/plugins/opendesign/account/login",
           "Query": null,
+          "Body": {
+            "auth_index": "idx-1"
+          },
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -293,25 +297,18 @@
           {
             "method": "host.log",
             "request": {
+              "level": "info",
+              "message": "opendesign: account sign-in started",
               "fields": {
                 "auth_index": "idx-1"
-              },
-              "level": "info",
-              "message": "opendesign: account sign-in started"
+              }
             }
           }
         ],
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "activation_url": "https://open-design.ai/cli/activate?deviceId=dev-2",
-              "auth_index": "idx-1",
-              "expires_at": "2026-01-01T00:10:00Z",
-              "id": "<volatile>",
-              "state": "pending",
-              "user_code": "WXYZ-1234"
-            },
+            "StatusCode": 201,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -320,7 +317,14 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 201
+            "Body": {
+              "id": "<volatile>",
+              "auth_index": "idx-1",
+              "state": "pending",
+              "user_code": "WXYZ-1234",
+              "activation_url": "https://open-design.ai/cli/activate?deviceId=dev-2",
+              "expires_at": "2026-01-02T03:14:05Z"
+            }
           }
         }
       }
@@ -329,19 +333,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/account/login",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/account/login",
           "Query": {
             "id": [
               "{{login_id}}"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -351,12 +355,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "auth_index": "idx-1",
-              "id": "<volatile>",
-              "message": "poll device authorization token: OpenDesign account API HTTP 410: device_authorization_expired: device authorization expired",
-              "state": "failed"
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -365,7 +364,12 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "id": "<volatile>",
+              "auth_index": "idx-1",
+              "state": "failed",
+              "message": "poll device authorization token: OpenDesign account API HTTP 410: device_authorization_expired: device authorization expired"
+            }
           }
         }
       }

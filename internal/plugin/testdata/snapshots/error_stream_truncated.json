@@ -49,19 +49,12 @@
       "rpc": {
         "method": "executor.execute_stream",
         "request": {
-          "Alt": "",
-          "AuthAttributes": {
-            "path": "/auths/opendesign-k1.json"
-          },
           "AuthID": "opendesign-k1.json",
-          "AuthMetadata": {
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
-          },
           "AuthProvider": "opendesign",
+          "Model": "model-a",
           "Format": "claude",
+          "Stream": true,
+          "Alt": "",
           "Headers": {
             "Authorization": [
               "Bearer sk-client-snapshot"
@@ -73,26 +66,53 @@
               "snapshot-client/1.0"
             ]
           },
+          "Query": null,
+          "OriginalRequest": {
+            "model": "opendesign/model-a",
+            "max_tokens": 1024,
+            "stream": true,
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hello"
+              }
+            ]
+          },
+          "SourceFormat": "claude",
+          "Payload": {
+            "model": "model-a",
+            "max_tokens": 1024,
+            "stream": true,
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hello"
+              }
+            ]
+          },
           "Metadata": {
             "request_path": "/v1/messages",
             "requested_model": "opendesign/model-a",
             "selected_auth_id": "opendesign-k1.json",
             "selected_auth_index": "idx-1"
           },
-          "Model": "model-a",
-          "OriginalRequest": "{\"model\":\"opendesign/model-a\",\"max_tokens\":1024,\"stream\":true,\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}",
-          "Payload": "{\"model\":\"model-a\",\"max_tokens\":1024,\"stream\":true,\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}",
-          "Query": null,
-          "SourceFormat": "claude",
           "StorageJSON": {
             "api_key": "sk-amr-snap-key-one-0001",
             "label": "Key One",
             "proxy_url": "direct",
             "type": "opendesign"
           },
-          "Stream": true,
-          "host_callback_id": "cb-exec",
-          "stream_id": "stream-err-trunc"
+          "AuthMetadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k1.json"
+          },
+          "stream_id": "stream-err-trunc",
+          "host_callback_id": "cb-exec"
         }
       },
       "output": {
@@ -131,35 +151,35 @@
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: message_start\ndata: {\"type\":\"message_start\",\"message\":{\"id\":\"msg_2\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[],\"model\":\"model-a\",\"stop_reason\":null,\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":5,\"output_tokens\":1}}}\n\n",
-              "stream_id": "stream-err-trunc"
+              "stream_id": "stream-err-trunc",
+              "payload": "event: message_start\ndata: {\"type\":\"message_start\",\"message\":{\"id\":\"msg_2\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[],\"model\":\"model-a\",\"stop_reason\":null,\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":5,\"output_tokens\":1}}}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: content_block_start\ndata: {\"type\":\"content_block_start\",\"index\":0,\"content_block\":{\"type\":\"text\",\"text\":\"\"}}\n\n",
-              "stream_id": "stream-err-trunc"
+              "stream_id": "stream-err-trunc",
+              "payload": "event: content_block_start\ndata: {\"type\":\"content_block_start\",\"index\":0,\"content_block\":{\"type\":\"text\",\"text\":\"\"}}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\"Hal\"}}\n\n",
-              "stream_id": "stream-err-trunc"
+              "stream_id": "stream-err-trunc",
+              "payload": "event: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\"Hal\"}}\n\n"
             }
           },
           {
             "method": "host.stream.close",
             "request": {
+              "stream_id": "stream-err-trunc",
               "error": "opendesign: upstream stream ended before the response finished",
               "error_detail": {
                 "code": "stream_truncated",
-                "http_status": 502,
                 "message": "opendesign: upstream stream ended before the response finished",
-                "retryable": true
-              },
-              "stream_id": "stream-err-trunc"
+                "retryable": true,
+                "http_status": 502
+              }
             }
           }
         ],
@@ -182,15 +202,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/logs",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/logs",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -200,54 +220,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "items": [
-                {
-                  "attempts": 1,
-                  "auth_id": "opendesign-k1.json",
-                  "auth_index": "idx-1",
-                  "cached_tokens": 5,
-                  "client_path": "/v1/messages",
-                  "credential": "sk-amr…0001",
-                  "duration_ms": "<volatile>",
-                  "egress": "direct",
-                  "endpoint": "/v1/messages",
-                  "error": "opendesign: upstream stream ended before the response finished",
-                  "error_code": "stream_truncated",
-                  "error_phase": "stream",
-                  "frames": 1,
-                  "http_status": 502,
-                  "id": "1",
-                  "input_tokens": 15,
-                  "last_frame_ms": "<volatile>",
-                  "model": "opendesign/model-a",
-                  "output_tokens": 1,
-                  "served_model": "model-a",
-                  "status": "error",
-                  "stream": true,
-                  "time": "<volatile>",
-                  "ttft_ms": "<volatile>",
-                  "upstream_model": "model-a",
-                  "upstream_request_id": "up-err-trunc",
-                  "upstream_status": 200,
-                  "usage_reported": true,
-                  "user_agent": "snapshot-client/1.0"
-                }
-              ],
-              "offset": 0,
-              "retention": 100000,
-              "retention_days": 30,
-              "summary": {
-                "cache_hit_rate": 0.3333333333333333,
-                "cached_tokens": 5,
-                "failed": 1,
-                "input_tokens": 15,
-                "output_tokens": 1,
-                "requests": 1,
-                "success": 0
-              },
-              "total": 1
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -256,7 +229,56 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "items": [
+                {
+                  "id": "1",
+                  "time": "<volatile>",
+                  "endpoint": "/v1/messages",
+                  "model": "opendesign/model-a",
+                  "upstream_model": "model-a",
+                  "served_model": "model-a",
+                  "stream": true,
+                  "status": "error",
+                  "http_status": 502,
+                  "credential": "sk-amr…0001",
+                  "auth_id": "opendesign-k1.json",
+                  "duration_ms": "<volatile>",
+                  "ttft_ms": "<volatile>",
+                  "input_tokens": 15,
+                  "output_tokens": 1,
+                  "cached_tokens": 5,
+                  "error_code": "stream_truncated",
+                  "error": "opendesign: upstream stream ended before the response finished",
+                  "error_phase": "stream",
+                  "client_path": "/v1/messages",
+                  "user_agent": "snapshot-client/1.0",
+                  "auth_index": "idx-1",
+                  "egress": "direct",
+                  "upstream_status": 200,
+                  "upstream_request_id": "up-err-trunc",
+                  "frames": 1,
+                  "last_frame_ms": "<volatile>",
+                  "usage_reported": true,
+                  "attempts": 1
+                }
+              ],
+              "total": 1,
+              "offset": 0,
+              "retention": 100000,
+              "retention_days": 30,
+              "summary": {
+                "requests": 1,
+                "success": 0,
+                "failed": 1,
+                "input_tokens": 15,
+                "output_tokens": 1,
+                "cached_tokens": 5,
+                "cache_hit_rate": 0.3333333333333333,
+                "output_tokens_per_second": "<volatile>",
+                "e2e_tokens_per_second": "<volatile>"
+              }
+            }
           }
         }
       }

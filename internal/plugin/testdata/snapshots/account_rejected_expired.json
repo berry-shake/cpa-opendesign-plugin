@@ -39,7 +39,8 @@
           "application/json"
         ]
       },
-      "body": "{\"error\":{\"code\":\"invalid_control_key\",\"message\":\"control key revoked\"}}"
+      "body": "{\"error\":{\"code\":\"invalid_control_key\",\"message\":\"control key revoked\"}}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -50,7 +51,8 @@
           "application/json"
         ]
       },
-      "body": "{\"code\":\"forbidden\",\"message\":\"not a member of this workspace\"}"
+      "body": "{\"code\":\"forbidden\",\"message\":\"not a member of this workspace\"}",
+      "chunks": []
     },
     {
       "method": "POST",
@@ -61,7 +63,8 @@
           "application/json"
         ]
       },
-      "body": "{\"error\":{\"code\":\"invalid_control_key\",\"message\":\"control key revoked\"}}"
+      "body": "{\"error\":{\"code\":\"invalid_control_key\",\"message\":\"control key revoked\"}}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -72,7 +75,8 @@
           "application/json"
         ]
       },
-      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-a\",\"object\":\"model\",\"created\":1767000000,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"image\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"Low\",\"capability\":\"standard\",\"context_limit\":200000,\"context_budget\":160000,\"output_budget\":32000},\"default\":true,\"enabled\":true},{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"image-gen\",\"object\":\"model\",\"created\":1767000002,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"image\"]},\"metadata\":{\"cost\":\"medium\"},\"enabled\":true}]}"
+      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-a\",\"object\":\"model\",\"created\":1767000000,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"image\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"Low\",\"capability\":\"standard\",\"context_limit\":200000,\"context_budget\":160000,\"output_budget\":32000},\"default\":true,\"enabled\":true},{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"image-gen\",\"object\":\"model\",\"created\":1767000002,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"image\"]},\"metadata\":{\"cost\":\"medium\"},\"enabled\":true}]}",
+      "chunks": []
     }
   ],
   "steps": [
@@ -80,14 +84,13 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Query": {
             "auth_index": [
               "idx-1"
@@ -96,6 +99,7 @@
               "1"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -137,50 +141,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "account": {
-                "eligible": false,
-                "email": "me@example.com",
-                "error": "read plan windows: OpenDesign account API HTTP 401: invalid_control_key: control key revoked",
-                "expired": true,
-                "fetched_at": "2026-01-01T00:00:00Z",
-                "windows": [],
-                "workspace_name": "Personal"
-              },
-              "day": {
-                "cached_tokens": 0,
-                "failed": 0,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 0
-              },
-              "fetched_at": "2026-01-01T00:00:00Z",
-              "five_hours": {
-                "cached_tokens": 0,
-                "failed": 0,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 0
-              },
-              "month": {
-                "cached_tokens": 0,
-                "failed": 0,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 0
-              },
-              "week": {
-                "cached_tokens": 0,
-                "failed": 0,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 0
-              }
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -189,7 +150,50 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "five_hours": {
+                "requests": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "cached_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0
+              },
+              "day": {
+                "requests": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "cached_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0
+              },
+              "week": {
+                "requests": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "cached_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0
+              },
+              "month": {
+                "requests": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "cached_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0
+              },
+              "fetched_at": "2026-01-02T03:04:05Z",
+              "account": {
+                "email": "me@example.com",
+                "workspace_name": "Personal",
+                "eligible": false,
+                "windows": [],
+                "fetched_at": "2026-01-02T03:04:05Z",
+                "error": "read plan windows: OpenDesign account API HTTP 401: invalid_control_key: control key revoked",
+                "expired": true
+              }
+            }
           }
         }
       }
@@ -198,31 +202,8 @@
       "rpc": {
         "method": "quota.fetch",
         "request": {
-          "auth_id": "opendesign-k1.json",
           "auth_index": "idx-1",
-          "host": {
-            "AuthDir": "/auths",
-            "ExcludedModels": null,
-            "ForceModelPrefix": false,
-            "OAuthModelAlias": null,
-            "ProxyURL": ""
-          },
-          "host_callback_id": "cb-quota",
-          "metadata": {
-            "account_api_url": "{{UPSTREAM}}",
-            "account_control_key": "ck-snap-old",
-            "account_control_key_id": "ck-snap-old-id",
-            "account_email": "me@example.com",
-            "account_logged_in_at": "2025-12-31T00:00:00Z",
-            "account_name": "Me",
-            "account_user_id": "user-1",
-            "account_workspace_id": "ws-me",
-            "account_workspace_name": "Personal",
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
-          },
+          "auth_id": "opendesign-k1.json",
           "provider": "opendesign",
           "storage_json": {
             "account_api_url": "{{UPSTREAM}}",
@@ -238,7 +219,30 @@
             "label": "Key One",
             "proxy_url": "direct",
             "type": "opendesign"
-          }
+          },
+          "metadata": {
+            "account_api_url": "{{UPSTREAM}}",
+            "account_control_key": "ck-snap-old",
+            "account_control_key_id": "ck-snap-old-id",
+            "account_email": "me@example.com",
+            "account_logged_in_at": "2025-12-31T00:00:00Z",
+            "account_name": "Me",
+            "account_user_id": "user-1",
+            "account_workspace_id": "ws-me",
+            "account_workspace_name": "Personal",
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "host": {
+            "AuthDir": "/auths",
+            "ProxyURL": "",
+            "ForceModelPrefix": false,
+            "OAuthModelAlias": null,
+            "ExcludedModels": null
+          },
+          "host_callback_id": "cb-quota"
         }
       },
       "output": {
@@ -277,12 +281,12 @@
           }
         ],
         "response": {
+          "ok": false,
           "error": {
             "code": "account_login_expired",
-            "http_status": 401,
-            "message": "the OpenDesign account login expired or was revoked; sign out and sign in again on the OpenDesign plugin page (read plan windows: OpenDesign account API HTTP 403: forbidden: not a member of this workspace)"
-          },
-          "ok": false
+            "message": "the OpenDesign account login expired or was revoked; sign out and sign in again on the OpenDesign plugin page (read plan windows: OpenDesign account API HTTP 403: forbidden: not a member of this workspace)",
+            "http_status": 401
+          }
         }
       }
     },
@@ -290,19 +294,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "DELETE",
+          "Path": "/v0/management/plugins/opendesign/account",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "DELETE",
-          "Path": "/v0/management/plugins/opendesign/account",
           "Query": {
             "auth_index": [
               "idx-1"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -362,34 +366,31 @@
           {
             "method": "host.auth.save",
             "request": {
+              "name": "opendesign-k1.json",
               "json": {
                 "api_key": "sk-amr-snap-key-one-0001",
                 "label": "Key One",
                 "proxy_url": "direct",
                 "type": "opendesign"
-              },
-              "name": "opendesign-k1.json"
+              }
             }
           },
           {
             "method": "host.log",
             "request": {
+              "level": "info",
+              "message": "opendesign: account signed out",
               "fields": {
                 "auth_index": "idx-1",
                 "revoked": true
-              },
-              "level": "info",
-              "message": "opendesign: account signed out"
+              }
             }
           }
         ],
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "ok": true,
-              "revoked": true
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -398,7 +399,10 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "ok": true,
+              "revoked": true
+            }
           }
         }
       }

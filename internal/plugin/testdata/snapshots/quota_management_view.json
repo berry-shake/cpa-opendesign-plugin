@@ -39,7 +39,8 @@
           "application/json"
         ]
       },
-      "body": "{\"id\":\"chatcmpl-1\",\"object\":\"chat.completion\",\"created\":1767225600,\"model\":\"model-a-2026\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"Hi there\"},\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":12,\"completion_tokens\":3,\"total_tokens\":15,\"prompt_tokens_details\":{\"cached_tokens\":4},\"completion_tokens_details\":{\"reasoning_tokens\":1}}}"
+      "body": "{\"id\":\"chatcmpl-1\",\"object\":\"chat.completion\",\"created\":1767225600,\"model\":\"model-a-2026\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"Hi there\"},\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":12,\"completion_tokens\":3,\"total_tokens\":15,\"prompt_tokens_details\":{\"cached_tokens\":4},\"completion_tokens_details\":{\"reasoning_tokens\":1}}}",
+      "chunks": []
     },
     {
       "method": "POST",
@@ -50,7 +51,8 @@
           "application/json"
         ]
       },
-      "body": "{\"error\":{\"message\":\"boom\"}}"
+      "body": "{\"error\":{\"message\":\"boom\"}}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -61,7 +63,8 @@
           "application/json"
         ]
       },
-      "body": "{\"schemaVersion\":1,\"workspaceId\":\"ws-me\",\"workspaceMemberId\":\"m2\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"balanceUsd\":\"1.25\",\"codingPlan\":{\"workspaceId\":\"ws-me\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"eligible\":true,\"tier\":\"go\",\"windows\":[{\"policyId\":\"p5\",\"durationSeconds\":18000,\"resetMode\":\"activity_triggered\",\"usedCredits\":\"250\",\"limitCredits\":\"1000\",\"remainingCredits\":\"750\",\"windowStart\":\"2025-12-31T21:00:00Z\",\"resetsAt\":\"2026-01-01T02:00:00Z\"},{\"policyId\":\"p7\",\"durationSeconds\":604800,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"4000\",\"limitCredits\":\"5000\",\"remainingCredits\":\"1000\",\"windowStart\":null,\"resetsAt\":null},{\"policyId\":\"pm\",\"durationSeconds\":2592000,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"0\",\"limitCredits\":\"0\",\"remainingCredits\":\"0\",\"windowStart\":null,\"resetsAt\":null}]},\"modelCovered\":true,\"funding\":\"coding_plan\",\"fundingCheck\":null}"
+      "body": "{\"schemaVersion\":1,\"workspaceId\":\"ws-me\",\"workspaceMemberId\":\"m2\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"balanceUsd\":\"1.25\",\"codingPlan\":{\"workspaceId\":\"ws-me\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"eligible\":true,\"tier\":\"go\",\"windows\":[{\"policyId\":\"p5\",\"durationSeconds\":18000,\"resetMode\":\"activity_triggered\",\"usedCredits\":\"250\",\"limitCredits\":\"1000\",\"remainingCredits\":\"750\",\"windowStart\":\"2025-12-31T21:00:00Z\",\"resetsAt\":\"2026-01-01T02:00:00Z\"},{\"policyId\":\"p7\",\"durationSeconds\":604800,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"4000\",\"limitCredits\":\"5000\",\"remainingCredits\":\"1000\",\"windowStart\":null,\"resetsAt\":null},{\"policyId\":\"pm\",\"durationSeconds\":2592000,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"0\",\"limitCredits\":\"0\",\"remainingCredits\":\"0\",\"windowStart\":null,\"resetsAt\":null}]},\"modelCovered\":true,\"funding\":\"coding_plan\",\"fundingCheck\":null}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -72,7 +75,8 @@
           "application/json"
         ]
       },
-      "body": "{\"schemaVersion\":1,\"workspaceId\":\"ws-me\",\"plan\":{\"tier\":\"go\",\"interval\":\"month\",\"currentPeriodStart\":\"2025-12-13T16:06:05Z\",\"currentPeriodEnd\":\"2026-01-13T16:06:05Z\",\"cancelAtPeriodEnd\":false,\"status\":\"active\"},\"wallet\":{\"balanceUsd\":\"1.25\",\"expiresAt\":null},\"designPlanWindows\":[]}"
+      "body": "{\"schemaVersion\":1,\"workspaceId\":\"ws-me\",\"plan\":{\"tier\":\"go\",\"interval\":\"month\",\"currentPeriodStart\":\"2025-12-13T16:06:05Z\",\"currentPeriodEnd\":\"2026-01-13T16:06:05Z\",\"cancelAtPeriodEnd\":false,\"status\":\"active\"},\"wallet\":{\"balanceUsd\":\"1.25\",\"expiresAt\":null},\"designPlanWindows\":[]}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -83,7 +87,8 @@
           "application/json"
         ]
       },
-      "body": "{\"schemaVersion\":1,\"workspaceId\":\"ws-me\",\"workspaceMemberId\":\"m2\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"balanceUsd\":\"1.25\",\"codingPlan\":{\"workspaceId\":\"ws-me\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"eligible\":true,\"tier\":\"go\",\"windows\":[{\"policyId\":\"p5\",\"durationSeconds\":18000,\"resetMode\":\"activity_triggered\",\"usedCredits\":\"250\",\"limitCredits\":\"1000\",\"remainingCredits\":\"750\",\"windowStart\":\"2025-12-31T21:00:00Z\",\"resetsAt\":\"2026-01-01T02:00:00Z\"},{\"policyId\":\"p7\",\"durationSeconds\":604800,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"4000\",\"limitCredits\":\"5000\",\"remainingCredits\":\"1000\",\"windowStart\":null,\"resetsAt\":null},{\"policyId\":\"pm\",\"durationSeconds\":2592000,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"0\",\"limitCredits\":\"0\",\"remainingCredits\":\"0\",\"windowStart\":null,\"resetsAt\":null}]},\"modelCovered\":true,\"funding\":\"coding_plan\",\"fundingCheck\":null}"
+      "body": "{\"schemaVersion\":1,\"workspaceId\":\"ws-me\",\"workspaceMemberId\":\"m2\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"balanceUsd\":\"1.25\",\"codingPlan\":{\"workspaceId\":\"ws-me\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"eligible\":true,\"tier\":\"go\",\"windows\":[{\"policyId\":\"p5\",\"durationSeconds\":18000,\"resetMode\":\"activity_triggered\",\"usedCredits\":\"250\",\"limitCredits\":\"1000\",\"remainingCredits\":\"750\",\"windowStart\":\"2025-12-31T21:00:00Z\",\"resetsAt\":\"2026-01-01T02:00:00Z\"},{\"policyId\":\"p7\",\"durationSeconds\":604800,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"4000\",\"limitCredits\":\"5000\",\"remainingCredits\":\"1000\",\"windowStart\":null,\"resetsAt\":null},{\"policyId\":\"pm\",\"durationSeconds\":2592000,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"0\",\"limitCredits\":\"0\",\"remainingCredits\":\"0\",\"windowStart\":null,\"resetsAt\":null}]},\"modelCovered\":true,\"funding\":\"coding_plan\",\"fundingCheck\":null}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -94,7 +99,8 @@
           "application/json"
         ]
       },
-      "body": "{\"schemaVersion\":1,\"workspaceId\":\"ws-me\",\"plan\":{\"tier\":\"go\",\"interval\":\"month\",\"currentPeriodStart\":\"2025-12-13T16:06:05Z\",\"currentPeriodEnd\":\"2026-01-13T16:06:05Z\",\"cancelAtPeriodEnd\":false,\"status\":\"active\"},\"wallet\":{\"balanceUsd\":\"1.25\",\"expiresAt\":null},\"designPlanWindows\":[]}"
+      "body": "{\"schemaVersion\":1,\"workspaceId\":\"ws-me\",\"plan\":{\"tier\":\"go\",\"interval\":\"month\",\"currentPeriodStart\":\"2025-12-13T16:06:05Z\",\"currentPeriodEnd\":\"2026-01-13T16:06:05Z\",\"cancelAtPeriodEnd\":false,\"status\":\"active\"},\"wallet\":{\"balanceUsd\":\"1.25\",\"expiresAt\":null},\"designPlanWindows\":[]}",
+      "chunks": []
     }
   ],
   "steps": [
@@ -102,28 +108,12 @@
       "rpc": {
         "method": "executor.execute",
         "request": {
-          "Alt": "",
-          "AuthAttributes": {
-            "path": "/auths/opendesign-k1.json"
-          },
           "AuthID": "opendesign-k1.json",
-          "AuthMetadata": {
-            "account_api_url": "{{UPSTREAM}}",
-            "account_control_key": "ck-snap-old",
-            "account_control_key_id": "ck-snap-old-id",
-            "account_email": "me@example.com",
-            "account_logged_in_at": "2025-12-31T00:00:00Z",
-            "account_name": "Me",
-            "account_user_id": "user-1",
-            "account_workspace_id": "ws-me",
-            "account_workspace_name": "Personal",
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
-          },
           "AuthProvider": "opendesign",
+          "Model": "model-a",
           "Format": "openai",
+          "Stream": false,
+          "Alt": "",
           "Headers": {
             "Authorization": [
               "Bearer sk-client-snapshot"
@@ -135,17 +125,34 @@
               "snapshot-client/1.0"
             ]
           },
+          "Query": null,
+          "OriginalRequest": {
+            "model": "opendesign/model-a",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hello"
+              }
+            ],
+            "reasoning_effort": "low"
+          },
+          "SourceFormat": "openai",
+          "Payload": {
+            "model": "model-a",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hello"
+              }
+            ],
+            "reasoning_effort": "low"
+          },
           "Metadata": {
             "request_path": "/v1/chat/completions",
             "requested_model": "opendesign/model-a",
             "selected_auth_id": "opendesign-k1.json",
             "selected_auth_index": "idx-1"
           },
-          "Model": "model-a",
-          "OriginalRequest": "{\"model\":\"opendesign/model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"reasoning_effort\":\"low\"}",
-          "Payload": "{\"model\":\"model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"reasoning_effort\":\"low\"}",
-          "Query": null,
-          "SourceFormat": "openai",
           "StorageJSON": {
             "account_api_url": "{{UPSTREAM}}",
             "account_control_key": "ck-snap-old",
@@ -161,7 +168,24 @@
             "proxy_url": "direct",
             "type": "opendesign"
           },
-          "Stream": false,
+          "AuthMetadata": {
+            "account_api_url": "{{UPSTREAM}}",
+            "account_control_key": "ck-snap-old",
+            "account_control_key_id": "ck-snap-old-id",
+            "account_email": "me@example.com",
+            "account_logged_in_at": "2025-12-31T00:00:00Z",
+            "account_name": "Me",
+            "account_user_id": "user-1",
+            "account_workspace_id": "ws-me",
+            "account_workspace_name": "Personal",
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k1.json"
+          },
           "host_callback_id": "cb-exec"
         }
       },
@@ -198,13 +222,39 @@
         "response": {
           "ok": true,
           "result": {
+            "Payload": {
+              "id": "chatcmpl-1",
+              "object": "chat.completion",
+              "created": 1767225600,
+              "model": "model-a-2026",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "Hi there"
+                  },
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 12,
+                "completion_tokens": 3,
+                "total_tokens": 15,
+                "prompt_tokens_details": {
+                  "cached_tokens": 4
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 1
+                }
+              }
+            },
             "Headers": {
               "Content-Type": [
                 "application/json"
               ]
             },
-            "Metadata": null,
-            "Payload": "{\"id\":\"chatcmpl-1\",\"object\":\"chat.completion\",\"created\":1767225600,\"model\":\"model-a-2026\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"Hi there\"},\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":12,\"completion_tokens\":3,\"total_tokens\":15,\"prompt_tokens_details\":{\"cached_tokens\":4},\"completion_tokens_details\":{\"reasoning_tokens\":1}}}"
+            "Metadata": null
           }
         }
       }
@@ -213,28 +263,12 @@
       "rpc": {
         "method": "executor.execute",
         "request": {
-          "Alt": "",
-          "AuthAttributes": {
-            "path": "/auths/opendesign-k1.json"
-          },
           "AuthID": "opendesign-k1.json",
-          "AuthMetadata": {
-            "account_api_url": "{{UPSTREAM}}",
-            "account_control_key": "ck-snap-old",
-            "account_control_key_id": "ck-snap-old-id",
-            "account_email": "me@example.com",
-            "account_logged_in_at": "2025-12-31T00:00:00Z",
-            "account_name": "Me",
-            "account_user_id": "user-1",
-            "account_workspace_id": "ws-me",
-            "account_workspace_name": "Personal",
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
-          },
           "AuthProvider": "opendesign",
+          "Model": "model-a",
           "Format": "openai",
+          "Stream": false,
+          "Alt": "",
           "Headers": {
             "Authorization": [
               "Bearer sk-client-snapshot"
@@ -246,17 +280,34 @@
               "snapshot-client/1.0"
             ]
           },
+          "Query": null,
+          "OriginalRequest": {
+            "model": "opendesign/model-a",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hello"
+              }
+            ],
+            "reasoning_effort": "low"
+          },
+          "SourceFormat": "openai",
+          "Payload": {
+            "model": "model-a",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hello"
+              }
+            ],
+            "reasoning_effort": "low"
+          },
           "Metadata": {
             "request_path": "/v1/chat/completions",
             "requested_model": "opendesign/model-a",
             "selected_auth_id": "opendesign-k1.json",
             "selected_auth_index": "idx-1"
           },
-          "Model": "model-a",
-          "OriginalRequest": "{\"model\":\"opendesign/model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"reasoning_effort\":\"low\"}",
-          "Payload": "{\"model\":\"model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"reasoning_effort\":\"low\"}",
-          "Query": null,
-          "SourceFormat": "openai",
           "StorageJSON": {
             "account_api_url": "{{UPSTREAM}}",
             "account_control_key": "ck-snap-old",
@@ -272,7 +323,24 @@
             "proxy_url": "direct",
             "type": "opendesign"
           },
-          "Stream": false,
+          "AuthMetadata": {
+            "account_api_url": "{{UPSTREAM}}",
+            "account_control_key": "ck-snap-old",
+            "account_control_key_id": "ck-snap-old-id",
+            "account_email": "me@example.com",
+            "account_logged_in_at": "2025-12-31T00:00:00Z",
+            "account_name": "Me",
+            "account_user_id": "user-1",
+            "account_workspace_id": "ws-me",
+            "account_workspace_name": "Personal",
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k1.json"
+          },
           "host_callback_id": "cb-exec"
         }
       },
@@ -307,13 +375,13 @@
         ],
         "host_calls": [],
         "response": {
+          "ok": false,
           "error": {
             "code": "upstream_500",
-            "http_status": 500,
             "message": "opendesign: boom",
-            "retryable": true
-          },
-          "ok": false
+            "retryable": true,
+            "http_status": 500
+          }
         }
       }
     },
@@ -321,19 +389,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Query": {
             "auth_index": [
               "idx-1"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -395,79 +463,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "account": {
-                "balance_usd": "1.25",
-                "eligible": true,
-                "email": "me@example.com",
-                "fetched_at": "2026-01-01T00:00:00Z",
-                "funding": "coding_plan",
-                "interval": "month",
-                "period_end": "2026-01-13T16:06:05Z",
-                "subscription_status": "active",
-                "tier": "go",
-                "windows": [
-                  {
-                    "duration_seconds": 18000,
-                    "kind": "5h",
-                    "limit": 1000,
-                    "remaining": 750,
-                    "resets_at": "2026-01-01T02:00:00Z",
-                    "used": 250,
-                    "window_start": "2025-12-31T21:00:00Z"
-                  },
-                  {
-                    "duration_seconds": 604800,
-                    "kind": "7d",
-                    "limit": 5000,
-                    "remaining": 1000,
-                    "used": 4000
-                  },
-                  {
-                    "duration_seconds": 2592000,
-                    "kind": "2592000s",
-                    "limit": 0,
-                    "remaining": 0,
-                    "used": 0
-                  }
-                ],
-                "workspace_name": "Personal"
-              },
-              "day": {
-                "cached_tokens": 4,
-                "failed": 1,
-                "input_tokens": 12,
-                "output_tokens": 3,
-                "reasoning_tokens": 1,
-                "requests": 2
-              },
-              "fetched_at": "2026-01-01T00:00:00Z",
-              "five_hours": {
-                "cached_tokens": 4,
-                "failed": 1,
-                "input_tokens": 12,
-                "output_tokens": 3,
-                "reasoning_tokens": 1,
-                "requests": 2
-              },
-              "log_since": "<volatile>",
-              "month": {
-                "cached_tokens": 4,
-                "failed": 1,
-                "input_tokens": 12,
-                "output_tokens": 3,
-                "reasoning_tokens": 1,
-                "requests": 2
-              },
-              "week": {
-                "cached_tokens": 4,
-                "failed": 1,
-                "input_tokens": 12,
-                "output_tokens": 3,
-                "reasoning_tokens": 1,
-                "requests": 2
-              }
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -476,7 +472,79 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "five_hours": {
+                "requests": 2,
+                "failed": 1,
+                "input_tokens": 12,
+                "cached_tokens": 4,
+                "output_tokens": 3,
+                "reasoning_tokens": 1
+              },
+              "day": {
+                "requests": 2,
+                "failed": 1,
+                "input_tokens": 12,
+                "cached_tokens": 4,
+                "output_tokens": 3,
+                "reasoning_tokens": 1
+              },
+              "week": {
+                "requests": 2,
+                "failed": 1,
+                "input_tokens": 12,
+                "cached_tokens": 4,
+                "output_tokens": 3,
+                "reasoning_tokens": 1
+              },
+              "month": {
+                "requests": 2,
+                "failed": 1,
+                "input_tokens": 12,
+                "cached_tokens": 4,
+                "output_tokens": 3,
+                "reasoning_tokens": 1
+              },
+              "log_since": "<volatile>",
+              "fetched_at": "2026-01-02T03:04:05Z",
+              "account": {
+                "email": "me@example.com",
+                "workspace_name": "Personal",
+                "tier": "go",
+                "eligible": true,
+                "funding": "coding_plan",
+                "balance_usd": "1.25",
+                "windows": [
+                  {
+                    "kind": "5h",
+                    "duration_seconds": 18000,
+                    "used": 250,
+                    "limit": 1000,
+                    "remaining": 750,
+                    "window_start": "2025-12-31T21:00:00Z",
+                    "resets_at": "2026-01-01T02:00:00Z"
+                  },
+                  {
+                    "kind": "7d",
+                    "duration_seconds": 604800,
+                    "used": 4000,
+                    "limit": 5000,
+                    "remaining": 1000
+                  },
+                  {
+                    "kind": "2592000s",
+                    "duration_seconds": 2592000,
+                    "used": 0,
+                    "limit": 0,
+                    "remaining": 0
+                  }
+                ],
+                "subscription_status": "active",
+                "interval": "month",
+                "period_end": "2026-01-13T16:06:05Z",
+                "fetched_at": "2026-01-02T03:04:05Z"
+              }
+            }
           }
         }
       }
@@ -485,19 +553,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Query": {
             "auth_index": [
               "idx-1"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -518,79 +586,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "account": {
-                "balance_usd": "1.25",
-                "eligible": true,
-                "email": "me@example.com",
-                "fetched_at": "2026-01-01T00:00:00Z",
-                "funding": "coding_plan",
-                "interval": "month",
-                "period_end": "2026-01-13T16:06:05Z",
-                "subscription_status": "active",
-                "tier": "go",
-                "windows": [
-                  {
-                    "duration_seconds": 18000,
-                    "kind": "5h",
-                    "limit": 1000,
-                    "remaining": 750,
-                    "resets_at": "2026-01-01T02:00:00Z",
-                    "used": 250,
-                    "window_start": "2025-12-31T21:00:00Z"
-                  },
-                  {
-                    "duration_seconds": 604800,
-                    "kind": "7d",
-                    "limit": 5000,
-                    "remaining": 1000,
-                    "used": 4000
-                  },
-                  {
-                    "duration_seconds": 2592000,
-                    "kind": "2592000s",
-                    "limit": 0,
-                    "remaining": 0,
-                    "used": 0
-                  }
-                ],
-                "workspace_name": "Personal"
-              },
-              "day": {
-                "cached_tokens": 4,
-                "failed": 1,
-                "input_tokens": 12,
-                "output_tokens": 3,
-                "reasoning_tokens": 1,
-                "requests": 2
-              },
-              "fetched_at": "2026-01-01T00:00:00Z",
-              "five_hours": {
-                "cached_tokens": 4,
-                "failed": 1,
-                "input_tokens": 12,
-                "output_tokens": 3,
-                "reasoning_tokens": 1,
-                "requests": 2
-              },
-              "log_since": "<volatile>",
-              "month": {
-                "cached_tokens": 4,
-                "failed": 1,
-                "input_tokens": 12,
-                "output_tokens": 3,
-                "reasoning_tokens": 1,
-                "requests": 2
-              },
-              "week": {
-                "cached_tokens": 4,
-                "failed": 1,
-                "input_tokens": 12,
-                "output_tokens": 3,
-                "reasoning_tokens": 1,
-                "requests": 2
-              }
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -599,7 +595,79 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "five_hours": {
+                "requests": 2,
+                "failed": 1,
+                "input_tokens": 12,
+                "cached_tokens": 4,
+                "output_tokens": 3,
+                "reasoning_tokens": 1
+              },
+              "day": {
+                "requests": 2,
+                "failed": 1,
+                "input_tokens": 12,
+                "cached_tokens": 4,
+                "output_tokens": 3,
+                "reasoning_tokens": 1
+              },
+              "week": {
+                "requests": 2,
+                "failed": 1,
+                "input_tokens": 12,
+                "cached_tokens": 4,
+                "output_tokens": 3,
+                "reasoning_tokens": 1
+              },
+              "month": {
+                "requests": 2,
+                "failed": 1,
+                "input_tokens": 12,
+                "cached_tokens": 4,
+                "output_tokens": 3,
+                "reasoning_tokens": 1
+              },
+              "log_since": "<volatile>",
+              "fetched_at": "2026-01-02T03:04:05Z",
+              "account": {
+                "email": "me@example.com",
+                "workspace_name": "Personal",
+                "tier": "go",
+                "eligible": true,
+                "funding": "coding_plan",
+                "balance_usd": "1.25",
+                "windows": [
+                  {
+                    "kind": "5h",
+                    "duration_seconds": 18000,
+                    "used": 250,
+                    "limit": 1000,
+                    "remaining": 750,
+                    "window_start": "2025-12-31T21:00:00Z",
+                    "resets_at": "2026-01-01T02:00:00Z"
+                  },
+                  {
+                    "kind": "7d",
+                    "duration_seconds": 604800,
+                    "used": 4000,
+                    "limit": 5000,
+                    "remaining": 1000
+                  },
+                  {
+                    "kind": "2592000s",
+                    "duration_seconds": 2592000,
+                    "used": 0,
+                    "limit": 0,
+                    "remaining": 0
+                  }
+                ],
+                "subscription_status": "active",
+                "interval": "month",
+                "period_end": "2026-01-13T16:06:05Z",
+                "fetched_at": "2026-01-02T03:04:05Z"
+              }
+            }
           }
         }
       }
@@ -608,14 +676,13 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Query": {
             "auth_index": [
               "idx-1"
@@ -624,6 +691,7 @@
               "1"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -685,79 +753,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "account": {
-                "balance_usd": "1.25",
-                "eligible": true,
-                "email": "me@example.com",
-                "fetched_at": "2026-01-01T00:00:00Z",
-                "funding": "coding_plan",
-                "interval": "month",
-                "period_end": "2026-01-13T16:06:05Z",
-                "subscription_status": "active",
-                "tier": "go",
-                "windows": [
-                  {
-                    "duration_seconds": 18000,
-                    "kind": "5h",
-                    "limit": 1000,
-                    "remaining": 750,
-                    "resets_at": "2026-01-01T02:00:00Z",
-                    "used": 250,
-                    "window_start": "2025-12-31T21:00:00Z"
-                  },
-                  {
-                    "duration_seconds": 604800,
-                    "kind": "7d",
-                    "limit": 5000,
-                    "remaining": 1000,
-                    "used": 4000
-                  },
-                  {
-                    "duration_seconds": 2592000,
-                    "kind": "2592000s",
-                    "limit": 0,
-                    "remaining": 0,
-                    "used": 0
-                  }
-                ],
-                "workspace_name": "Personal"
-              },
-              "day": {
-                "cached_tokens": 4,
-                "failed": 1,
-                "input_tokens": 12,
-                "output_tokens": 3,
-                "reasoning_tokens": 1,
-                "requests": 2
-              },
-              "fetched_at": "2026-01-01T00:00:00Z",
-              "five_hours": {
-                "cached_tokens": 4,
-                "failed": 1,
-                "input_tokens": 12,
-                "output_tokens": 3,
-                "reasoning_tokens": 1,
-                "requests": 2
-              },
-              "log_since": "<volatile>",
-              "month": {
-                "cached_tokens": 4,
-                "failed": 1,
-                "input_tokens": 12,
-                "output_tokens": 3,
-                "reasoning_tokens": 1,
-                "requests": 2
-              },
-              "week": {
-                "cached_tokens": 4,
-                "failed": 1,
-                "input_tokens": 12,
-                "output_tokens": 3,
-                "reasoning_tokens": 1,
-                "requests": 2
-              }
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -766,7 +762,79 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "five_hours": {
+                "requests": 2,
+                "failed": 1,
+                "input_tokens": 12,
+                "cached_tokens": 4,
+                "output_tokens": 3,
+                "reasoning_tokens": 1
+              },
+              "day": {
+                "requests": 2,
+                "failed": 1,
+                "input_tokens": 12,
+                "cached_tokens": 4,
+                "output_tokens": 3,
+                "reasoning_tokens": 1
+              },
+              "week": {
+                "requests": 2,
+                "failed": 1,
+                "input_tokens": 12,
+                "cached_tokens": 4,
+                "output_tokens": 3,
+                "reasoning_tokens": 1
+              },
+              "month": {
+                "requests": 2,
+                "failed": 1,
+                "input_tokens": 12,
+                "cached_tokens": 4,
+                "output_tokens": 3,
+                "reasoning_tokens": 1
+              },
+              "log_since": "<volatile>",
+              "fetched_at": "2026-01-02T03:04:05Z",
+              "account": {
+                "email": "me@example.com",
+                "workspace_name": "Personal",
+                "tier": "go",
+                "eligible": true,
+                "funding": "coding_plan",
+                "balance_usd": "1.25",
+                "windows": [
+                  {
+                    "kind": "5h",
+                    "duration_seconds": 18000,
+                    "used": 250,
+                    "limit": 1000,
+                    "remaining": 750,
+                    "window_start": "2025-12-31T21:00:00Z",
+                    "resets_at": "2026-01-01T02:00:00Z"
+                  },
+                  {
+                    "kind": "7d",
+                    "duration_seconds": 604800,
+                    "used": 4000,
+                    "limit": 5000,
+                    "remaining": 1000
+                  },
+                  {
+                    "kind": "2592000s",
+                    "duration_seconds": 2592000,
+                    "used": 0,
+                    "limit": 0,
+                    "remaining": 0
+                  }
+                ],
+                "subscription_status": "active",
+                "interval": "month",
+                "period_end": "2026-01-13T16:06:05Z",
+                "fetched_at": "2026-01-02T03:04:05Z"
+              }
+            }
           }
         }
       }
@@ -775,19 +843,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Query": {
             "auth_index": [
               "idx-9"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -808,10 +876,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "error": "credential_not_found",
-              "message": "no OpenDesign credential matches auth_index"
-            },
+            "StatusCode": 404,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -820,7 +885,10 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 404
+            "Body": {
+              "error": "credential_not_found",
+              "message": "no OpenDesign credential matches auth_index"
+            }
           }
         }
       }

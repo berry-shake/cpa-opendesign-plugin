@@ -55,19 +55,12 @@
       "rpc": {
         "method": "executor.execute_stream",
         "request": {
-          "Alt": "",
-          "AuthAttributes": {
-            "path": "/auths/opendesign-k1.json"
-          },
           "AuthID": "opendesign-k1.json",
-          "AuthMetadata": {
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
-          },
           "AuthProvider": "opendesign",
+          "Model": "model-a",
           "Format": "claude",
+          "Stream": true,
+          "Alt": "",
           "Headers": {
             "Authorization": [
               "Bearer sk-client-snapshot"
@@ -79,26 +72,69 @@
               "snapshot-client/1.0"
             ]
           },
+          "Query": null,
+          "OriginalRequest": {
+            "model": "opendesign/model-a",
+            "max_tokens": 1024,
+            "stream": true,
+            "tools": [
+              {
+                "name": "get_weather",
+                "input_schema": {
+                  "type": "object"
+                }
+              }
+            ],
+            "messages": [
+              {
+                "role": "user",
+                "content": "Weather in Paris?"
+              }
+            ]
+          },
+          "SourceFormat": "claude",
+          "Payload": {
+            "model": "model-a",
+            "max_tokens": 1024,
+            "stream": true,
+            "tools": [
+              {
+                "name": "get_weather",
+                "input_schema": {
+                  "type": "object"
+                }
+              }
+            ],
+            "messages": [
+              {
+                "role": "user",
+                "content": "Weather in Paris?"
+              }
+            ]
+          },
           "Metadata": {
             "request_path": "/v1/messages",
             "requested_model": "opendesign/model-a",
             "selected_auth_id": "opendesign-k1.json",
             "selected_auth_index": "idx-1"
           },
-          "Model": "model-a",
-          "OriginalRequest": "{\"model\":\"opendesign/model-a\",\"max_tokens\":1024,\"stream\":true,\"tools\":[{\"name\":\"get_weather\",\"input_schema\":{\"type\":\"object\"}}],\"messages\":[{\"role\":\"user\",\"content\":\"Weather in Paris?\"}]}",
-          "Payload": "{\"model\":\"model-a\",\"max_tokens\":1024,\"stream\":true,\"tools\":[{\"name\":\"get_weather\",\"input_schema\":{\"type\":\"object\"}}],\"messages\":[{\"role\":\"user\",\"content\":\"Weather in Paris?\"}]}",
-          "Query": null,
-          "SourceFormat": "claude",
           "StorageJSON": {
             "api_key": "sk-amr-snap-key-one-0001",
             "label": "Key One",
             "proxy_url": "direct",
             "type": "opendesign"
           },
-          "Stream": true,
-          "host_callback_id": "cb-exec",
-          "stream_id": "stream-fix-2"
+          "AuthMetadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k1.json"
+          },
+          "stream_id": "stream-fix-2",
+          "host_callback_id": "cb-exec"
         }
       },
       "output": {
@@ -137,64 +173,64 @@
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: message_start\ndata: {\"type\":\"message_start\",\"message\":{\"id\":\"msg_2\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[],\"model\":\"model-a\",\"stop_reason\":null,\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":5,\"output_tokens\":1}}}\n\n",
-              "stream_id": "stream-fix-2"
+              "stream_id": "stream-fix-2",
+              "payload": "event: message_start\ndata: {\"type\":\"message_start\",\"message\":{\"id\":\"msg_2\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[],\"model\":\"model-a\",\"stop_reason\":null,\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":5,\"output_tokens\":1}}}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: content_block_start\ndata: {\"type\":\"content_block_start\",\"index\":0,\"content_block\":{\"type\":\"text\",\"text\":\"\"}}\n\n",
-              "stream_id": "stream-fix-2"
+              "stream_id": "stream-fix-2",
+              "payload": "event: content_block_start\ndata: {\"type\":\"content_block_start\",\"index\":0,\"content_block\":{\"type\":\"text\",\"text\":\"\"}}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\"Checking.\"}}\n\n",
-              "stream_id": "stream-fix-2"
+              "stream_id": "stream-fix-2",
+              "payload": "event: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\"Checking.\"}}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: content_block_stop\ndata: {\"type\":\"content_block_stop\",\"index\":0}\n\n",
-              "stream_id": "stream-fix-2"
+              "stream_id": "stream-fix-2",
+              "payload": "event: content_block_stop\ndata: {\"type\":\"content_block_stop\",\"index\":0}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: content_block_start\ndata: {\"type\":\"content_block_start\",\"index\":1,\"content_block\":{\"type\":\"tool_use\",\"id\":\"toolu_1\",\"name\":\"get_weather\",\"input\":{}}}\n\n",
-              "stream_id": "stream-fix-2"
+              "stream_id": "stream-fix-2",
+              "payload": "event: content_block_start\ndata: {\"type\":\"content_block_start\",\"index\":1,\"content_block\":{\"type\":\"tool_use\",\"id\":\"toolu_1\",\"name\":\"get_weather\",\"input\":{}}}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"input_json_delta\",\"partial_json\":\"{\\\"city\\\":\\\"Paris\\\"}\"}}\n\n",
-              "stream_id": "stream-fix-2"
+              "stream_id": "stream-fix-2",
+              "payload": "event: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":1,\"delta\":{\"type\":\"input_json_delta\",\"partial_json\":\"{\\\"city\\\":\\\"Paris\\\"}\"}}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: content_block_stop\ndata: {\"type\":\"content_block_stop\",\"index\":1}\n\n",
-              "stream_id": "stream-fix-2"
+              "stream_id": "stream-fix-2",
+              "payload": "event: content_block_stop\ndata: {\"type\":\"content_block_stop\",\"index\":1}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: message_delta\ndata: {\"delta\":{\"stop_reason\":\"tool_use\",\"stop_sequence\":null},\"type\":\"message_delta\",\"usage\":{\"output_tokens\":21}}\n\n",
-              "stream_id": "stream-fix-2"
+              "stream_id": "stream-fix-2",
+              "payload": "event: message_delta\ndata: {\"delta\":{\"stop_reason\":\"tool_use\",\"stop_sequence\":null},\"type\":\"message_delta\",\"usage\":{\"output_tokens\":21}}\n\n"
             }
           },
           {
             "method": "host.stream.emit",
             "request": {
-              "payload": "event: message_stop\ndata: {\"type\":\"message_stop\"}\n\n",
-              "stream_id": "stream-fix-2"
+              "stream_id": "stream-fix-2",
+              "payload": "event: message_stop\ndata: {\"type\":\"message_stop\"}\n\n"
             }
           },
           {
@@ -223,15 +259,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/logs",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/logs",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -241,52 +277,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "items": [
-                {
-                  "attempts": 1,
-                  "auth_id": "opendesign-k1.json",
-                  "auth_index": "idx-1",
-                  "cached_tokens": 5,
-                  "client_path": "/v1/messages",
-                  "credential": "sk-amr…0001",
-                  "duration_ms": "<volatile>",
-                  "egress": "direct",
-                  "endpoint": "/v1/messages",
-                  "finish_reason": "tool_use",
-                  "frames": 4,
-                  "http_status": 200,
-                  "id": "1",
-                  "input_tokens": 15,
-                  "last_frame_ms": "<volatile>",
-                  "model": "opendesign/model-a",
-                  "output_tokens": 21,
-                  "served_model": "model-a",
-                  "status": "success",
-                  "stream": true,
-                  "time": "<volatile>",
-                  "ttft_ms": "<volatile>",
-                  "upstream_model": "model-a",
-                  "upstream_request_id": "up-fix-2",
-                  "upstream_status": 200,
-                  "usage_reported": true,
-                  "user_agent": "snapshot-client/1.0"
-                }
-              ],
-              "offset": 0,
-              "retention": 100000,
-              "retention_days": 30,
-              "summary": {
-                "cache_hit_rate": 0.3333333333333333,
-                "cached_tokens": 5,
-                "failed": 0,
-                "input_tokens": 15,
-                "output_tokens": 21,
-                "requests": 1,
-                "success": 1
-              },
-              "total": 1
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -295,7 +286,54 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "items": [
+                {
+                  "id": "1",
+                  "time": "<volatile>",
+                  "endpoint": "/v1/messages",
+                  "model": "opendesign/model-a",
+                  "upstream_model": "model-a",
+                  "served_model": "model-a",
+                  "stream": true,
+                  "status": "success",
+                  "http_status": 200,
+                  "credential": "sk-amr…0001",
+                  "auth_id": "opendesign-k1.json",
+                  "duration_ms": "<volatile>",
+                  "ttft_ms": "<volatile>",
+                  "input_tokens": 15,
+                  "output_tokens": 21,
+                  "cached_tokens": 5,
+                  "client_path": "/v1/messages",
+                  "user_agent": "snapshot-client/1.0",
+                  "auth_index": "idx-1",
+                  "egress": "direct",
+                  "upstream_status": 200,
+                  "upstream_request_id": "up-fix-2",
+                  "finish_reason": "tool_use",
+                  "frames": 4,
+                  "last_frame_ms": "<volatile>",
+                  "usage_reported": true,
+                  "attempts": 1
+                }
+              ],
+              "total": 1,
+              "offset": 0,
+              "retention": 100000,
+              "retention_days": 30,
+              "summary": {
+                "requests": 1,
+                "success": 1,
+                "failed": 0,
+                "input_tokens": 15,
+                "output_tokens": 21,
+                "cached_tokens": 5,
+                "cache_hit_rate": 0.3333333333333333,
+                "output_tokens_per_second": "<volatile>",
+                "e2e_tokens_per_second": "<volatile>"
+              }
+            }
           }
         }
       }

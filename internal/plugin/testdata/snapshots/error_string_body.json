@@ -30,7 +30,8 @@
           "application/json"
         ]
       },
-      "body": "{\"error\":\"insufficient credits\"}"
+      "body": "{\"error\":\"insufficient credits\"}",
+      "chunks": []
     }
   ],
   "steps": [
@@ -38,19 +39,12 @@
       "rpc": {
         "method": "executor.execute",
         "request": {
-          "Alt": "",
-          "AuthAttributes": {
-            "path": "/auths/opendesign-k1.json"
-          },
           "AuthID": "opendesign-k1.json",
-          "AuthMetadata": {
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
-          },
           "AuthProvider": "opendesign",
+          "Model": "model-a",
           "Format": "openai",
+          "Stream": false,
+          "Alt": "",
           "Headers": {
             "Authorization": [
               "Bearer sk-client-snapshot"
@@ -65,24 +59,49 @@
               "req-chat-1"
             ]
           },
+          "Query": null,
+          "OriginalRequest": {
+            "model": "opendesign/model-a",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hello"
+              }
+            ],
+            "reasoning_effort": "low"
+          },
+          "SourceFormat": "openai",
+          "Payload": {
+            "model": "model-a",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Hello"
+              }
+            ],
+            "reasoning_effort": "low"
+          },
           "Metadata": {
             "request_path": "/v1/chat/completions",
             "requested_model": "opendesign/model-a",
             "selected_auth_id": "opendesign-k1.json",
             "selected_auth_index": "idx-1"
           },
-          "Model": "model-a",
-          "OriginalRequest": "{\"model\":\"opendesign/model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"reasoning_effort\":\"low\"}",
-          "Payload": "{\"model\":\"model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"reasoning_effort\":\"low\"}",
-          "Query": null,
-          "SourceFormat": "openai",
           "StorageJSON": {
             "api_key": "sk-amr-snap-key-one-0001",
             "label": "Key One",
             "proxy_url": "direct",
             "type": "opendesign"
           },
-          "Stream": false,
+          "AuthMetadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k1.json"
+          },
           "host_callback_id": "cb-exec"
         }
       },
@@ -117,12 +136,12 @@
         ],
         "host_calls": [],
         "response": {
+          "ok": false,
           "error": {
             "code": "upstream_402",
-            "http_status": 402,
-            "message": "opendesign: insufficient credits"
-          },
-          "ok": false
+            "message": "opendesign: insufficient credits",
+            "http_status": 402
+          }
         }
       }
     },
@@ -130,15 +149,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/logs",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/logs",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -148,50 +167,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "items": [
-                {
-                  "attempts": 1,
-                  "auth_id": "opendesign-k1.json",
-                  "auth_index": "idx-1",
-                  "cached_tokens": 0,
-                  "client_path": "/v1/chat/completions",
-                  "credential": "sk-amr…0001",
-                  "duration_ms": "<volatile>",
-                  "egress": "direct",
-                  "endpoint": "/v1/chat/completions",
-                  "error": "opendesign: insufficient credits",
-                  "error_code": "upstream_402",
-                  "error_phase": "request",
-                  "http_status": 402,
-                  "id": "1",
-                  "input_tokens": 0,
-                  "model": "opendesign/model-a",
-                  "output_tokens": 0,
-                  "reasoning_effort": "low",
-                  "request_id": "req-chat-1",
-                  "status": "error",
-                  "stream": false,
-                  "time": "<volatile>",
-                  "upstream_model": "model-a",
-                  "upstream_status": 402,
-                  "user_agent": "snapshot-client/1.0"
-                }
-              ],
-              "offset": 0,
-              "retention": 100000,
-              "retention_days": 30,
-              "summary": {
-                "cache_hit_rate": null,
-                "cached_tokens": 0,
-                "failed": 1,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "requests": 1,
-                "success": 0
-              },
-              "total": 1
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -200,7 +176,52 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "items": [
+                {
+                  "id": "1",
+                  "request_id": "req-chat-1",
+                  "time": "<volatile>",
+                  "endpoint": "/v1/chat/completions",
+                  "model": "opendesign/model-a",
+                  "upstream_model": "model-a",
+                  "reasoning_effort": "low",
+                  "stream": false,
+                  "status": "error",
+                  "http_status": 402,
+                  "credential": "sk-amr…0001",
+                  "auth_id": "opendesign-k1.json",
+                  "duration_ms": "<volatile>",
+                  "input_tokens": 0,
+                  "output_tokens": 0,
+                  "cached_tokens": 0,
+                  "error_code": "upstream_402",
+                  "error": "opendesign: insufficient credits",
+                  "error_phase": "request",
+                  "client_path": "/v1/chat/completions",
+                  "user_agent": "snapshot-client/1.0",
+                  "auth_index": "idx-1",
+                  "egress": "direct",
+                  "upstream_status": 402,
+                  "attempts": 1
+                }
+              ],
+              "total": 1,
+              "offset": 0,
+              "retention": 100000,
+              "retention_days": 30,
+              "summary": {
+                "requests": 1,
+                "success": 0,
+                "failed": 1,
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "cached_tokens": 0,
+                "cache_hit_rate": null,
+                "output_tokens_per_second": "<volatile>",
+                "e2e_tokens_per_second": "<volatile>"
+              }
+            }
           }
         }
       }

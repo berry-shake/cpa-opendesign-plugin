@@ -31,7 +31,8 @@
           "application/json"
         ]
       },
-      "body": "{\"deviceId\":\"dev-1\",\"userCode\":\"WXYZ-1234\",\"deviceSecret\":\"secret-dev-1\",\"activationUrl\":\"https://open-design.ai/cli/activate?deviceId=dev-1\",\"pollIntervalSeconds\":1,\"status\":\"pending\",\"expiresAt\":\"2026-01-01T00:10:00Z\"}"
+      "body": "{\"deviceId\":\"dev-1\",\"userCode\":\"WXYZ-1234\",\"deviceSecret\":\"secret-dev-1\",\"activationUrl\":\"https://open-design.ai/cli/activate?deviceId=dev-1\",\"pollIntervalSeconds\":1,\"status\":\"pending\",\"expiresAt\":\"2026-01-02T03:14:05Z\"}",
+      "chunks": []
     },
     {
       "method": "POST",
@@ -42,7 +43,8 @@
           "application/json"
         ]
       },
-      "body": "{\"status\":\"approved\",\"controlKey\":\"ck-snap-new\",\"controlKeyId\":\"ck-snap-new-id\",\"runtimeKey\":\"rk-snap\",\"user\":{\"id\":\"user-1\",\"authUserId\":\"auth-1\",\"email\":\"me@example.com\",\"name\":\"Me\"},\"apiUrl\":\"\",\"linkUrl\":\"\"}"
+      "body": "{\"status\":\"approved\",\"controlKey\":\"ck-snap-new\",\"controlKeyId\":\"ck-snap-new-id\",\"runtimeKey\":\"rk-snap\",\"user\":{\"id\":\"user-1\",\"authUserId\":\"auth-1\",\"email\":\"me@example.com\",\"name\":\"Me\"},\"apiUrl\":\"\",\"linkUrl\":\"\"}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -53,7 +55,8 @@
           "application/json"
         ]
       },
-      "body": "{\"error\":\"workspace service down\"}"
+      "body": "{\"error\":\"workspace service down\"}",
+      "chunks": []
     },
     {
       "method": "POST",
@@ -64,7 +67,8 @@
           "application/json"
         ]
       },
-      "body": "{\"ok\":true}"
+      "body": "{\"ok\":true}",
+      "chunks": []
     }
   ],
   "steps": [
@@ -72,17 +76,17 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": {
-            "auth_index": "idx-1"
-          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/account/login",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "POST",
-          "Path": "/v0/management/plugins/opendesign/account/login",
           "Query": null,
+          "Body": {
+            "auth_index": "idx-1"
+          },
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -183,22 +187,22 @@
           {
             "method": "host.log",
             "request": {
+              "level": "info",
+              "message": "opendesign: account sign-in started",
               "fields": {
                 "auth_index": "idx-1"
-              },
-              "level": "info",
-              "message": "opendesign: account sign-in started"
+              }
             }
           },
           {
             "method": "host.log",
             "request": {
+              "level": "warn",
+              "message": "opendesign: cannot list the account's workspaces",
               "fields": {
                 "auth_index": "idx-1",
                 "error": "OpenDesign account API HTTP 500: workspace service down"
-              },
-              "level": "warn",
-              "message": "opendesign: cannot list the account's workspaces"
+              }
             }
           },
           {
@@ -210,33 +214,26 @@
           {
             "method": "host.auth.save",
             "request": {
+              "name": "opendesign-k1.json",
               "json": {
                 "account_control_key": "ck-snap-new",
                 "account_control_key_id": "ck-snap-new-id",
                 "account_email": "me@example.com",
-                "account_logged_in_at": "2026-01-01T00:00:00Z",
+                "account_logged_in_at": "2026-01-02T03:04:05Z",
                 "account_name": "Me",
                 "account_user_id": "user-1",
                 "api_key": "sk-amr-snap-key-one-0001",
                 "label": "Key One",
                 "proxy_url": "direct",
                 "type": "opendesign"
-              },
-              "name": "opendesign-k1.json"
+              }
             }
           }
         ],
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "activation_url": "https://open-design.ai/cli/activate?deviceId=dev-1",
-              "auth_index": "idx-1",
-              "expires_at": "2026-01-01T00:10:00Z",
-              "id": "<volatile>",
-              "state": "pending",
-              "user_code": "WXYZ-1234"
-            },
+            "StatusCode": 201,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -245,7 +242,14 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 201
+            "Body": {
+              "id": "<volatile>",
+              "auth_index": "idx-1",
+              "state": "pending",
+              "user_code": "WXYZ-1234",
+              "activation_url": "https://open-design.ai/cli/activate?deviceId=dev-1",
+              "expires_at": "2026-01-02T03:14:05Z"
+            }
           }
         }
       }
@@ -254,19 +258,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/account/login",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/account/login",
           "Query": {
             "id": [
               "{{login_id}}"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -276,12 +280,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "auth_index": "idx-1",
-              "id": "<volatile>",
-              "message": "credentials were issued but could not be saved: host.auth.save: failed to write auth file: open /auths/opendesign-k1.json: permission denied",
-              "state": "failed"
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -290,7 +289,12 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "id": "<volatile>",
+              "auth_index": "idx-1",
+              "state": "failed",
+              "message": "credentials were issued but could not be saved: host.auth.save: failed to write auth file: open /auths/opendesign-k1.json: permission denied"
+            }
           }
         }
       }

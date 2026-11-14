@@ -44,7 +44,8 @@
           "application/json"
         ]
       },
-      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-a\",\"object\":\"model\",\"created\":1767000000,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"image\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"Low\",\"capability\":\"standard\",\"context_limit\":200000,\"context_budget\":160000,\"output_budget\":32000},\"default\":true,\"enabled\":true},{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"image-gen\",\"object\":\"model\",\"created\":1767000002,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"image\"]},\"metadata\":{\"cost\":\"medium\"},\"enabled\":true}]}"
+      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-a\",\"object\":\"model\",\"created\":1767000000,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"image\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"Low\",\"capability\":\"standard\",\"context_limit\":200000,\"context_budget\":160000,\"output_budget\":32000},\"default\":true,\"enabled\":true},{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"image-gen\",\"object\":\"model\",\"created\":1767000002,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"image\"]},\"metadata\":{\"cost\":\"medium\"},\"enabled\":true}]}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -55,7 +56,8 @@
           "application/json"
         ]
       },
-      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"model-c\",\"object\":\"model\",\"created\":1767000003,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"application/pdf\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"medium\",\"capability\":\"standard\",\"context_limit\":64000,\"context_budget\":60000,\"output_budget\":8000},\"enabled\":false}]}"
+      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"model-c\",\"object\":\"model\",\"created\":1767000003,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"application/pdf\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"medium\",\"capability\":\"standard\",\"context_limit\":64000,\"context_budget\":60000,\"output_budget\":8000},\"enabled\":false}]}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -66,7 +68,8 @@
           "application/json"
         ]
       },
-      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-a\",\"object\":\"model\",\"created\":1767000000,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"image\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"Low\",\"capability\":\"standard\",\"context_limit\":200000,\"context_budget\":160000,\"output_budget\":32000},\"default\":true,\"enabled\":true},{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"image-gen\",\"object\":\"model\",\"created\":1767000002,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"image\"]},\"metadata\":{\"cost\":\"medium\"},\"enabled\":true}]}"
+      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-a\",\"object\":\"model\",\"created\":1767000000,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"image\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"Low\",\"capability\":\"standard\",\"context_limit\":200000,\"context_budget\":160000,\"output_budget\":32000},\"default\":true,\"enabled\":true},{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"image-gen\",\"object\":\"model\",\"created\":1767000002,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"image\"]},\"metadata\":{\"cost\":\"medium\"},\"enabled\":true}]}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -77,7 +80,8 @@
           "application/json"
         ]
       },
-      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"model-c\",\"object\":\"model\",\"created\":1767000003,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"application/pdf\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"medium\",\"capability\":\"standard\",\"context_limit\":64000,\"context_budget\":60000,\"output_budget\":8000},\"enabled\":false}]}"
+      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"model-c\",\"object\":\"model\",\"created\":1767000003,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"application/pdf\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"medium\",\"capability\":\"standard\",\"context_limit\":64000,\"context_budget\":60000,\"output_budget\":8000},\"enabled\":false}]}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -88,7 +92,8 @@
           "application/json"
         ]
       },
-      "body": "{\"error\":{\"message\":\"catalog unavailable\"}}"
+      "body": "{\"error\":{\"message\":\"catalog unavailable\"}}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -99,7 +104,8 @@
           "application/json"
         ]
       },
-      "body": "{\"error\":{\"message\":\"maintenance\"}}"
+      "body": "{\"error\":{\"message\":\"maintenance\"}}",
+      "chunks": []
     }
   ],
   "steps": [
@@ -107,15 +113,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/models",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/models",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -182,30 +188,31 @@
           {
             "method": "host.auth.save",
             "request": {
+              "name": "opendesign-k1.json",
               "json": {
                 "api_key": "sk-amr-snap-key-one-0001",
                 "label": "Key One",
                 "model_revision": "3623d54cfd5c5c08",
                 "proxy_url": "direct",
                 "type": "opendesign"
-              },
-              "name": "opendesign-k1.json"
+              }
             }
           },
           {
             "method": "host.log",
             "request": {
+              "level": "info",
+              "message": "opendesign: refreshed registered models",
               "fields": {
                 "auth": "opendesign-k1.json",
                 "revision": "3623d54cfd5c5c08"
-              },
-              "level": "info",
-              "message": "opendesign: refreshed registered models"
+              }
             }
           },
           {
             "method": "host.auth.save",
             "request": {
+              "name": "opendesign-k2.json",
               "json": {
                 "api_key": "sk-amr-snap-key-two-0002",
                 "model_revision": "388feb7b3399f3cd",
@@ -217,112 +224,25 @@
                 "prefix": "od2",
                 "priority": 2,
                 "type": "opendesign"
-              },
-              "name": "opendesign-k2.json"
+              }
             }
           },
           {
             "method": "host.log",
             "request": {
+              "level": "info",
+              "message": "opendesign: refreshed registered models",
               "fields": {
                 "auth": "opendesign-k2.json",
                 "revision": "388feb7b3399f3cd"
-              },
-              "level": "info",
-              "message": "opendesign: refreshed registered models"
+              }
             }
           }
         ],
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "catalog": {
-                "checked_at": "2026-01-01T00:00:00Z",
-                "count": 4,
-                "fetched_at": "2026-01-01T00:00:00Z",
-                "keys": 2,
-                "revision": "ad564412b50b7b9a"
-              },
-              "models": [
-                {
-                  "chat": false,
-                  "cost_tier": "medium",
-                  "enabled": true,
-                  "id": "image-gen",
-                  "inputs": [
-                    "text"
-                  ],
-                  "keys": [
-                    "89a142c2e7"
-                  ],
-                  "outputs": [
-                    "image"
-                  ]
-                },
-                {
-                  "capability": "standard",
-                  "chat": true,
-                  "context_budget": 160000,
-                  "context_length": 200000,
-                  "cost_tier": "low",
-                  "default": true,
-                  "enabled": true,
-                  "id": "model-a",
-                  "inputs": [
-                    "text",
-                    "image"
-                  ],
-                  "keys": [
-                    "89a142c2e7"
-                  ],
-                  "max_output": 32000,
-                  "outputs": [
-                    "text"
-                  ]
-                },
-                {
-                  "capability": "reasoning",
-                  "chat": true,
-                  "context_budget": 100000,
-                  "context_length": 128000,
-                  "cost_tier": "high",
-                  "enabled": true,
-                  "id": "model-b",
-                  "inputs": [
-                    "text"
-                  ],
-                  "keys": [
-                    "89a142c2e7",
-                    "9687cdae8c"
-                  ],
-                  "max_output": 16000,
-                  "outputs": [
-                    "text"
-                  ]
-                },
-                {
-                  "capability": "standard",
-                  "chat": false,
-                  "context_budget": 60000,
-                  "context_length": 64000,
-                  "cost_tier": "medium",
-                  "enabled": false,
-                  "id": "model-c",
-                  "inputs": [
-                    "text",
-                    "file"
-                  ],
-                  "keys": [
-                    "9687cdae8c"
-                  ],
-                  "max_output": 8000,
-                  "outputs": [
-                    "text"
-                  ]
-                }
-              ]
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -331,7 +251,93 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "catalog": {
+                "count": 4,
+                "keys": 2,
+                "revision": "ad564412b50b7b9a",
+                "fetched_at": "2026-01-02T03:04:05Z",
+                "checked_at": "2026-01-02T03:04:05Z"
+              },
+              "models": [
+                {
+                  "id": "image-gen",
+                  "chat": false,
+                  "enabled": true,
+                  "inputs": [
+                    "text"
+                  ],
+                  "outputs": [
+                    "image"
+                  ],
+                  "cost_tier": "medium",
+                  "keys": [
+                    "89a142c2e7"
+                  ]
+                },
+                {
+                  "id": "model-a",
+                  "chat": true,
+                  "enabled": true,
+                  "default": true,
+                  "inputs": [
+                    "text",
+                    "image"
+                  ],
+                  "outputs": [
+                    "text"
+                  ],
+                  "context_length": 200000,
+                  "context_budget": 160000,
+                  "max_output": 32000,
+                  "cost_tier": "low",
+                  "capability": "standard",
+                  "keys": [
+                    "89a142c2e7"
+                  ]
+                },
+                {
+                  "id": "model-b",
+                  "chat": true,
+                  "enabled": true,
+                  "inputs": [
+                    "text"
+                  ],
+                  "outputs": [
+                    "text"
+                  ],
+                  "context_length": 128000,
+                  "context_budget": 100000,
+                  "max_output": 16000,
+                  "cost_tier": "high",
+                  "capability": "reasoning",
+                  "keys": [
+                    "89a142c2e7",
+                    "9687cdae8c"
+                  ]
+                },
+                {
+                  "id": "model-c",
+                  "chat": false,
+                  "enabled": false,
+                  "inputs": [
+                    "text",
+                    "file"
+                  ],
+                  "outputs": [
+                    "text"
+                  ],
+                  "context_length": 64000,
+                  "context_budget": 60000,
+                  "max_output": 8000,
+                  "cost_tier": "medium",
+                  "capability": "standard",
+                  "keys": [
+                    "9687cdae8c"
+                  ]
+                }
+              ]
+            }
           }
         }
       }
@@ -340,15 +346,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/models/refresh",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "POST",
-          "Path": "/v0/management/plugins/opendesign/models/refresh",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -416,93 +422,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "catalog": {
-                "checked_at": "2026-01-01T00:00:00Z",
-                "count": 4,
-                "fetched_at": "2026-01-01T00:00:00Z",
-                "keys": 2,
-                "revision": "ad564412b50b7b9a"
-              },
-              "models": [
-                {
-                  "chat": false,
-                  "cost_tier": "medium",
-                  "enabled": true,
-                  "id": "image-gen",
-                  "inputs": [
-                    "text"
-                  ],
-                  "keys": [
-                    "89a142c2e7"
-                  ],
-                  "outputs": [
-                    "image"
-                  ]
-                },
-                {
-                  "capability": "standard",
-                  "chat": true,
-                  "context_budget": 160000,
-                  "context_length": 200000,
-                  "cost_tier": "low",
-                  "default": true,
-                  "enabled": true,
-                  "id": "model-a",
-                  "inputs": [
-                    "text",
-                    "image"
-                  ],
-                  "keys": [
-                    "89a142c2e7"
-                  ],
-                  "max_output": 32000,
-                  "outputs": [
-                    "text"
-                  ]
-                },
-                {
-                  "capability": "reasoning",
-                  "chat": true,
-                  "context_budget": 100000,
-                  "context_length": 128000,
-                  "cost_tier": "high",
-                  "enabled": true,
-                  "id": "model-b",
-                  "inputs": [
-                    "text"
-                  ],
-                  "keys": [
-                    "89a142c2e7",
-                    "9687cdae8c"
-                  ],
-                  "max_output": 16000,
-                  "outputs": [
-                    "text"
-                  ]
-                },
-                {
-                  "capability": "standard",
-                  "chat": false,
-                  "context_budget": 60000,
-                  "context_length": 64000,
-                  "cost_tier": "medium",
-                  "enabled": false,
-                  "id": "model-c",
-                  "inputs": [
-                    "text",
-                    "file"
-                  ],
-                  "keys": [
-                    "9687cdae8c"
-                  ],
-                  "max_output": 8000,
-                  "outputs": [
-                    "text"
-                  ]
-                }
-              ]
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -511,7 +431,93 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "catalog": {
+                "count": 4,
+                "keys": 2,
+                "revision": "ad564412b50b7b9a",
+                "fetched_at": "2026-01-02T03:04:05Z",
+                "checked_at": "2026-01-02T03:04:05Z"
+              },
+              "models": [
+                {
+                  "id": "image-gen",
+                  "chat": false,
+                  "enabled": true,
+                  "inputs": [
+                    "text"
+                  ],
+                  "outputs": [
+                    "image"
+                  ],
+                  "cost_tier": "medium",
+                  "keys": [
+                    "89a142c2e7"
+                  ]
+                },
+                {
+                  "id": "model-a",
+                  "chat": true,
+                  "enabled": true,
+                  "default": true,
+                  "inputs": [
+                    "text",
+                    "image"
+                  ],
+                  "outputs": [
+                    "text"
+                  ],
+                  "context_length": 200000,
+                  "context_budget": 160000,
+                  "max_output": 32000,
+                  "cost_tier": "low",
+                  "capability": "standard",
+                  "keys": [
+                    "89a142c2e7"
+                  ]
+                },
+                {
+                  "id": "model-b",
+                  "chat": true,
+                  "enabled": true,
+                  "inputs": [
+                    "text"
+                  ],
+                  "outputs": [
+                    "text"
+                  ],
+                  "context_length": 128000,
+                  "context_budget": 100000,
+                  "max_output": 16000,
+                  "cost_tier": "high",
+                  "capability": "reasoning",
+                  "keys": [
+                    "89a142c2e7",
+                    "9687cdae8c"
+                  ]
+                },
+                {
+                  "id": "model-c",
+                  "chat": false,
+                  "enabled": false,
+                  "inputs": [
+                    "text",
+                    "file"
+                  ],
+                  "outputs": [
+                    "text"
+                  ],
+                  "context_length": 64000,
+                  "context_budget": 60000,
+                  "max_output": 8000,
+                  "cost_tier": "medium",
+                  "capability": "standard",
+                  "keys": [
+                    "9687cdae8c"
+                  ]
+                }
+              ]
+            }
           }
         }
       }
@@ -520,15 +526,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/models/refresh",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "POST",
-          "Path": "/v0/management/plugins/opendesign/models/refresh",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -595,21 +601,18 @@
           {
             "method": "host.log",
             "request": {
+              "level": "warn",
+              "message": "opendesign: model list refresh failed",
               "fields": {
                 "error": "GET /v1/models returned 503: {\"error\":{\"message\":\"maintenance\"}}"
-              },
-              "level": "warn",
-              "message": "opendesign: model list refresh failed"
+              }
             }
           }
         ],
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "error": "catalog_unavailable",
-              "message": "GET /v1/models returned 503: {\"error\":{\"message\":\"maintenance\"}}"
-            },
+            "StatusCode": 502,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -618,7 +621,10 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 502
+            "Body": {
+              "error": "catalog_unavailable",
+              "message": "GET /v1/models returned 503: {\"error\":{\"message\":\"maintenance\"}}"
+            }
           }
         }
       }

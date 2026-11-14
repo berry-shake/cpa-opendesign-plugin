@@ -30,7 +30,8 @@
           "application/json"
         ]
       },
-      "body": "{\"deviceId\":\"dev-1\",\"userCode\":\"WXYZ-1234\",\"deviceSecret\":\"secret-dev-1\",\"activationUrl\":\"https://open-design.ai/cli/activate?deviceId=dev-1\",\"pollIntervalSeconds\":1,\"status\":\"pending\",\"expiresAt\":\"2026-01-01T00:10:00Z\"}"
+      "body": "{\"deviceId\":\"dev-1\",\"userCode\":\"WXYZ-1234\",\"deviceSecret\":\"secret-dev-1\",\"activationUrl\":\"https://open-design.ai/cli/activate?deviceId=dev-1\",\"pollIntervalSeconds\":1,\"status\":\"pending\",\"expiresAt\":\"2026-01-02T03:14:05Z\"}",
+      "chunks": []
     },
     {
       "method": "POST",
@@ -41,7 +42,8 @@
           "application/json"
         ]
       },
-      "body": "{\"status\":\"pending\"}"
+      "body": "{\"status\":\"pending\"}",
+      "chunks": []
     },
     {
       "method": "POST",
@@ -52,7 +54,8 @@
           "application/json"
         ]
       },
-      "body": "{\"status\":\"approved\",\"controlKey\":\"ck-snap-new\",\"controlKeyId\":\"ck-snap-new-id\",\"runtimeKey\":\"rk-snap\",\"user\":{\"id\":\"user-1\",\"authUserId\":\"auth-1\",\"email\":\"me@example.com\",\"name\":\"Me\"},\"apiUrl\":\"\",\"linkUrl\":\"\"}"
+      "body": "{\"status\":\"approved\",\"controlKey\":\"ck-snap-new\",\"controlKeyId\":\"ck-snap-new-id\",\"runtimeKey\":\"rk-snap\",\"user\":{\"id\":\"user-1\",\"authUserId\":\"auth-1\",\"email\":\"me@example.com\",\"name\":\"Me\"},\"apiUrl\":\"\",\"linkUrl\":\"\"}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -63,7 +66,8 @@
           "application/json"
         ]
       },
-      "body": "{\"items\":[{\"workspaceId\":\"ws-team\",\"workspaceName\":\"Team\",\"workspaceType\":\"team\",\"workspaceMemberId\":\"m1\",\"role\":\"owner\",\"memberStatus\":\"active\",\"lifecycleState\":\"active\",\"isDefault\":true},{\"workspaceId\":\"ws-me\",\"workspaceName\":\"Personal\",\"workspaceType\":\"personal\",\"workspaceMemberId\":\"m2\",\"role\":\"owner\",\"memberStatus\":\"active\",\"lifecycleState\":\"active\",\"isDefault\":false}]}"
+      "body": "{\"items\":[{\"workspaceId\":\"ws-team\",\"workspaceName\":\"Team\",\"workspaceType\":\"team\",\"workspaceMemberId\":\"m1\",\"role\":\"owner\",\"memberStatus\":\"active\",\"lifecycleState\":\"active\",\"isDefault\":true},{\"workspaceId\":\"ws-me\",\"workspaceName\":\"Personal\",\"workspaceType\":\"personal\",\"workspaceMemberId\":\"m2\",\"role\":\"owner\",\"memberStatus\":\"active\",\"lifecycleState\":\"active\",\"isDefault\":false}]}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -74,7 +78,8 @@
           "application/json"
         ]
       },
-      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-a\",\"object\":\"model\",\"created\":1767000000,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"image\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"Low\",\"capability\":\"standard\",\"context_limit\":200000,\"context_budget\":160000,\"output_budget\":32000},\"default\":true,\"enabled\":true},{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"image-gen\",\"object\":\"model\",\"created\":1767000002,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"image\"]},\"metadata\":{\"cost\":\"medium\"},\"enabled\":true}]}"
+      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-a\",\"object\":\"model\",\"created\":1767000000,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"image\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"Low\",\"capability\":\"standard\",\"context_limit\":200000,\"context_budget\":160000,\"output_budget\":32000},\"default\":true,\"enabled\":true},{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"image-gen\",\"object\":\"model\",\"created\":1767000002,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"image\"]},\"metadata\":{\"cost\":\"medium\"},\"enabled\":true}]}",
+      "chunks": []
     },
     {
       "method": "POST",
@@ -85,7 +90,8 @@
           "application/json"
         ]
       },
-      "body": "{\"status\":\"completed\"}"
+      "body": "{\"status\":\"completed\"}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -96,7 +102,8 @@
           "application/json"
         ]
       },
-      "body": "{\"schemaVersion\":1,\"workspaceId\":\"ws-me\",\"workspaceMemberId\":\"m2\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"balanceUsd\":\"1.25\",\"codingPlan\":{\"workspaceId\":\"ws-me\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"eligible\":true,\"tier\":\"go\",\"windows\":[{\"policyId\":\"p5\",\"durationSeconds\":18000,\"resetMode\":\"activity_triggered\",\"usedCredits\":\"250\",\"limitCredits\":\"1000\",\"remainingCredits\":\"750\",\"windowStart\":\"2025-12-31T21:00:00Z\",\"resetsAt\":\"2026-01-01T02:00:00Z\"},{\"policyId\":\"p7\",\"durationSeconds\":604800,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"4000\",\"limitCredits\":\"5000\",\"remainingCredits\":\"1000\",\"windowStart\":null,\"resetsAt\":null},{\"policyId\":\"pm\",\"durationSeconds\":2592000,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"0\",\"limitCredits\":\"0\",\"remainingCredits\":\"0\",\"windowStart\":null,\"resetsAt\":null}]},\"modelCovered\":true,\"funding\":\"coding_plan\",\"fundingCheck\":null}"
+      "body": "{\"schemaVersion\":1,\"workspaceId\":\"ws-me\",\"workspaceMemberId\":\"m2\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"balanceUsd\":\"1.25\",\"codingPlan\":{\"workspaceId\":\"ws-me\",\"generatedAt\":\"2026-01-01T00:00:00Z\",\"eligible\":true,\"tier\":\"go\",\"windows\":[{\"policyId\":\"p5\",\"durationSeconds\":18000,\"resetMode\":\"activity_triggered\",\"usedCredits\":\"250\",\"limitCredits\":\"1000\",\"remainingCredits\":\"750\",\"windowStart\":\"2025-12-31T21:00:00Z\",\"resetsAt\":\"2026-01-01T02:00:00Z\"},{\"policyId\":\"p7\",\"durationSeconds\":604800,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"4000\",\"limitCredits\":\"5000\",\"remainingCredits\":\"1000\",\"windowStart\":null,\"resetsAt\":null},{\"policyId\":\"pm\",\"durationSeconds\":2592000,\"resetMode\":\"anchored_recurring\",\"usedCredits\":\"0\",\"limitCredits\":\"0\",\"remainingCredits\":\"0\",\"windowStart\":null,\"resetsAt\":null}]},\"modelCovered\":true,\"funding\":\"coding_plan\",\"fundingCheck\":null}",
+      "chunks": []
     },
     {
       "method": "GET",
@@ -107,7 +114,8 @@
           "application/json"
         ]
       },
-      "body": "{\"schemaVersion\":1,\"workspaceId\":\"ws-me\",\"plan\":{\"tier\":\"go\",\"interval\":\"month\",\"currentPeriodStart\":\"2025-12-13T16:06:05Z\",\"currentPeriodEnd\":\"2026-01-13T16:06:05Z\",\"cancelAtPeriodEnd\":false,\"status\":\"active\"},\"wallet\":{\"balanceUsd\":\"1.25\",\"expiresAt\":null},\"designPlanWindows\":[]}"
+      "body": "{\"schemaVersion\":1,\"workspaceId\":\"ws-me\",\"plan\":{\"tier\":\"go\",\"interval\":\"month\",\"currentPeriodStart\":\"2025-12-13T16:06:05Z\",\"currentPeriodEnd\":\"2026-01-13T16:06:05Z\",\"cancelAtPeriodEnd\":false,\"status\":\"active\"},\"wallet\":{\"balanceUsd\":\"1.25\",\"expiresAt\":null},\"designPlanWindows\":[]}",
+      "chunks": []
     },
     {
       "method": "POST",
@@ -118,7 +126,8 @@
           "application/json"
         ]
       },
-      "body": "{\"ok\":true}"
+      "body": "{\"ok\":true}",
+      "chunks": []
     }
   ],
   "steps": [
@@ -126,17 +135,17 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": {
-            "auth_index": "idx-1"
-          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/account/login",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "POST",
-          "Path": "/v0/management/plugins/opendesign/account/login",
           "Query": null,
+          "Body": {
+            "auth_index": "idx-1"
+          },
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -274,11 +283,11 @@
           {
             "method": "host.log",
             "request": {
+              "level": "info",
+              "message": "opendesign: account sign-in started",
               "fields": {
                 "auth_index": "idx-1"
-              },
-              "level": "info",
-              "message": "opendesign: account sign-in started"
+              }
             }
           },
           {
@@ -290,11 +299,12 @@
           {
             "method": "host.auth.save",
             "request": {
+              "name": "opendesign-k1.json",
               "json": {
                 "account_control_key": "ck-snap-new",
                 "account_control_key_id": "ck-snap-new-id",
                 "account_email": "me@example.com",
-                "account_logged_in_at": "2026-01-01T00:00:00Z",
+                "account_logged_in_at": "2026-01-02T03:04:05Z",
                 "account_name": "Me",
                 "account_user_id": "user-1",
                 "account_workspace_id": "ws-me",
@@ -303,33 +313,25 @@
                 "label": "Key One",
                 "proxy_url": "direct",
                 "type": "opendesign"
-              },
-              "name": "opendesign-k1.json"
+              }
             }
           },
           {
             "method": "host.log",
             "request": {
+              "level": "info",
+              "message": "opendesign: account signed in",
               "fields": {
                 "auth_index": "idx-1",
                 "workspace": true
-              },
-              "level": "info",
-              "message": "opendesign: account signed in"
+              }
             }
           }
         ],
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "activation_url": "https://open-design.ai/cli/activate?deviceId=dev-1",
-              "auth_index": "idx-1",
-              "expires_at": "2026-01-01T00:10:00Z",
-              "id": "<volatile>",
-              "state": "pending",
-              "user_code": "WXYZ-1234"
-            },
+            "StatusCode": 201,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -338,7 +340,14 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 201
+            "Body": {
+              "id": "<volatile>",
+              "auth_index": "idx-1",
+              "state": "pending",
+              "user_code": "WXYZ-1234",
+              "activation_url": "https://open-design.ai/cli/activate?deviceId=dev-1",
+              "expires_at": "2026-01-02T03:14:05Z"
+            }
           }
         }
       }
@@ -347,19 +356,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/account/login",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/account/login",
           "Query": {
             "id": [
               "{{login_id}}"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -369,12 +378,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "auth_index": "idx-1",
-              "email": "me@example.com",
-              "id": "<volatile>",
-              "state": "approved"
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -383,7 +387,12 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "id": "<volatile>",
+              "auth_index": "idx-1",
+              "state": "approved",
+              "email": "me@example.com"
+            }
           }
         }
       }
@@ -392,14 +401,13 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/credentials/quota",
           "Query": {
             "auth_index": [
               "idx-1"
@@ -408,6 +416,7 @@
               "1"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -469,78 +478,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "account": {
-                "balance_usd": "1.25",
-                "eligible": true,
-                "email": "me@example.com",
-                "fetched_at": "2026-01-01T00:00:00Z",
-                "funding": "coding_plan",
-                "interval": "month",
-                "period_end": "2026-01-13T16:06:05Z",
-                "subscription_status": "active",
-                "tier": "go",
-                "windows": [
-                  {
-                    "duration_seconds": 18000,
-                    "kind": "5h",
-                    "limit": 1000,
-                    "remaining": 750,
-                    "resets_at": "2026-01-01T02:00:00Z",
-                    "used": 250,
-                    "window_start": "2025-12-31T21:00:00Z"
-                  },
-                  {
-                    "duration_seconds": 604800,
-                    "kind": "7d",
-                    "limit": 5000,
-                    "remaining": 1000,
-                    "used": 4000
-                  },
-                  {
-                    "duration_seconds": 2592000,
-                    "kind": "2592000s",
-                    "limit": 0,
-                    "remaining": 0,
-                    "used": 0
-                  }
-                ],
-                "workspace_name": "Personal"
-              },
-              "day": {
-                "cached_tokens": 0,
-                "failed": 0,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 0
-              },
-              "fetched_at": "2026-01-01T00:00:00Z",
-              "five_hours": {
-                "cached_tokens": 0,
-                "failed": 0,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 0
-              },
-              "month": {
-                "cached_tokens": 0,
-                "failed": 0,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 0
-              },
-              "week": {
-                "cached_tokens": 0,
-                "failed": 0,
-                "input_tokens": 0,
-                "output_tokens": 0,
-                "reasoning_tokens": 0,
-                "requests": 0
-              }
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -549,7 +487,78 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "five_hours": {
+                "requests": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "cached_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0
+              },
+              "day": {
+                "requests": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "cached_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0
+              },
+              "week": {
+                "requests": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "cached_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0
+              },
+              "month": {
+                "requests": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "cached_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0
+              },
+              "fetched_at": "2026-01-02T03:04:05Z",
+              "account": {
+                "email": "me@example.com",
+                "workspace_name": "Personal",
+                "tier": "go",
+                "eligible": true,
+                "funding": "coding_plan",
+                "balance_usd": "1.25",
+                "windows": [
+                  {
+                    "kind": "5h",
+                    "duration_seconds": 18000,
+                    "used": 250,
+                    "limit": 1000,
+                    "remaining": 750,
+                    "window_start": "2025-12-31T21:00:00Z",
+                    "resets_at": "2026-01-01T02:00:00Z"
+                  },
+                  {
+                    "kind": "7d",
+                    "duration_seconds": 604800,
+                    "used": 4000,
+                    "limit": 5000,
+                    "remaining": 1000
+                  },
+                  {
+                    "kind": "2592000s",
+                    "duration_seconds": 2592000,
+                    "used": 0,
+                    "limit": 0,
+                    "remaining": 0
+                  }
+                ],
+                "subscription_status": "active",
+                "interval": "month",
+                "period_end": "2026-01-13T16:06:05Z",
+                "fetched_at": "2026-01-02T03:04:05Z"
+              }
+            }
           }
         }
       }
@@ -558,15 +567,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/status",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/status",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -591,55 +600,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "catalog": {
-                "checked_at": "2026-01-01T00:00:00Z",
-                "count": 3,
-                "fetched_at": "2026-01-01T00:00:00Z",
-                "keys": 1,
-                "revision": "3623d54cfd5c5c08"
-              },
-              "config": {
-                "base_url": "{{UPSTREAM}}",
-                "default_prefix": "opendesign",
-                "force_model_prefix": false,
-                "models_refresh_minutes": 60,
-                "request_timeout_seconds": 600,
-                "stream_idle_timeout_seconds": 300
-              },
-              "credentials": [
-                {
-                  "account": {
-                    "email": "me@example.com",
-                    "logged_in_at": "2026-01-01T00:00:00Z",
-                    "name": "Me",
-                    "workspace_name": "Personal"
-                  },
-                  "all_models": true,
-                  "auth_index": "idx-1",
-                  "disabled": false,
-                  "effective_prefix": "opendesign",
-                  "failed": 0,
-                  "id": "opendesign-k1.json",
-                  "key_id": "89a142c2e7",
-                  "key_masked": "sk-amr…0001",
-                  "label": "Key One",
-                  "listed_models": 2,
-                  "models": [],
-                  "name": "opendesign-k1.json",
-                  "prefix": null,
-                  "priority": 0,
-                  "proxy_url": "direct",
-                  "registered_known": true,
-                  "registered_models": 2,
-                  "success": 0,
-                  "unavailable": false
-                }
-              ],
-              "now": "2026-01-01T00:00:00Z",
-              "plugin": "opendesign",
-              "version": "9.9.9-snapshot"
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -648,7 +609,55 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "plugin": "opendesign",
+              "version": "9.9.9-snapshot",
+              "now": "2026-01-02T03:04:05Z",
+              "config": {
+                "base_url": "{{UPSTREAM}}",
+                "default_prefix": "opendesign",
+                "force_model_prefix": false,
+                "models_refresh_minutes": 60,
+                "request_timeout_seconds": 600,
+                "stream_idle_timeout_seconds": 300
+              },
+              "catalog": {
+                "count": 3,
+                "keys": 1,
+                "revision": "3623d54cfd5c5c08",
+                "fetched_at": "2026-01-02T03:04:05Z",
+                "checked_at": "2026-01-02T03:04:05Z"
+              },
+              "credentials": [
+                {
+                  "auth_index": "idx-1",
+                  "id": "opendesign-k1.json",
+                  "name": "opendesign-k1.json",
+                  "label": "Key One",
+                  "key_masked": "sk-amr…0001",
+                  "key_id": "89a142c2e7",
+                  "listed_models": 2,
+                  "disabled": false,
+                  "unavailable": false,
+                  "priority": 0,
+                  "proxy_url": "direct",
+                  "prefix": null,
+                  "effective_prefix": "opendesign",
+                  "all_models": true,
+                  "models": [],
+                  "registered_models": 2,
+                  "registered_known": true,
+                  "success": 0,
+                  "failed": 0,
+                  "account": {
+                    "email": "me@example.com",
+                    "name": "Me",
+                    "workspace_name": "Personal",
+                    "logged_in_at": "2026-01-02T03:04:05Z"
+                  }
+                }
+              ]
+            }
           }
         }
       }
@@ -657,19 +666,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "DELETE",
+          "Path": "/v0/management/plugins/opendesign/account",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "DELETE",
-          "Path": "/v0/management/plugins/opendesign/account",
           "Query": {
             "auth_index": [
               "idx-1"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -709,34 +718,31 @@
           {
             "method": "host.auth.save",
             "request": {
+              "name": "opendesign-k1.json",
               "json": {
                 "api_key": "sk-amr-snap-key-one-0001",
                 "label": "Key One",
                 "proxy_url": "direct",
                 "type": "opendesign"
-              },
-              "name": "opendesign-k1.json"
+              }
             }
           },
           {
             "method": "host.log",
             "request": {
+              "level": "info",
+              "message": "opendesign: account signed out",
               "fields": {
                 "auth_index": "idx-1",
                 "revoked": true
-              },
-              "level": "info",
-              "message": "opendesign: account signed out"
+              }
             }
           }
         ],
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "ok": true,
-              "revoked": true
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -745,7 +751,10 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "ok": true,
+              "revoked": true
+            }
           }
         }
       }
@@ -754,19 +763,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "DELETE",
+          "Path": "/v0/management/plugins/opendesign/account",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "DELETE",
-          "Path": "/v0/management/plugins/opendesign/account",
           "Query": {
             "auth_index": [
               "idx-1"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -783,10 +792,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "error": "not_signed_in",
-              "message": "no OpenDesign account is signed in on this credential"
-            },
+            "StatusCode": 409,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -795,7 +801,10 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 409
+            "Body": {
+              "error": "not_signed_in",
+              "message": "no OpenDesign account is signed in on this credential"
+            }
           }
         }
       }

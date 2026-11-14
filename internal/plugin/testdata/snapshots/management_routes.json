@@ -23,116 +23,116 @@
         "response": {
           "ok": true,
           "result": {
-            "resources": [
-              {
-                "description": "Manage OpenDesign API keys, model selection and egress proxies.",
-                "menu": "OpenDesign",
-                "path": "/manage"
-              },
-              {
-                "description": "Plugin logo served to the management panel sidebar.",
-                "path": "/logo.svg"
-              },
-              {
-                "description": "Country flag icon for egress checks (?cc=<ISO 3166-1 alpha-2>).",
-                "path": "/flag.svg"
-              }
-            ],
             "routes": [
               {
-                "description": "Plugin status, model catalog summary and OpenDesign credentials.",
                 "method": "GET",
-                "path": "/v0/management/plugins/opendesign/status"
+                "path": "/v0/management/plugins/opendesign/status",
+                "description": "Plugin status, model catalog summary and OpenDesign credentials."
               },
               {
-                "description": "OpenDesign models the keys' plans list, with inputs, context and output budgets, cost tier and which keys list each.",
                 "method": "GET",
-                "path": "/v0/management/plugins/opendesign/models"
+                "path": "/v0/management/plugins/opendesign/models",
+                "description": "OpenDesign models the keys' plans list, with inputs, context and output budgets, cost tier and which keys list each."
               },
               {
-                "description": "Reload every key's OpenDesign model list and re-register changed models.",
                 "method": "POST",
-                "path": "/v0/management/plugins/opendesign/models/refresh"
+                "path": "/v0/management/plugins/opendesign/models/refresh",
+                "description": "Reload every key's OpenDesign model list and re-register changed models."
               },
               {
-                "description": "Add an OpenDesign API key. Body: {\"api_key\",\"label\",\"note\",\"models\",\"prefix\",\"proxy_url\"|\"proxy_id\"}.",
                 "method": "POST",
-                "path": "/v0/management/plugins/opendesign/credentials"
+                "path": "/v0/management/plugins/opendesign/credentials",
+                "description": "Add an OpenDesign API key. Body: {\"api_key\",\"label\",\"note\",\"models\",\"prefix\",\"proxy_url\"|\"proxy_id\"}."
               },
               {
-                "description": "Edit an OpenDesign credential. Body: {\"auth_index\",\"label\",\"note\",\"models\",\"prefix\",\"proxy_url\"|\"proxy_id\",\"priority\"}.",
                 "method": "PATCH",
-                "path": "/v0/management/plugins/opendesign/credentials"
+                "path": "/v0/management/plugins/opendesign/credentials",
+                "description": "Edit an OpenDesign credential. Body: {\"auth_index\",\"label\",\"note\",\"models\",\"prefix\",\"proxy_url\"|\"proxy_id\",\"priority\"}."
               },
               {
-                "description": "Requests and tokens of one credential over the last 5 hours, 24 hours, 7 days and 30 days, summed from the request log, and the plan windows of the OpenDesign account signed in on it (?auth_index=&refresh=1).",
                 "method": "GET",
-                "path": "/v0/management/plugins/opendesign/credentials/quota"
+                "path": "/v0/management/plugins/opendesign/credentials/quota",
+                "description": "Requests and tokens of one credential over the last 5 hours, 24 hours, 7 days and 30 days, summed from the request log, and the plan windows of the OpenDesign account signed in on it (?auth_index=&refresh=1)."
               },
               {
-                "description": "Start signing an OpenDesign account in on a credential (device authorization, as vela login). Body: {\"auth_index\"}. Answers the activation link and code.",
                 "method": "POST",
-                "path": "/v0/management/plugins/opendesign/account/login"
+                "path": "/v0/management/plugins/opendesign/account/login",
+                "description": "Start signing an OpenDesign account in on a credential (device authorization, as vela login). Body: {\"auth_index\"}. Answers the activation link and code."
               },
               {
-                "description": "State of a sign-in (?id=): pending, approved, denied, expired, cancelled or failed.",
                 "method": "GET",
-                "path": "/v0/management/plugins/opendesign/account/login"
+                "path": "/v0/management/plugins/opendesign/account/login",
+                "description": "State of a sign-in (?id=): pending, approved, denied, expired, cancelled or failed."
               },
               {
-                "description": "Cancel a pending sign-in (?id=).",
                 "method": "DELETE",
-                "path": "/v0/management/plugins/opendesign/account/login"
+                "path": "/v0/management/plugins/opendesign/account/login",
+                "description": "Cancel a pending sign-in (?id=)."
               },
               {
-                "description": "Sign the OpenDesign account out of a credential and revoke its key (?auth_index=).",
                 "method": "DELETE",
-                "path": "/v0/management/plugins/opendesign/account"
+                "path": "/v0/management/plugins/opendesign/account",
+                "description": "Sign the OpenDesign account out of a credential and revoke its key (?auth_index=)."
               },
               {
-                "description": "Request log, newest first (?search=&status=all|success|error&from=&to=&request_id=&limit=&offset=), with a summary.",
                 "method": "GET",
-                "path": "/v0/management/plugins/opendesign/logs"
+                "path": "/v0/management/plugins/opendesign/logs",
+                "description": "Request log, newest first (?search=&status=all|success|error&from=&to=&request_id=&limit=&offset=), with a summary."
               },
               {
-                "description": "Clear the request log.",
                 "method": "DELETE",
-                "path": "/v0/management/plugins/opendesign/logs"
+                "path": "/v0/management/plugins/opendesign/logs",
+                "description": "Clear the request log."
               },
               {
-                "description": "Proxy list (URLs redacted) and CPA's global proxy.",
                 "method": "GET",
-                "path": "/v0/management/plugins/opendesign/proxies"
+                "path": "/v0/management/plugins/opendesign/proxies",
+                "description": "Proxy list (URLs redacted) and CPA's global proxy."
               },
               {
-                "description": "Add a proxy. Body: {\"name\",\"url\"}.",
                 "method": "POST",
-                "path": "/v0/management/plugins/opendesign/proxies"
+                "path": "/v0/management/plugins/opendesign/proxies",
+                "description": "Add a proxy. Body: {\"name\",\"url\"}."
               },
               {
-                "description": "Rename a proxy or change its URL. Body: {\"id\",\"name\",\"url\"}. Credentials using the old URL move to the new one.",
                 "method": "PATCH",
-                "path": "/v0/management/plugins/opendesign/proxies"
+                "path": "/v0/management/plugins/opendesign/proxies",
+                "description": "Rename a proxy or change its URL. Body: {\"id\",\"name\",\"url\"}. Credentials using the old URL move to the new one."
               },
               {
-                "description": "Remove a proxy (?id=). Credentials using it keep its URL.",
                 "method": "DELETE",
-                "path": "/v0/management/plugins/opendesign/proxies"
+                "path": "/v0/management/plugins/opendesign/proxies",
+                "description": "Remove a proxy (?id=). Credentials using it keep its URL."
               },
               {
-                "description": "Add the proxies OpenDesign credentials already use to the list.",
                 "method": "POST",
-                "path": "/v0/management/plugins/opendesign/proxies/import"
+                "path": "/v0/management/plugins/opendesign/proxies/import",
+                "description": "Add the proxies OpenDesign credentials already use to the list."
               },
               {
-                "description": "Reorder the proxy list. Body: {\"ids\":[...]}.",
                 "method": "POST",
-                "path": "/v0/management/plugins/opendesign/proxies/order"
+                "path": "/v0/management/plugins/opendesign/proxies/order",
+                "description": "Reorder the proxy list. Body: {\"ids\":[...]}."
               },
               {
-                "description": "Look up the exit IP and latency of a proxy. Body: {\"id\"} or {\"target\":\"direct\"|\"inherit\"}.",
                 "method": "POST",
-                "path": "/v0/management/plugins/opendesign/proxies/check"
+                "path": "/v0/management/plugins/opendesign/proxies/check",
+                "description": "Look up the exit IP and latency of a proxy. Body: {\"id\"} or {\"target\":\"direct\"|\"inherit\"}."
+              }
+            ],
+            "resources": [
+              {
+                "path": "/manage",
+                "menu": "OpenDesign",
+                "description": "Manage OpenDesign API keys, model selection and egress proxies."
+              },
+              {
+                "path": "/logo.svg",
+                "description": "Plugin logo served to the management panel sidebar."
+              },
+              {
+                "path": "/flag.svg",
+                "description": "Country flag icon for egress checks (?cc=<ISO 3166-1 alpha-2>)."
               }
             ]
           }
@@ -143,15 +143,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/resource/plugins/opendesign/logo.svg",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/resource/plugins/opendesign/logo.svg",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -161,7 +161,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 180 180\">\n  <rect width=\"180\" height=\"180\" rx=\"46\" fill=\"#26251E\"/>\n  <path fill=\"#FFFFFF\" fill-rule=\"evenodd\" d=\"M94 35A57 57 0 0 1 94 149H37V92A57 57 0 0 1 94 35ZM94 47A45 45 0 1 0 94 137A45 45 0 1 0 94 47Z\"/>\n  <path fill=\"#FFFFFF\" d=\"M68 70L117 87L94 95L87 118Z\"/>\n</svg>\n",
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "public, max-age=86400"
@@ -176,7 +176,7 @@
                 "nosniff"
               ]
             },
-            "StatusCode": 200
+            "Body": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 180 180\">\n  <rect width=\"180\" height=\"180\" rx=\"46\" fill=\"#26251E\"/>\n  <path fill=\"#FFFFFF\" fill-rule=\"evenodd\" d=\"M94 35A57 57 0 0 1 94 149H37V92A57 57 0 0 1 94 35ZM94 47A45 45 0 1 0 94 137A45 45 0 1 0 94 47Z\"/>\n  <path fill=\"#FFFFFF\" d=\"M68 70L117 87L94 95L87 118Z\"/>\n</svg>\n"
           }
         }
       }
@@ -185,19 +185,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/resource/plugins/opendesign/flag.svg",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/resource/plugins/opendesign/flag.svg",
           "Query": {
             "cc": [
               "jp"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -207,7 +207,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 36 36\"><path fill=\"#EEE\" d=\"M36 27a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V9a4 4 0 0 1 4-4h28a4 4 0 0 1 4 4v18z\"/><circle cx=\"18\" cy=\"18\" r=\"7\" fill=\"#ED1B2F\"/></svg>",
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "public, max-age=604800"
@@ -222,7 +222,7 @@
                 "nosniff"
               ]
             },
-            "StatusCode": 200
+            "Body": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 36 36\"><path fill=\"#EEE\" d=\"M36 27a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V9a4 4 0 0 1 4-4h28a4 4 0 0 1 4 4v18z\"/><circle cx=\"18\" cy=\"18\" r=\"7\" fill=\"#ED1B2F\"/></svg>"
           }
         }
       }
@@ -231,19 +231,19 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/resource/plugins/opendesign/flag.svg",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/resource/plugins/opendesign/flag.svg",
           "Query": {
             "cc": [
               "x1"
             ]
           },
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -253,7 +253,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": "unknown country code",
+            "StatusCode": 404,
             "Headers": {
               "Cache-Control": [
                 "public, max-age=86400"
@@ -262,7 +262,7 @@
                 "text/plain; charset=utf-8"
               ]
             },
-            "StatusCode": 404
+            "Body": "unknown country code"
           }
         }
       }
@@ -271,15 +271,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/nope",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/nope",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -289,19 +289,19 @@
         "response": {
           "ok": true,
           "result": {
+            "StatusCode": 404,
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
             "Body": {
               "error": "not_found",
               "message": "plugin route not found"
-            },
-            "Headers": {
-              "Cache-Control": [
-                "no-store"
-              ],
-              "Content-Type": [
-                "application/json; charset=utf-8"
-              ]
-            },
-            "StatusCode": 404
+            }
           }
         }
       }
@@ -310,15 +310,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
-          "Headers": {
-            "Accept": [
-              "application/json"
-            ]
-          },
           "Method": "POST",
           "Path": "/v0/management/plugins/opendesign/status",
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -328,10 +328,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "error": "method_not_allowed",
-              "message": "method not allowed on this route"
-            },
+            "StatusCode": 405,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -340,7 +337,10 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 405
+            "Body": {
+              "error": "method_not_allowed",
+              "message": "method not allowed on this route"
+            }
           }
         }
       }
@@ -349,15 +349,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "PUT",
+          "Path": "/v0/management/plugins/opendesign/logs",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "PUT",
-          "Path": "/v0/management/plugins/opendesign/logs",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -367,10 +367,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "error": "method_not_allowed",
-              "message": "method not allowed on this route"
-            },
+            "StatusCode": 405,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -379,7 +376,10 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 405
+            "Body": {
+              "error": "method_not_allowed",
+              "message": "method not allowed on this route"
+            }
           }
         }
       }

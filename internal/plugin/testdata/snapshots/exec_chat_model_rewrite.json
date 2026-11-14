@@ -30,7 +30,8 @@
           "application/json"
         ]
       },
-      "body": "{\"id\":\"chatcmpl-1\",\"object\":\"chat.completion\",\"created\":1767225600,\"model\":\"model-a-2026\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"Hi there\"},\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":12,\"completion_tokens\":3,\"total_tokens\":15,\"prompt_tokens_details\":{\"cached_tokens\":4},\"completion_tokens_details\":{\"reasoning_tokens\":1}}}"
+      "body": "{\"id\":\"chatcmpl-1\",\"object\":\"chat.completion\",\"created\":1767225600,\"model\":\"model-a-2026\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"Hi there\"},\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":12,\"completion_tokens\":3,\"total_tokens\":15,\"prompt_tokens_details\":{\"cached_tokens\":4},\"completion_tokens_details\":{\"reasoning_tokens\":1}}}",
+      "chunks": []
     }
   ],
   "steps": [
@@ -38,19 +39,12 @@
       "rpc": {
         "method": "executor.execute",
         "request": {
-          "Alt": "",
-          "AuthAttributes": {
-            "path": "/auths/opendesign-k1.json"
-          },
           "AuthID": "opendesign-k1.json",
-          "AuthMetadata": {
-            "api_key": "sk-amr-snap-key-one-0001",
-            "label": "Key One",
-            "proxy_url": "direct",
-            "type": "opendesign"
-          },
           "AuthProvider": "opendesign",
+          "Model": "opendesign/model-a(high)",
           "Format": "openai",
+          "Stream": false,
+          "Alt": "",
           "Headers": {
             "Authorization": [
               "Bearer sk-client-snapshot"
@@ -62,24 +56,31 @@
               "snapshot-client/1.0"
             ]
           },
+          "Query": null,
+          "OriginalRequest": "{\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],  \"model\" : \"opendesign/model-a(high)\", \"stream_options\":{\"include_usage\":false}}",
+          "SourceFormat": "openai",
+          "Payload": "{\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],  \"model\" : \"opendesign/model-a(high)\", \"stream_options\":{\"include_usage\":false}}",
           "Metadata": {
             "request_path": "/v1/chat/completions",
             "requested_model": "opendesign/model-a(high)",
             "selected_auth_id": "opendesign-k1.json",
             "selected_auth_index": "idx-1"
           },
-          "Model": "opendesign/model-a(high)",
-          "OriginalRequest": "{\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],  \"model\" : \"opendesign/model-a(high)\", \"stream_options\":{\"include_usage\":false}}",
-          "Payload": "{\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],  \"model\" : \"opendesign/model-a(high)\", \"stream_options\":{\"include_usage\":false}}",
-          "Query": null,
-          "SourceFormat": "openai",
           "StorageJSON": {
             "api_key": "sk-amr-snap-key-one-0001",
             "label": "Key One",
             "proxy_url": "direct",
             "type": "opendesign"
           },
-          "Stream": false,
+          "AuthMetadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k1.json"
+          },
           "host_callback_id": "cb-exec"
         }
       },
@@ -116,13 +117,39 @@
         "response": {
           "ok": true,
           "result": {
+            "Payload": {
+              "id": "chatcmpl-1",
+              "object": "chat.completion",
+              "created": 1767225600,
+              "model": "model-a-2026",
+              "choices": [
+                {
+                  "index": 0,
+                  "message": {
+                    "role": "assistant",
+                    "content": "Hi there"
+                  },
+                  "finish_reason": "stop"
+                }
+              ],
+              "usage": {
+                "prompt_tokens": 12,
+                "completion_tokens": 3,
+                "total_tokens": 15,
+                "prompt_tokens_details": {
+                  "cached_tokens": 4
+                },
+                "completion_tokens_details": {
+                  "reasoning_tokens": 1
+                }
+              }
+            },
             "Headers": {
               "Content-Type": [
                 "application/json"
               ]
             },
-            "Metadata": null,
-            "Payload": "{\"id\":\"chatcmpl-1\",\"object\":\"chat.completion\",\"created\":1767225600,\"model\":\"model-a-2026\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"Hi there\"},\"finish_reason\":\"stop\"}],\"usage\":{\"prompt_tokens\":12,\"completion_tokens\":3,\"total_tokens\":15,\"prompt_tokens_details\":{\"cached_tokens\":4},\"completion_tokens_details\":{\"reasoning_tokens\":1}}}"
+            "Metadata": null
           }
         }
       }
@@ -131,15 +158,15 @@
       "rpc": {
         "method": "management.handle",
         "request": {
-          "Body": null,
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/logs",
           "Headers": {
             "Accept": [
               "application/json"
             ]
           },
-          "Method": "GET",
-          "Path": "/v0/management/plugins/opendesign/logs",
           "Query": null,
+          "Body": null,
           "host_callback_id": "cb-mgmt"
         }
       },
@@ -149,49 +176,7 @@
         "response": {
           "ok": true,
           "result": {
-            "Body": {
-              "items": [
-                {
-                  "attempts": 1,
-                  "auth_id": "opendesign-k1.json",
-                  "auth_index": "idx-1",
-                  "cached_tokens": 4,
-                  "client_path": "/v1/chat/completions",
-                  "credential": "sk-amr…0001",
-                  "duration_ms": "<volatile>",
-                  "egress": "direct",
-                  "endpoint": "/v1/chat/completions",
-                  "finish_reason": "stop",
-                  "http_status": 200,
-                  "id": "1",
-                  "input_tokens": 12,
-                  "model": "opendesign/model-a(high)",
-                  "output_tokens": 3,
-                  "reasoning_tokens": 1,
-                  "served_model": "model-a-2026",
-                  "status": "success",
-                  "stream": false,
-                  "time": "<volatile>",
-                  "upstream_model": "model-a",
-                  "upstream_status": 200,
-                  "usage_reported": true,
-                  "user_agent": "snapshot-client/1.0"
-                }
-              ],
-              "offset": 0,
-              "retention": 100000,
-              "retention_days": 30,
-              "summary": {
-                "cache_hit_rate": 0.3333333333333333,
-                "cached_tokens": 4,
-                "failed": 0,
-                "input_tokens": 12,
-                "output_tokens": 3,
-                "requests": 1,
-                "success": 1
-              },
-              "total": 1
-            },
+            "StatusCode": 200,
             "Headers": {
               "Cache-Control": [
                 "no-store"
@@ -200,7 +185,51 @@
                 "application/json; charset=utf-8"
               ]
             },
-            "StatusCode": 200
+            "Body": {
+              "items": [
+                {
+                  "id": "1",
+                  "time": "<volatile>",
+                  "endpoint": "/v1/chat/completions",
+                  "model": "opendesign/model-a(high)",
+                  "upstream_model": "model-a",
+                  "served_model": "model-a-2026",
+                  "stream": false,
+                  "status": "success",
+                  "http_status": 200,
+                  "credential": "sk-amr…0001",
+                  "auth_id": "opendesign-k1.json",
+                  "duration_ms": "<volatile>",
+                  "input_tokens": 12,
+                  "output_tokens": 3,
+                  "cached_tokens": 4,
+                  "reasoning_tokens": 1,
+                  "client_path": "/v1/chat/completions",
+                  "user_agent": "snapshot-client/1.0",
+                  "auth_index": "idx-1",
+                  "egress": "direct",
+                  "upstream_status": 200,
+                  "finish_reason": "stop",
+                  "usage_reported": true,
+                  "attempts": 1
+                }
+              ],
+              "total": 1,
+              "offset": 0,
+              "retention": 100000,
+              "retention_days": 30,
+              "summary": {
+                "requests": 1,
+                "success": 1,
+                "failed": 0,
+                "input_tokens": 12,
+                "output_tokens": 3,
+                "cached_tokens": 4,
+                "cache_hit_rate": 0.3333333333333333,
+                "output_tokens_per_second": "<volatile>",
+                "e2e_tokens_per_second": "<volatile>"
+              }
+            }
           }
         }
       }
