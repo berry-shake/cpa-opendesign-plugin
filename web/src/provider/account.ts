@@ -110,9 +110,10 @@ class AccountStore {
       }
       if (view.state === "approved") {
         store.notify("ok", "log.accountSignedIn", { name: login.name, email: view.email || "" });
-        // Dropping the old figures makes the refresh load them anew, windows included.
+        // Drop the old figures, then load the card's usage anew, windows included.
         store.setQuota(login.authIndex, undefined);
         await store.refresh(true);
+        void store.loadQuota(login.authIndex);
       }
     } catch (error) {
       if (!this.loginOpen(seq)) return;
@@ -148,6 +149,7 @@ class AccountStore {
       else store.notify("warn", "log.accountSignOutUnrevoked", { name: displayName(cred), msg: result.revoke_error || "" });
       store.setQuota(cred.auth_index, undefined);
       await store.refresh(true);
+      void store.loadQuota(cred.auth_index);
     } catch (error) {
       store.handleError(error);
     } finally {

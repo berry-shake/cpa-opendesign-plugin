@@ -72,6 +72,9 @@ function deferred(): { promise: Promise<Reply>; resolve: (reply: Reply) => void 
 }
 
 const ok = (body: unknown): Reply => ({ status: 200, body });
+// A card's usage from the request log, plus the signed-in account's figures if given.
+const quota = (account?: object): Reply =>
+  ok({ five_hours: usage, day: usage, week: usage, month: usage, fetched_at: new Date().toISOString(), ...(account ? { account } : {}) });
 // Every sign-in's code expires five minutes after the page opened.
 const pending = (id: string, extra: object = {}): Reply =>
   ok({ id, auth_index: "a1", state: "pending", user_code: "ABCD-EFGH", activation_url: ACTIVATE, expires_at: new Date(T0 + 300_000).toISOString(), ...extra });
@@ -86,9 +89,7 @@ function defaultReply(method: string, url: URL): Reply {
       credentials: creds,
     });
   }
-  if (route === "GET /credentials/quota") {
-    return ok({ five_hours: usage, day: usage, week: usage, month: usage, fetched_at: new Date().toISOString() });
-  }
+  if (route === "GET /credentials/quota") return quota();
   if (route === "GET /proxies") return ok({ proxies: [] });
   if (route === "GET /logs") {
     return ok({
@@ -247,7 +248,7 @@ afterEach(async () => {
 });
 
 describe("signing an account in on a key card", () => {
-  it("starts a device sign-in, checks 2 s after each answer, and refreshes the cards once approved", async () => {
+  it("starts a device sign-in, checks 2 s after each answer, and refreshes the cards and the card's usage once approved", async () => {
     await openPage();
     const start = deferred();
     script("POST /account/login", start.promise);
@@ -295,25 +296,38 @@ describe("signing an account in on a key card", () => {
     expect(accountCalls(mark)).toHaveLength(3);
 
     // Approved: the dialog says so, a toast confirms, the card's figures are
-    // dropped and the cards reload (proxies, then status); checking stops.
+    // dropped, the cards reload (proxies, then status) and the card's usage
+    // loads anew, the account's windows included; checking stops.
+    expect(text(card("Alpha"))).toContain("5h tokens");
     creds = [{ ...alpha, account: { email: "alice@example.com" } }, beta];
     script("GET /account/login", ok({ id: "L1", auth_index: "a1", state: "approved", email: "alice@example.com" }));
+    const figures = deferred();
+    script("GET /credentials/quota", figures.promise);
     const approvedMark = sent.length;
     await wait(1);
-    expect(calls(approvedMark)).toEqual(["GET /account/login?id=L1", "GET /proxies", "GET /status"]);
+    expect(calls(approvedMark)).toEqual(["GET /account/login?id=L1", "GET /proxies", "GET /status", "GET /credentials/quota?auth_index=a1"]);
     expect(text(dialog)).toContain("Signed in as alice@example.com");
     expect(buttonNames(dialog)).toEqual(["Close", "Done"]);
     expect(button(dialog, "Done").className).toContain("btn-primary");
     expect(toast()).toBe("Alpha is signed in as alice@example.com");
-    expect(text(card("Alpha"))).toContain("Usage not loaded yet.");
+    expect(text(card("Alpha"))).toContain("Loading…");
+    expect(text(card("Alpha"))).not.toContain("5h tokens");
     expect(buttonNames(card("Alpha"))).toContain("Sign out");
     expect(buttonNames(card("Alpha"))).not.toContain("Sign in");
 
+    const window5h = { kind: "5h", duration_seconds: 18_000, used: 25, limit: 100, remaining: 75 };
+    await run(() => figures.resolve(quota({ email: "alice@example.com", tier: "pro", eligible: true, windows: [window5h] })));
+    expect(text(card("Alpha"))).toContain("5-hour window");
+    expect(text(card("Alpha"))).toContain("Account alice@example.com · Plan Pro");
+    expect(text(card("Alpha"))).toContain("5h tokens");
+    expect(text(card("Alpha"))).not.toContain("Loading…");
+    expect(text(card("Alpha"))).not.toContain("Usage not loaded yet.");
+
     await wait(10_000);
-    expect(calls(approvedMark)).toHaveLength(3);
+    expect(calls(approvedMark)).toHaveLength(4);
     await click(button(dialog, "Done"));
     expect(dialog.open).toBe(false);
-    expect(calls(approvedMark)).toHaveLength(3);
+    expect(calls(approvedMark)).toHaveLength(4);
   });
 
   it.each<[string, (d: HTMLDialogElement) => Promise<void>]>([
@@ -483,7 +497,7 @@ describe("signing an account in on a key card", () => {
 });
 
 describe("signing an account out of a key card", () => {
-  it("takes two clicks, then revokes, confirms and refreshes the card", async () => {
+  it("takes two clicks, then revokes, confirms, refreshes the cards and reloads the card's usage", async () => {
     await openPage();
     const signOut = () => button(card("Beta"), "Sign out");
     expect(signOut().getAttribute("title")).toBe("Signed in as beta@example.com");
@@ -505,15 +519,23 @@ describe("signing an account out of a key card", () => {
     expect(signOut().className).not.toContain("armed");
 
     creds = [alpha, { ...beta, account: undefined }];
+    const figures = deferred();
+    script("GET /credentials/quota", figures.promise);
     await run(() => answer.resolve(ok({ ok: true, revoked: true })));
-    expect(calls(mark)).toEqual(["DELETE /account?auth_index=b2", "GET /proxies", "GET /status"]);
+    expect(calls(mark)).toEqual(["DELETE /account?auth_index=b2", "GET /proxies", "GET /status", "GET /credentials/quota?auth_index=b2"]);
     expect(toast()).toBe("Beta is signed out");
     expect(notice()).toBe("");
-    expect(text(card("Beta"))).toContain("Usage not loaded yet.");
+    expect(text(card("Beta"))).toContain("Loading…");
+    expect(text(card("Beta"))).not.toContain("5h tokens");
     expect(buttonNames(card("Beta"))).toContain("Sign in");
     expect(buttonNames(card("Beta"))).not.toContain("Sign out");
+
+    await run(() => figures.resolve(quota()));
+    expect(text(card("Beta"))).toContain("5h tokens");
+    expect(text(card("Beta"))).not.toContain("Loading…");
+    expect(text(card("Beta"))).not.toContain("Usage not loaded yet.");
     await wait(10_000);
-    expect(calls(mark)).toHaveLength(3);
+    expect(calls(mark)).toHaveLength(4);
   });
 
   it("an armed sign-out disarms after 4 s, or when another two-click action is armed", async () => {
@@ -533,14 +555,14 @@ describe("signing an account out of a key card", () => {
     expect(calls(mark)).toEqual([]);
   });
 
-  it("warns in the notice bar when the key could not be revoked, and still refreshes", async () => {
+  it("warns in the notice bar when the key could not be revoked, and still refreshes and reloads the usage", async () => {
     await openPage();
     const mark = sent.length;
     await click(button(card("Beta"), "Sign out"));
     creds = [alpha, { ...beta, account: undefined }];
     script("DELETE /account", ok({ ok: true, revoked: false, revoke_error: "device not found" }));
     await click(button(card("Beta"), "Click to confirm"));
-    expect(calls(mark)).toEqual(["DELETE /account?auth_index=b2", "GET /proxies", "GET /status"]);
+    expect(calls(mark)).toEqual(["DELETE /account?auth_index=b2", "GET /proxies", "GET /status", "GET /credentials/quota?auth_index=b2"]);
     expect(notice()).toBe(
       "Beta is signed out, but its key could not be revoked: device not found. Remove the device from the OpenDesign website's device list.",
     );
