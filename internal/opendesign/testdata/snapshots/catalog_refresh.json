@@ -604,7 +604,7 @@
               "level": "warn",
               "message": "opendesign: model list refresh failed",
               "fields": {
-                "error": "GET /v1/models returned 503: {\"error\":{\"message\":\"maintenance\"}}"
+                "error": "GET /v1/models returned 500: {\"error\":{\"message\":\"catalog unavailable\"}}; GET /v1/models returned 503: {\"error\":{\"message\":\"maintenance\"}}"
               }
             }
           }
@@ -623,7 +623,7 @@
             },
             "Body": {
               "error": "catalog_unavailable",
-              "message": "GET /v1/models returned 503: {\"error\":{\"message\":\"maintenance\"}}"
+              "message": "GET /v1/models returned 500: {\"error\":{\"message\":\"catalog unavailable\"}}; GET /v1/models returned 503: {\"error\":{\"message\":\"maintenance\"}}"
             }
           }
         }

@@ -203,6 +203,9 @@ type Catalog struct {
 	mu       sync.RWMutex
 	snapshot Snapshot
 	lists    map[string]keyList
+	// errs are the errors of the keys whose last load failed, by keyID; the
+	// snapshot's LastError lists them all.
+	errs map[string]string
 	// fetchMu serializes upstream fetches so concurrent model.for_auth calls
 	// during startup share one request per key.
 	fetchMu sync.Mutex
@@ -215,7 +218,7 @@ var (
 
 // NewCatalog returns an empty catalog.
 func NewCatalog() *Catalog {
-	return &Catalog{snapshot: Snapshot{byID: map[string]Model{}, keys: map[string]time.Time{}}, lists: map[string]keyList{}}
+	return &Catalog{snapshot: Snapshot{byID: map[string]Model{}, keys: map[string]time.Time{}}, lists: map[string]keyList{}, errs: map[string]string{}}
 }
 
 // Current returns the cached snapshot.
@@ -264,15 +267,15 @@ func (c *Catalog) fetch(ctx context.Context, client *http.Client, baseURL, apiKe
 	req.Header.Set("User-Agent", userAgent)
 	resp, errDo := client.Do(req)
 	if errDo != nil {
-		return c.recordError(now, errDo)
+		return c.recordError(keyID, now, errDo)
 	}
 	body, errRead := io.ReadAll(io.LimitReader(resp.Body, maxCatalogBytes))
 	_ = resp.Body.Close()
 	if errRead != nil {
-		return c.recordError(now, errRead)
+		return c.recordError(keyID, now, errRead)
 	}
 	if resp.StatusCode != http.StatusOK {
-		return c.recordError(now, fmt.Errorf("GET %s returned %d: %s", EndpointModels, resp.StatusCode, truncate(string(body), 300)))
+		return c.recordError(keyID, now, fmt.Errorf("GET %s returned %d: %s", EndpointModels, resp.StatusCode, truncate(string(body), 300)))
 	}
 	return c.Store(keyID, body, now)
 }
@@ -281,12 +284,13 @@ func (c *Catalog) fetch(ctx context.Context, client *http.Client, baseURL, apiKe
 func (c *Catalog) Store(keyID string, body []byte, now time.Time) (Snapshot, bool, error) {
 	models, errParse := ParseModels(body)
 	if errParse != nil {
-		return c.recordError(now, errParse)
+		return c.recordError(keyID, now, errParse)
 	}
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	previous := c.snapshot.Revision
 	c.lists[keyID] = keyList{models: models, at: now}
+	delete(c.errs, keyID)
 	c.rebuildLocked(now)
 	return c.snapshot, c.snapshot.Revision != previous, nil
 }
@@ -299,6 +303,12 @@ func (c *Catalog) retain(keep map[string]bool) Snapshot {
 	for keyID := range c.lists {
 		if !keep[keyID] {
 			delete(c.lists, keyID)
+			removed = true
+		}
+	}
+	for keyID := range c.errs {
+		if !keep[keyID] {
+			delete(c.errs, keyID)
 			removed = true
 		}
 	}
@@ -342,7 +352,25 @@ func (c *Catalog) rebuildLocked(fetchedAt time.Time) {
 		Revision:  catalogRevision(models),
 		FetchedAt: fetchedAt,
 		CheckedAt: fetchedAt,
+		LastError: c.lastErrorLocked(),
 	}
+}
+
+// lastErrorLocked lists the distinct errors of the keys whose last load
+// failed, in key order.
+func (c *Catalog) lastErrorLocked() string {
+	keyIDs := make([]string, 0, len(c.errs))
+	for keyID := range c.errs {
+		keyIDs = append(keyIDs, keyID)
+	}
+	sort.Strings(keyIDs)
+	var messages []string
+	for _, keyID := range keyIDs {
+		if message := c.errs[keyID]; !slices.Contains(messages, message) {
+			messages = append(messages, message)
+		}
+	}
+	return strings.Join(messages, "; ")
 }
 
 // ParseModels reads a GET /v1/models response.
@@ -414,10 +442,11 @@ func kinds(raw []string, fallback string) []string {
 	return out
 }
 
-func (c *Catalog) recordError(now time.Time, err error) (Snapshot, bool, error) {
+func (c *Catalog) recordError(keyID string, now time.Time, err error) (Snapshot, bool, error) {
 	c.mu.Lock()
+	c.errs[keyID] = err.Error()
 	c.snapshot.CheckedAt = now
-	c.snapshot.LastError = err.Error()
+	c.snapshot.LastError = c.lastErrorLocked()
 	snapshot := c.snapshot
 	c.mu.Unlock()
 	return snapshot, false, err
