@@ -312,7 +312,7 @@
                   "upstream_status": 200,
                   "upstream_request_id": "up-fix-2",
                   "finish_reason": "tool_use",
-                  "frames": 4,
+                  "frames": 2,
                   "last_frame_ms": "<volatile>",
                   "usage_reported": true,
                   "attempts": 1

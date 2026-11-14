@@ -270,7 +270,7 @@
                   "upstream_status": 200,
                   "upstream_request_id": "up-fix-3",
                   "finish_reason": "max_tokens",
-                  "frames": 2,
+                  "frames": 1,
                   "last_frame_ms": "<volatile>",
                   "usage_reported": true,
                   "attempts": 1

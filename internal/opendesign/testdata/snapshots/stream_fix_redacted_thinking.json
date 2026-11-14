@@ -329,7 +329,7 @@
                   "upstream_status": 200,
                   "upstream_request_id": "up-fix-1",
                   "finish_reason": "end_turn",
-                  "frames": 6,
+                  "frames": 3,
                   "last_frame_ms": "<volatile>",
                   "usage_reported": true,
                   "attempts": 1
