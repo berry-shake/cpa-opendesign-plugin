@@ -8,8 +8,10 @@ import (
 	"github.com/berry-shake/cpa-provider-core/upstream"
 )
 
+// OpenDesign's error bodies as the core's error mapping reads them; it drops
+// the "[code=...] " prefix OpenDesign repeats the code in.
 func TestUpstreamErrorShapes(t *testing.T) {
-	errs := upstream.Errors{Prefix: "opendesign: ", Remap: New().RemapError}
+	errs := upstream.Errors{Prefix: "opendesign: "}
 	for _, tc := range []struct {
 		status        int
 		body          string

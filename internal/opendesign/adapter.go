@@ -50,7 +50,6 @@ func New() *Adapter {
 
 var (
 	_ provider.Adapter             = (*Adapter)(nil)
-	_ provider.ErrorRemapper       = (*Adapter)(nil)
 	_ provider.CredentialExtension = (*Adapter)(nil)
 	_ provider.StreamFixer         = (*Adapter)(nil)
 	_ provider.HostUser            = (*Adapter)(nil)
