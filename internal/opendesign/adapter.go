@@ -86,7 +86,6 @@ func (a *Adapter) Spec() provider.Spec {
 			EditCredentialRoute: `Edit an OpenDesign credential. Body: {"auth_index","label","note","models","prefix","proxy_url"|"proxy_id","priority"}.`,
 			QuotaRoute:          "Requests and tokens of one credential over the last 5 hours, 24 hours, 7 days and 30 days, summed from the request log, and the plan windows of the OpenDesign account signed in on it (?auth_index=&refresh=1).",
 		},
-		StreamErrors: provider.StreamErrorsExtended,
 		// StreamFix reads max_tokens.
 		RequestMembers:     []string{"max_tokens"},
 		CountTokensRefusal: "OpenDesign has no token counting endpoint",

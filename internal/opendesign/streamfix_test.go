@@ -28,7 +28,6 @@ func runGate(t *testing.T, body string, maxTokens int64) (string, []streamgate.K
 	config := streamgate.Config{
 		Protocol: provider.Messages,
 		Errors:   upstream.Errors{Prefix: "opendesign: ", Remap: New().RemapError},
-		Table:    provider.StreamErrorsExtended,
 		Fix:      &messagesFix{maxTokens: maxTokens},
 	}
 	gate := streamgate.New(config, true, nil, func(payload []byte) error {
