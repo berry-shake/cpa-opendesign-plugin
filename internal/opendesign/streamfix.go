@@ -10,6 +10,11 @@ import (
 	"github.com/berry-shake/cpa-provider-core/streamgate"
 )
 
+// RequestMembers names the request member StreamFix reads.
+func (a *Adapter) RequestMembers() []string {
+	return []string{"max_tokens"}
+}
+
 // StreamFix repairs the Messages streams OpenDesign gets wrong (see
 // messagesFix); the other protocols stream as they are. max_tokens, read
 // from the request when its scan found no malformed JSON, lets a stream cut

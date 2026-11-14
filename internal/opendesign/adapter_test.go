@@ -43,7 +43,7 @@ func TestConfigProfile(t *testing.T) {
 func TestStreamFixReadsMaxTokens(t *testing.T) {
 	a := New()
 	input := func(body string, scanErr error) provider.CallInput {
-		members, _ := payload.Members([]byte(body), a.Spec().RequestMembers...)
+		members, _ := payload.Members([]byte(body), a.RequestMembers()...)
 		return provider.CallInput{Request: pluginapi.ExecutorRequest{Payload: []byte(body)}, Members: members, ScanErr: scanErr}
 	}
 	if fix := a.StreamFix(provider.Chat, input(`{"max_tokens":64}`, nil)); fix != nil {
