@@ -3,6 +3,7 @@ package plugin
 import (
 	"context"
 	"fmt"
+	"math"
 	"math/big"
 	"strconv"
 	"strings"
@@ -236,13 +237,17 @@ func planWindowViewOf(w vela.PlanWindow) planWindowView {
 }
 
 // credits reads a decimal credit string; the API sends big integers as
-// strings, which a float64 shows well enough.
+// strings, which a float64 shows well enough. "Inf" and numbers too large for
+// a float64 are no amount, and JSON cannot carry them, so they read as 0.
 func credits(raw string) float64 {
 	value, ok := new(big.Float).SetString(strings.TrimSpace(raw))
 	if !ok {
 		return 0
 	}
 	out, _ := value.Float64()
+	if math.IsInf(out, 0) || math.IsNaN(out) {
+		return 0
+	}
 	return out
 }
 
