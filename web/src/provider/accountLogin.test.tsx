@@ -437,14 +437,27 @@ describe("signing an account in on a key card", () => {
     await click(button(card("Alpha"), "Sign in"));
     const dialog = signinDialog();
     expect(text(dialog)).toContain("Could not start the sign-in: " + msg);
-    // With no sign-in to show, the footer still reads "Cancel sign-in".
-    expect(buttonNames(dialog)).toEqual(["Close", "Sign in again", "Cancel sign-in"]);
+    // Nothing started, so there is nothing to cancel: the footer reads "Close".
+    expect(buttonNames(dialog)).toEqual(["Close", "Sign in again", "Close"]);
+    expect(button(dialog, "Close", 1).className).toContain("btn-secondary");
     await wait(10_000);
     expect(accountCalls(mark)).toEqual(["POST /account/login"]);
     script("POST /account/login", pending("L2"));
     await click(button(dialog, "Sign in again"));
     expect(accountCalls(mark)).toEqual(["POST /account/login", "POST /account/login"]);
     expect(text(dialog)).toContain("Waiting for you to approve on the website…");
+  });
+
+  it("closing a start that failed just closes the dialog", async () => {
+    await openPage();
+    script("POST /account/login", { status: 502, body: { message: "OpenDesign unreachable" } });
+    const mark = sent.length;
+    await click(button(card("Alpha"), "Sign in"));
+    const dialog = signinDialog();
+    await click(button(dialog, "Close", 1));
+    expect(dialog.open).toBe(false);
+    await wait(10_000);
+    expect(accountCalls(mark)).toEqual(["POST /account/login"]);
   });
 
   it.each<[string, boolean, Reply]>([

@@ -95,7 +95,8 @@ export function AccountLoginDialog({ t, s }: { t: T; s: State }) {
     return () => box.removeEventListener("close", onClose);
   }, []);
 
-  const pending = !!login && (!login.view || login.view.state === "pending");
+  // Still starting or waiting; a start that failed has nothing left to cancel.
+  const pending = !!login && (login.view ? login.view.state === "pending" : !login.error);
   useEffect(() => {
     if (!pending) return;
     const timer = setInterval(() => setNow(Date.now()), 1000);
