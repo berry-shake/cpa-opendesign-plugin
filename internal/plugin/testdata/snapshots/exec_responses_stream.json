@@ -1,0 +1,274 @@
+{
+  "case": "exec_responses_stream",
+  "description": "OpenAI Responses streamed: the created/in_progress prelude is held until output and [DONE] is dropped",
+  "setup": {
+    "version": "9.9.9-snapshot",
+    "config": {
+      "base-url": "{{UPSTREAM}}",
+      "data-dir": "{{DATA_DIR}}",
+      "model-prefix": "opendesign"
+    },
+    "credentials": [
+      {
+        "name": "opendesign-k1.json",
+        "fields": {
+          "api_key": "sk-amr-snap-key-one-0001",
+          "label": "Key One",
+          "proxy_url": "direct",
+          "type": "opendesign"
+        }
+      }
+    ]
+  },
+  "upstream_script": [
+    {
+      "method": "POST",
+      "path": "/v1/responses",
+      "status": 200,
+      "header": {
+        "Cache-Control": [
+          "no-cache"
+        ],
+        "Content-Type": [
+          "text/event-stream; charset=utf-8"
+        ],
+        "X-Request-Id": [
+          "up-resp-2"
+        ]
+      },
+      "body": "",
+      "chunks": [
+        "event: response.created\ndata: {\"type\":\"response.created\",\"sequence_number\":0,\"response\":{\"id\":\"resp_2\",\"object\":\"response\",\"status\":\"in_progress\",\"model\":\"model-a\",\"output\":[]}}\n\n",
+        "event: response.in_progress\ndata: {\"type\":\"response.in_progress\",\"sequence_number\":1,\"response\":{\"id\":\"resp_2\",\"object\":\"response\",\"status\":\"in_progress\",\"model\":\"model-a\",\"output\":[]}}\n\n",
+        "event: response.output_item.added\ndata: {\"type\":\"response.output_item.added\",\"sequence_number\":2,\"output_index\":0,\"item\":{\"type\":\"message\",\"id\":\"msg_2\",\"role\":\"assistant\",\"content\":[]}}\n\n",
+        "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"sequence_number\":3,\"output_index\":0,\"content_index\":0,\"delta\":\"Hi\"}\n\n",
+        "event: response.completed\ndata: {\"type\":\"response.completed\",\"sequence_number\":4,\"response\":{\"id\":\"resp_2\",\"object\":\"response\",\"status\":\"completed\",\"model\":\"model-a\",\"output\":[{\"type\":\"message\",\"id\":\"msg_2\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"Hi\"}]}],\"usage\":{\"input_tokens\":10,\"output_tokens\":2,\"total_tokens\":12}}}\n\n",
+        "data: [DONE]\n\n"
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "rpc": {
+        "method": "executor.execute_stream",
+        "request": {
+          "Alt": "",
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k1.json"
+          },
+          "AuthID": "opendesign-k1.json",
+          "AuthMetadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "AuthProvider": "opendesign",
+          "Format": "openai-response",
+          "Headers": {
+            "Authorization": [
+              "Bearer sk-client-snapshot"
+            ],
+            "Content-Type": [
+              "application/json"
+            ],
+            "User-Agent": [
+              "snapshot-client/1.0"
+            ],
+            "X-Opendesign-Cpa-Request-Id": [
+              "req-resp-2"
+            ]
+          },
+          "Metadata": {
+            "request_path": "/v1/responses",
+            "requested_model": "opendesign/model-a",
+            "selected_auth_id": "opendesign-k1.json",
+            "selected_auth_index": "idx-1"
+          },
+          "Model": "model-a",
+          "OriginalRequest": "{\"model\":\"opendesign/model-a\",\"input\":\"Hello\",\"stream\":true}",
+          "Payload": "{\"model\":\"model-a\",\"input\":\"Hello\",\"stream\":true}",
+          "Query": null,
+          "SourceFormat": "openai-response",
+          "StorageJSON": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "Stream": true,
+          "host_callback_id": "cb-exec",
+          "stream_id": "stream-resp-1"
+        }
+      },
+      "output": {
+        "upstream_requests": [
+          {
+            "method": "POST",
+            "path": "/v1/responses",
+            "query": "",
+            "header": {
+              "Accept": [
+                "text/event-stream"
+              ],
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Authorization": [
+                "Bearer sk-amr-snap-key-one-0001"
+              ],
+              "Content-Length": [
+                "49"
+              ],
+              "Content-Type": [
+                "application/json"
+              ],
+              "User-Agent": [
+                "cpa-opendesign-plugin/9.9.9-snapshot"
+              ]
+            },
+            "body": "{\"model\":\"model-a\",\"input\":\"Hello\",\"stream\":true}"
+          }
+        ],
+        "host_calls": [
+          {
+            "method": "host.stream.emit",
+            "request": {
+              "payload": "event: response.created\ndata: {\"type\":\"response.created\",\"sequence_number\":0,\"response\":{\"id\":\"resp_2\",\"object\":\"response\",\"status\":\"in_progress\",\"model\":\"model-a\",\"output\":[]}}\n\n",
+              "stream_id": "stream-resp-1"
+            }
+          },
+          {
+            "method": "host.stream.emit",
+            "request": {
+              "payload": "event: response.in_progress\ndata: {\"type\":\"response.in_progress\",\"sequence_number\":1,\"response\":{\"id\":\"resp_2\",\"object\":\"response\",\"status\":\"in_progress\",\"model\":\"model-a\",\"output\":[]}}\n\n",
+              "stream_id": "stream-resp-1"
+            }
+          },
+          {
+            "method": "host.stream.emit",
+            "request": {
+              "payload": "event: response.output_item.added\ndata: {\"type\":\"response.output_item.added\",\"sequence_number\":2,\"output_index\":0,\"item\":{\"type\":\"message\",\"id\":\"msg_2\",\"role\":\"assistant\",\"content\":[]}}\n\n",
+              "stream_id": "stream-resp-1"
+            }
+          },
+          {
+            "method": "host.stream.emit",
+            "request": {
+              "payload": "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"sequence_number\":3,\"output_index\":0,\"content_index\":0,\"delta\":\"Hi\"}\n\n",
+              "stream_id": "stream-resp-1"
+            }
+          },
+          {
+            "method": "host.stream.emit",
+            "request": {
+              "payload": "event: response.completed\ndata: {\"type\":\"response.completed\",\"sequence_number\":4,\"response\":{\"id\":\"resp_2\",\"object\":\"response\",\"status\":\"completed\",\"model\":\"model-a\",\"output\":[{\"type\":\"message\",\"id\":\"msg_2\",\"role\":\"assistant\",\"content\":[{\"type\":\"output_text\",\"text\":\"Hi\"}]}],\"usage\":{\"input_tokens\":10,\"output_tokens\":2,\"total_tokens\":12}}}\n\n",
+              "stream_id": "stream-resp-1"
+            }
+          },
+          {
+            "method": "host.stream.close",
+            "request": {
+              "stream_id": "stream-resp-1"
+            }
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "headers": {
+              "Content-Type": [
+                "text/event-stream; charset=utf-8"
+              ],
+              "X-Request-Id": [
+                "up-resp-2"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/logs",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "items": [
+                {
+                  "attempts": 1,
+                  "auth_id": "opendesign-k1.json",
+                  "auth_index": "idx-1",
+                  "cached_tokens": 0,
+                  "client_path": "/v1/responses",
+                  "credential": "sk-amr…0001",
+                  "duration_ms": "<volatile>",
+                  "egress": "direct",
+                  "endpoint": "/v1/responses",
+                  "finish_reason": "completed",
+                  "frames": 1,
+                  "http_status": 200,
+                  "id": "1",
+                  "input_tokens": 10,
+                  "last_frame_ms": "<volatile>",
+                  "model": "opendesign/model-a",
+                  "output_tokens": 2,
+                  "request_id": "req-resp-2",
+                  "served_model": "model-a",
+                  "status": "success",
+                  "stream": true,
+                  "time": "<volatile>",
+                  "ttft_ms": "<volatile>",
+                  "upstream_model": "model-a",
+                  "upstream_request_id": "up-resp-2",
+                  "upstream_status": 200,
+                  "usage_reported": true,
+                  "user_agent": "snapshot-client/1.0"
+                }
+              ],
+              "offset": 0,
+              "retention": 100000,
+              "retention_days": 30,
+              "summary": {
+                "cache_hit_rate": 0,
+                "cached_tokens": 0,
+                "failed": 0,
+                "input_tokens": 10,
+                "output_tokens": 2,
+                "requests": 1,
+                "success": 1
+              },
+              "total": 1
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    }
+  ]
+}

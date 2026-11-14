@@ -1,0 +1,407 @@
+{
+  "case": "account_rejected_expired",
+  "description": "The account API rejecting the control key marks the sign-in expired; signing out still clears the fields",
+  "setup": {
+    "version": "9.9.9-snapshot",
+    "config": {
+      "base-url": "{{UPSTREAM}}",
+      "data-dir": "{{DATA_DIR}}",
+      "model-prefix": "opendesign"
+    },
+    "credentials": [
+      {
+        "name": "opendesign-k1.json",
+        "fields": {
+          "account_api_url": "{{UPSTREAM}}",
+          "account_control_key": "ck-snap-old",
+          "account_control_key_id": "ck-snap-old-id",
+          "account_email": "me@example.com",
+          "account_logged_in_at": "2025-12-31T00:00:00Z",
+          "account_name": "Me",
+          "account_user_id": "user-1",
+          "account_workspace_id": "ws-me",
+          "account_workspace_name": "Personal",
+          "api_key": "sk-amr-snap-key-one-0001",
+          "label": "Key One",
+          "proxy_url": "direct",
+          "type": "opendesign"
+        }
+      }
+    ]
+  },
+  "upstream_script": [
+    {
+      "method": "GET",
+      "path": "/api/v1/workspaces/ws-me/billing/funding-check",
+      "status": 401,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": "{\"error\":{\"code\":\"invalid_control_key\",\"message\":\"control key revoked\"}}"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/workspaces/ws-me/billing/funding-check",
+      "status": 403,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": "{\"code\":\"forbidden\",\"message\":\"not a member of this workspace\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/cli/logout",
+      "status": 401,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": "{\"error\":{\"code\":\"invalid_control_key\",\"message\":\"control key revoked\"}}"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/models",
+      "status": 200,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-a\",\"object\":\"model\",\"created\":1767000000,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"image\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"Low\",\"capability\":\"standard\",\"context_limit\":200000,\"context_budget\":160000,\"output_budget\":32000},\"default\":true,\"enabled\":true},{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"image-gen\",\"object\":\"model\",\"created\":1767000002,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"image\"]},\"metadata\":{\"cost\":\"medium\"},\"enabled\":true}]}"
+    }
+  ],
+  "steps": [
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/credentials/quota",
+          "Query": {
+            "auth_index": [
+              "idx-1"
+            ],
+            "refresh": [
+              "1"
+            ]
+          },
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [
+          {
+            "method": "GET",
+            "path": "/api/v1/workspaces/ws-me/billing/funding-check",
+            "query": "",
+            "header": {
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Authorization": [
+                "Bearer ck-snap-old"
+              ],
+              "User-Agent": [
+                "Go-http-client/1.1"
+              ],
+              "X-Vela-Workspace-Id": [
+                "ws-me"
+              ]
+            },
+            "body": ""
+          }
+        ],
+        "host_calls": [
+          {
+            "method": "host.auth.list",
+            "request": {}
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "account": {
+                "eligible": false,
+                "email": "me@example.com",
+                "error": "read plan windows: OpenDesign account API HTTP 401: invalid_control_key: control key revoked",
+                "expired": true,
+                "fetched_at": "2026-01-01T00:00:00Z",
+                "windows": [],
+                "workspace_name": "Personal"
+              },
+              "day": {
+                "cached_tokens": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0,
+                "requests": 0
+              },
+              "fetched_at": "2026-01-01T00:00:00Z",
+              "five_hours": {
+                "cached_tokens": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0,
+                "requests": 0
+              },
+              "month": {
+                "cached_tokens": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0,
+                "requests": 0
+              },
+              "week": {
+                "cached_tokens": 0,
+                "failed": 0,
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "reasoning_tokens": 0,
+                "requests": 0
+              }
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "quota.fetch",
+        "request": {
+          "auth_id": "opendesign-k1.json",
+          "auth_index": "idx-1",
+          "host": {
+            "AuthDir": "/auths",
+            "ExcludedModels": null,
+            "ForceModelPrefix": false,
+            "OAuthModelAlias": null,
+            "ProxyURL": ""
+          },
+          "host_callback_id": "cb-quota",
+          "metadata": {
+            "account_api_url": "{{UPSTREAM}}",
+            "account_control_key": "ck-snap-old",
+            "account_control_key_id": "ck-snap-old-id",
+            "account_email": "me@example.com",
+            "account_logged_in_at": "2025-12-31T00:00:00Z",
+            "account_name": "Me",
+            "account_user_id": "user-1",
+            "account_workspace_id": "ws-me",
+            "account_workspace_name": "Personal",
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "provider": "opendesign",
+          "storage_json": {
+            "account_api_url": "{{UPSTREAM}}",
+            "account_control_key": "ck-snap-old",
+            "account_control_key_id": "ck-snap-old-id",
+            "account_email": "me@example.com",
+            "account_logged_in_at": "2025-12-31T00:00:00Z",
+            "account_name": "Me",
+            "account_user_id": "user-1",
+            "account_workspace_id": "ws-me",
+            "account_workspace_name": "Personal",
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          }
+        }
+      },
+      "output": {
+        "upstream_requests": [
+          {
+            "method": "GET",
+            "path": "/api/v1/workspaces/ws-me/billing/funding-check",
+            "query": "",
+            "header": {
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Authorization": [
+                "Bearer ck-snap-old"
+              ],
+              "User-Agent": [
+                "Go-http-client/1.1"
+              ],
+              "X-Vela-Workspace-Id": [
+                "ws-me"
+              ]
+            },
+            "body": ""
+          }
+        ],
+        "host_calls": [
+          {
+            "method": "host.auth.list",
+            "request": {}
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          }
+        ],
+        "response": {
+          "error": {
+            "code": "account_login_expired",
+            "http_status": 401,
+            "message": "the OpenDesign account login expired or was revoked; sign out and sign in again on the OpenDesign plugin page (read plan windows: OpenDesign account API HTTP 403: forbidden: not a member of this workspace)"
+          },
+          "ok": false
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "DELETE",
+          "Path": "/v0/management/plugins/opendesign/account",
+          "Query": {
+            "auth_index": [
+              "idx-1"
+            ]
+          },
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [
+          {
+            "method": "POST",
+            "path": "/api/v1/cli/logout",
+            "query": "",
+            "header": {
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Authorization": [
+                "Bearer ck-snap-old"
+              ],
+              "Content-Length": [
+                "62"
+              ],
+              "Content-Type": [
+                "application/json"
+              ],
+              "User-Agent": [
+                "Go-http-client/1.1"
+              ]
+            },
+            "body": "{\"controlKeyId\":\"ck-snap-old-id\",\"expectedAppUserId\":\"user-1\"}"
+          },
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "query": "",
+            "header": {
+              "Accept": [
+                "application/json"
+              ],
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Authorization": [
+                "Bearer sk-amr-snap-key-one-0001"
+              ],
+              "User-Agent": [
+                "cpa-opendesign-plugin/9.9.9-snapshot"
+              ]
+            },
+            "body": ""
+          }
+        ],
+        "host_calls": [
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          },
+          {
+            "method": "host.auth.save",
+            "request": {
+              "json": {
+                "api_key": "sk-amr-snap-key-one-0001",
+                "label": "Key One",
+                "proxy_url": "direct",
+                "type": "opendesign"
+              },
+              "name": "opendesign-k1.json"
+            }
+          },
+          {
+            "method": "host.log",
+            "request": {
+              "fields": {
+                "auth_index": "idx-1",
+                "revoked": true
+              },
+              "level": "info",
+              "message": "opendesign: account signed out"
+            }
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "ok": true,
+              "revoked": true
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    }
+  ]
+}

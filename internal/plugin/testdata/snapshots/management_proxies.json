@@ -1,0 +1,537 @@
+{
+  "case": "management_proxies",
+  "description": "The proxy list: empty, add (URL credentials redacted), duplicate and invalid input, rename, import the credentials' proxies, delete",
+  "setup": {
+    "version": "9.9.9-snapshot",
+    "config": {
+      "base-url": "{{UPSTREAM}}",
+      "data-dir": "{{DATA_DIR}}",
+      "model-prefix": "opendesign"
+    },
+    "credentials": [
+      {
+        "name": "opendesign-k1.json",
+        "fields": {
+          "api_key": "sk-amr-snap-key-one-0001",
+          "label": "Key One",
+          "proxy_url": "direct",
+          "type": "opendesign"
+        }
+      },
+      {
+        "name": "opendesign-k2.json",
+        "fields": {
+          "api_key": "sk-amr-snap-key-two-0002",
+          "models": [
+            "model-b",
+            "model-z"
+          ],
+          "note": "second key",
+          "prefix": "od2",
+          "priority": 2,
+          "proxy_url": "socks5://user:secret@127.0.0.1:1080",
+          "type": "opendesign"
+        }
+      }
+    ]
+  },
+  "upstream_script": [],
+  "steps": [
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/proxies",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "proxies": []
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": {
+            "name": "Tokyo",
+            "url": "http://user:secret@127.0.0.1:9"
+          },
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/proxies",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [
+          {
+            "method": "host.log",
+            "request": {
+              "fields": {
+                "proxy": "http://127.0.0.1:9"
+              },
+              "level": "info",
+              "message": "opendesign: added proxy"
+            }
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "ok": true,
+              "proxy": {
+                "created_at": "<volatile>",
+                "id": "<volatile>",
+                "label": "http://127.0.0.1:9",
+                "name": "Tokyo",
+                "url": "http://user:xxxxx@127.0.0.1:9"
+              },
+              "updated_credentials": 0
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 201
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": {
+            "name": "Again",
+            "url": "http://user:secret@127.0.0.1:9"
+          },
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/proxies",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "error": "duplicate_proxy",
+              "message": "this proxy URL is already in the list"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 409
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": {
+            "name": "Bad",
+            "url": "ftp://127.0.0.1:21"
+          },
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/proxies",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "error": "invalid_proxy",
+              "message": "url: invalid proxy_url: unsupported scheme \"ftp\" (use http, https, socks5 or socks5h)"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 400
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": {
+            "id": "{{proxy_id}}",
+            "name": "Osaka"
+          },
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "PATCH",
+          "Path": "/v0/management/plugins/opendesign/proxies",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "ok": true,
+              "proxy": {
+                "created_at": "<volatile>",
+                "id": "<volatile>",
+                "label": "http://127.0.0.1:9",
+                "name": "Osaka",
+                "url": "http://user:xxxxx@127.0.0.1:9"
+              },
+              "updated_credentials": 0
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/proxies/import",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [
+          {
+            "method": "host.auth.list",
+            "request": {}
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-2"
+            }
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "added": 1,
+              "ok": true,
+              "proxies": [
+                {
+                  "created_at": "<volatile>",
+                  "id": "<volatile>",
+                  "label": "http://127.0.0.1:9",
+                  "name": "Osaka",
+                  "url": "http://user:xxxxx@127.0.0.1:9"
+                },
+                {
+                  "created_at": "<volatile>",
+                  "id": "<volatile>",
+                  "label": "socks5://127.0.0.1:1080",
+                  "name": "127.0.0.1:1080",
+                  "url": "socks5://user:xxxxx@127.0.0.1:1080"
+                }
+              ]
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/proxies",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "proxies": [
+                {
+                  "created_at": "<volatile>",
+                  "id": "<volatile>",
+                  "label": "http://127.0.0.1:9",
+                  "name": "Osaka",
+                  "url": "http://user:xxxxx@127.0.0.1:9"
+                },
+                {
+                  "created_at": "<volatile>",
+                  "id": "<volatile>",
+                  "label": "socks5://127.0.0.1:1080",
+                  "name": "127.0.0.1:1080",
+                  "url": "socks5://user:xxxxx@127.0.0.1:1080"
+                }
+              ]
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "DELETE",
+          "Path": "/v0/management/plugins/opendesign/proxies",
+          "Query": {
+            "id": [
+              "{{proxy_id}}"
+            ]
+          },
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [
+          {
+            "method": "host.log",
+            "request": {
+              "fields": {
+                "proxy": "socks5://127.0.0.1:1080"
+              },
+              "level": "info",
+              "message": "opendesign: deleted proxy"
+            }
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "ok": true
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": {
+            "target": "elsewhere"
+          },
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/proxies/check",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "error": "invalid_target",
+              "message": "send {\"id\"} or {\"target\":\"direct\"|\"inherit\"}"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 400
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/proxies",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "proxies": [
+                {
+                  "created_at": "<volatile>",
+                  "id": "<volatile>",
+                  "label": "http://127.0.0.1:9",
+                  "name": "Osaka",
+                  "url": "http://user:xxxxx@127.0.0.1:9"
+                }
+              ]
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    }
+  ]
+}

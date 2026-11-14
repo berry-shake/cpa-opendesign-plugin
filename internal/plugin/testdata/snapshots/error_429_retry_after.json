@@ -1,0 +1,215 @@
+{
+  "case": "error_429_retry_after",
+  "description": "HTTP 429 with Retry-After on a stream request is retryable and carries retry_after_seconds",
+  "setup": {
+    "version": "9.9.9-snapshot",
+    "config": {
+      "base-url": "{{UPSTREAM}}",
+      "data-dir": "{{DATA_DIR}}",
+      "model-prefix": "opendesign"
+    },
+    "credentials": [
+      {
+        "name": "opendesign-k1.json",
+        "fields": {
+          "api_key": "sk-amr-snap-key-one-0001",
+          "label": "Key One",
+          "proxy_url": "direct",
+          "type": "opendesign"
+        }
+      }
+    ]
+  },
+  "upstream_script": [
+    {
+      "method": "POST",
+      "path": "/v1/chat/completions",
+      "status": 429,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ],
+        "Retry-After": [
+          "30"
+        ]
+      },
+      "body": "{\"error\":{\"message\":\"5-hour limit reached\",\"type\":\"rate_limit_error\",\"code\":\"usage_limit\"}}"
+    }
+  ],
+  "steps": [
+    {
+      "rpc": {
+        "method": "executor.execute_stream",
+        "request": {
+          "Alt": "",
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k1.json"
+          },
+          "AuthID": "opendesign-k1.json",
+          "AuthMetadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "AuthProvider": "opendesign",
+          "Format": "openai",
+          "Headers": {
+            "Authorization": [
+              "Bearer sk-client-snapshot"
+            ],
+            "Content-Type": [
+              "application/json"
+            ],
+            "User-Agent": [
+              "snapshot-client/1.0"
+            ],
+            "X-Opendesign-Cpa-Request-Id": [
+              "req-429"
+            ]
+          },
+          "Metadata": {
+            "request_path": "/v1/chat/completions",
+            "requested_model": "opendesign/model-a",
+            "selected_auth_id": "opendesign-k1.json",
+            "selected_auth_index": "idx-1"
+          },
+          "Model": "model-a",
+          "OriginalRequest": "{\"model\":\"opendesign/model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"stream\":true}",
+          "Payload": "{\"model\":\"model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"stream\":true}",
+          "Query": null,
+          "SourceFormat": "openai",
+          "StorageJSON": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "Stream": true,
+          "host_callback_id": "cb-exec",
+          "stream_id": "stream-err-429"
+        }
+      },
+      "output": {
+        "upstream_requests": [
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions",
+            "query": "",
+            "header": {
+              "Accept": [
+                "text/event-stream"
+              ],
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Authorization": [
+                "Bearer sk-amr-snap-key-one-0001"
+              ],
+              "Content-Length": [
+                "120"
+              ],
+              "Content-Type": [
+                "application/json"
+              ],
+              "User-Agent": [
+                "cpa-opendesign-plugin/9.9.9-snapshot"
+              ]
+            },
+            "body": "{\"stream_options\":{\"include_usage\":true},\"model\":\"model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"stream\":true}"
+          }
+        ],
+        "host_calls": [],
+        "response": {
+          "error": {
+            "code": "usage_limit",
+            "http_status": 429,
+            "message": "opendesign: 5-hour limit reached",
+            "retry_after_seconds": 30,
+            "retryable": true
+          },
+          "ok": false
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/logs",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "items": [
+                {
+                  "attempts": 1,
+                  "auth_id": "opendesign-k1.json",
+                  "auth_index": "idx-1",
+                  "cached_tokens": 0,
+                  "client_path": "/v1/chat/completions",
+                  "credential": "sk-amr…0001",
+                  "duration_ms": "<volatile>",
+                  "egress": "direct",
+                  "endpoint": "/v1/chat/completions",
+                  "error": "opendesign: 5-hour limit reached",
+                  "error_code": "usage_limit",
+                  "error_phase": "request",
+                  "http_status": 429,
+                  "id": "1",
+                  "input_tokens": 0,
+                  "model": "opendesign/model-a",
+                  "output_tokens": 0,
+                  "request_id": "req-429",
+                  "retry_after": 30,
+                  "status": "error",
+                  "stream": true,
+                  "time": "<volatile>",
+                  "upstream_model": "model-a",
+                  "upstream_status": 429,
+                  "user_agent": "snapshot-client/1.0"
+                }
+              ],
+              "offset": 0,
+              "retention": 100000,
+              "retention_days": 30,
+              "summary": {
+                "cache_hit_rate": null,
+                "cached_tokens": 0,
+                "failed": 1,
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "requests": 1,
+                "success": 0
+              },
+              "total": 1
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    }
+  ]
+}

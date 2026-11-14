@@ -1,0 +1,234 @@
+{
+  "case": "exec_messages_nonstream",
+  "description": "Anthropic Messages, buffered: Anthropic-Version and Anthropic-Beta are forwarded, the thinking budget is logged as the effort, cache tokens are counted",
+  "setup": {
+    "version": "9.9.9-snapshot",
+    "config": {
+      "base-url": "{{UPSTREAM}}",
+      "data-dir": "{{DATA_DIR}}",
+      "model-prefix": "opendesign"
+    },
+    "credentials": [
+      {
+        "name": "opendesign-k1.json",
+        "fields": {
+          "api_key": "sk-amr-snap-key-one-0001",
+          "label": "Key One",
+          "proxy_url": "direct",
+          "type": "opendesign"
+        }
+      }
+    ]
+  },
+  "upstream_script": [
+    {
+      "method": "POST",
+      "path": "/v1/messages",
+      "status": 200,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ],
+        "Request-Id": [
+          "up-msg-1"
+        ]
+      },
+      "body": "{\"id\":\"msg_1\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"model-a\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"Greet back.\",\"signature\":\"sig-1\"},{\"type\":\"text\",\"text\":\"Hi\"}],\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"cache_creation_input_tokens\":2,\"cache_read_input_tokens\":5,\"output_tokens\":7,\"output_tokens_details\":{\"thinking_tokens\":4}}}"
+    }
+  ],
+  "steps": [
+    {
+      "rpc": {
+        "method": "executor.execute",
+        "request": {
+          "Alt": "",
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k1.json"
+          },
+          "AuthID": "opendesign-k1.json",
+          "AuthMetadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "AuthProvider": "opendesign",
+          "Format": "claude",
+          "Headers": {
+            "Anthropic-Beta": [
+              "interleaved-thinking-2025-05-14"
+            ],
+            "Anthropic-Version": [
+              "2023-06-01"
+            ],
+            "Authorization": [
+              "Bearer sk-client-snapshot"
+            ],
+            "Content-Type": [
+              "application/json"
+            ],
+            "User-Agent": [
+              "snapshot-client/1.0"
+            ],
+            "X-Opendesign-Cpa-Request-Id": [
+              "req-msg-1"
+            ]
+          },
+          "Metadata": {
+            "request_path": "/v1/messages",
+            "requested_model": "opendesign/model-a",
+            "selected_auth_id": "opendesign-k1.json",
+            "selected_auth_index": "idx-1"
+          },
+          "Model": "model-a",
+          "OriginalRequest": "{\"model\":\"opendesign/model-a\",\"max_tokens\":1024,\"thinking\":{\"type\":\"enabled\",\"budget_tokens\":2048},\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}",
+          "Payload": "{\"model\":\"model-a\",\"max_tokens\":1024,\"thinking\":{\"type\":\"enabled\",\"budget_tokens\":2048},\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}",
+          "Query": null,
+          "SourceFormat": "claude",
+          "StorageJSON": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "Stream": false,
+          "host_callback_id": "cb-exec"
+        }
+      },
+      "output": {
+        "upstream_requests": [
+          {
+            "method": "POST",
+            "path": "/v1/messages",
+            "query": "",
+            "header": {
+              "Accept": [
+                "application/json"
+              ],
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Anthropic-Beta": [
+                "interleaved-thinking-2025-05-14"
+              ],
+              "Anthropic-Version": [
+                "2023-06-01"
+              ],
+              "Authorization": [
+                "Bearer sk-amr-snap-key-one-0001"
+              ],
+              "Content-Length": [
+                "135"
+              ],
+              "Content-Type": [
+                "application/json"
+              ],
+              "User-Agent": [
+                "cpa-opendesign-plugin/9.9.9-snapshot"
+              ]
+            },
+            "body": "{\"model\":\"model-a\",\"max_tokens\":1024,\"thinking\":{\"type\":\"enabled\",\"budget_tokens\":2048},\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}"
+          }
+        ],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Headers": {
+              "Content-Type": [
+                "application/json"
+              ],
+              "Request-Id": [
+                "up-msg-1"
+              ]
+            },
+            "Metadata": null,
+            "Payload": "{\"id\":\"msg_1\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"model-a\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"Greet back.\",\"signature\":\"sig-1\"},{\"type\":\"text\",\"text\":\"Hi\"}],\"stop_reason\":\"end_turn\",\"stop_sequence\":null,\"usage\":{\"input_tokens\":10,\"cache_creation_input_tokens\":2,\"cache_read_input_tokens\":5,\"output_tokens\":7,\"output_tokens_details\":{\"thinking_tokens\":4}}}"
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/logs",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "items": [
+                {
+                  "attempts": 1,
+                  "auth_id": "opendesign-k1.json",
+                  "auth_index": "idx-1",
+                  "cache_write_tokens": 2,
+                  "cached_tokens": 5,
+                  "client_path": "/v1/messages",
+                  "credential": "sk-amr…0001",
+                  "duration_ms": "<volatile>",
+                  "egress": "direct",
+                  "endpoint": "/v1/messages",
+                  "finish_reason": "end_turn",
+                  "http_status": 200,
+                  "id": "1",
+                  "input_tokens": 17,
+                  "model": "opendesign/model-a",
+                  "output_tokens": 7,
+                  "reasoning_effort": "budget 2048",
+                  "reasoning_tokens": 4,
+                  "request_id": "req-msg-1",
+                  "served_model": "model-a",
+                  "status": "success",
+                  "stream": false,
+                  "time": "<volatile>",
+                  "upstream_model": "model-a",
+                  "upstream_request_id": "up-msg-1",
+                  "upstream_status": 200,
+                  "usage_reported": true,
+                  "user_agent": "snapshot-client/1.0"
+                }
+              ],
+              "offset": 0,
+              "retention": 100000,
+              "retention_days": 30,
+              "summary": {
+                "cache_hit_rate": 0.29411764705882354,
+                "cached_tokens": 5,
+                "failed": 0,
+                "input_tokens": 17,
+                "output_tokens": 7,
+                "requests": 1,
+                "success": 1
+              },
+              "total": 1
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    }
+  ]
+}

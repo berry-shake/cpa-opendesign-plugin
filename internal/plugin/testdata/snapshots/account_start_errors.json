@@ -1,0 +1,338 @@
+{
+  "case": "account_start_errors",
+  "description": "Sign-in and sign-out requests refused before or by the account API",
+  "setup": {
+    "version": "9.9.9-snapshot",
+    "config": {
+      "base-url": "{{UPSTREAM}}",
+      "data-dir": "{{DATA_DIR}}",
+      "model-prefix": "opendesign"
+    },
+    "credentials": [
+      {
+        "name": "opendesign-k1.json",
+        "fields": {
+          "api_key": "sk-amr-snap-key-one-0001",
+          "label": "Key One",
+          "proxy_url": "direct",
+          "type": "opendesign"
+        }
+      }
+    ]
+  },
+  "upstream_script": [
+    {
+      "method": "POST",
+      "path": "/api/v1/cli/device-authorizations",
+      "status": 500,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": "{\"error\":{\"code\":\"internal\",\"message\":\"try again later\"}}"
+    }
+  ],
+  "steps": [
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": {},
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/account/login",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "error": "invalid_json",
+              "message": "send {\"auth_index\"}"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 400
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": {
+            "auth_index": "idx-9"
+          },
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/account/login",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [
+          {
+            "method": "host.auth.list",
+            "request": {}
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "error": "credential_not_found",
+              "message": "no OpenDesign credential matches auth_index"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 404
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": {
+            "auth_index": "idx-1"
+          },
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/account/login",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [
+          {
+            "method": "POST",
+            "path": "/api/v1/cli/device-authorizations",
+            "query": "",
+            "header": {
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Content-Length": [
+                "109"
+              ],
+              "Content-Type": [
+                "application/json"
+              ],
+              "User-Agent": [
+                "Go-http-client/1.1"
+              ]
+            },
+            "body": "{\"capabilities\":{\"completionReceipt\":true},\"cliVersion\":\"0.1.10\",\"host\":\"cpa-snapshot-host\",\"profile\":\"prod\"}"
+          }
+        ],
+        "host_calls": [
+          {
+            "method": "host.auth.list",
+            "request": {}
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "error": "login_start_failed",
+              "message": "start device authorization: OpenDesign account API HTTP 500: internal: try again later"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 502
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/account/login",
+          "Query": {
+            "id": [
+              "nope"
+            ]
+          },
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "error": "login_not_found",
+              "message": "no sign-in has this id; start a new one"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 404
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "DELETE",
+          "Path": "/v0/management/plugins/opendesign/account/login",
+          "Query": {
+            "id": [
+              "nope"
+            ]
+          },
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "error": "login_not_found",
+              "message": "no sign-in has this id"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 404
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "DELETE",
+          "Path": "/v0/management/plugins/opendesign/account",
+          "Query": {
+            "auth_index": [
+              "idx-1"
+            ]
+          },
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "error": "not_signed_in",
+              "message": "no OpenDesign account is signed in on this credential"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 409
+          }
+        }
+      }
+    }
+  ]
+}

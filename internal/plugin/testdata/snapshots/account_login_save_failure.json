@@ -1,0 +1,299 @@
+{
+  "case": "account_login_save_failure",
+  "description": "Keys that cannot be saved are revoked and the sign-in fails",
+  "setup": {
+    "version": "9.9.9-snapshot",
+    "config": {
+      "base-url": "{{UPSTREAM}}",
+      "data-dir": "{{DATA_DIR}}",
+      "model-prefix": "opendesign"
+    },
+    "credentials": [
+      {
+        "name": "opendesign-k1.json",
+        "fields": {
+          "api_key": "sk-amr-snap-key-one-0001",
+          "label": "Key One",
+          "proxy_url": "direct",
+          "type": "opendesign"
+        },
+        "read_only": true
+      }
+    ]
+  },
+  "upstream_script": [
+    {
+      "method": "POST",
+      "path": "/api/v1/cli/device-authorizations",
+      "status": 201,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": "{\"deviceId\":\"dev-1\",\"userCode\":\"WXYZ-1234\",\"deviceSecret\":\"secret-dev-1\",\"activationUrl\":\"https://open-design.ai/cli/activate?deviceId=dev-1\",\"pollIntervalSeconds\":1,\"status\":\"pending\",\"expiresAt\":\"2026-01-01T00:10:00Z\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/cli/device-authorizations/dev-1/token",
+      "status": 200,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": "{\"status\":\"approved\",\"controlKey\":\"ck-snap-new\",\"controlKeyId\":\"ck-snap-new-id\",\"runtimeKey\":\"rk-snap\",\"user\":{\"id\":\"user-1\",\"authUserId\":\"auth-1\",\"email\":\"me@example.com\",\"name\":\"Me\"},\"apiUrl\":\"\",\"linkUrl\":\"\"}"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/workspaces",
+      "status": 500,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": "{\"error\":\"workspace service down\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/cli/logout",
+      "status": 200,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": "{\"ok\":true}"
+    }
+  ],
+  "steps": [
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": {
+            "auth_index": "idx-1"
+          },
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/account/login",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [
+          {
+            "method": "POST",
+            "path": "/api/v1/cli/device-authorizations",
+            "query": "",
+            "header": {
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Content-Length": [
+                "109"
+              ],
+              "Content-Type": [
+                "application/json"
+              ],
+              "User-Agent": [
+                "Go-http-client/1.1"
+              ]
+            },
+            "body": "{\"capabilities\":{\"completionReceipt\":true},\"cliVersion\":\"0.1.10\",\"host\":\"cpa-snapshot-host\",\"profile\":\"prod\"}"
+          },
+          {
+            "method": "POST",
+            "path": "/api/v1/cli/device-authorizations/dev-1/token",
+            "query": "",
+            "header": {
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Content-Length": [
+                "63"
+              ],
+              "Content-Type": [
+                "application/json"
+              ],
+              "User-Agent": [
+                "Go-http-client/1.1"
+              ]
+            },
+            "body": "{\"deviceSecret\":\"secret-dev-1\",\"claimRegistrationInvite\":false}"
+          },
+          {
+            "method": "GET",
+            "path": "/api/v1/workspaces",
+            "query": "",
+            "header": {
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Authorization": [
+                "Bearer ck-snap-new"
+              ],
+              "User-Agent": [
+                "Go-http-client/1.1"
+              ]
+            },
+            "body": ""
+          },
+          {
+            "method": "POST",
+            "path": "/api/v1/cli/logout",
+            "query": "",
+            "header": {
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Authorization": [
+                "Bearer ck-snap-new"
+              ],
+              "Content-Length": [
+                "62"
+              ],
+              "Content-Type": [
+                "application/json"
+              ],
+              "User-Agent": [
+                "Go-http-client/1.1"
+              ]
+            },
+            "body": "{\"controlKeyId\":\"ck-snap-new-id\",\"expectedAppUserId\":\"user-1\"}"
+          }
+        ],
+        "host_calls": [
+          {
+            "method": "host.auth.list",
+            "request": {}
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          },
+          {
+            "method": "host.log",
+            "request": {
+              "fields": {
+                "auth_index": "idx-1"
+              },
+              "level": "info",
+              "message": "opendesign: account sign-in started"
+            }
+          },
+          {
+            "method": "host.log",
+            "request": {
+              "fields": {
+                "auth_index": "idx-1",
+                "error": "OpenDesign account API HTTP 500: workspace service down"
+              },
+              "level": "warn",
+              "message": "opendesign: cannot list the account's workspaces"
+            }
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          },
+          {
+            "method": "host.auth.save",
+            "request": {
+              "json": {
+                "account_control_key": "ck-snap-new",
+                "account_control_key_id": "ck-snap-new-id",
+                "account_email": "me@example.com",
+                "account_logged_in_at": "2026-01-01T00:00:00Z",
+                "account_name": "Me",
+                "account_user_id": "user-1",
+                "api_key": "sk-amr-snap-key-one-0001",
+                "label": "Key One",
+                "proxy_url": "direct",
+                "type": "opendesign"
+              },
+              "name": "opendesign-k1.json"
+            }
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "activation_url": "https://open-design.ai/cli/activate?deviceId=dev-1",
+              "auth_index": "idx-1",
+              "expires_at": "2026-01-01T00:10:00Z",
+              "id": "<volatile>",
+              "state": "pending",
+              "user_code": "WXYZ-1234"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 201
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/account/login",
+          "Query": {
+            "id": [
+              "{{login_id}}"
+            ]
+          },
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "auth_index": "idx-1",
+              "id": "<volatile>",
+              "message": "credentials were issued but could not be saved: host.auth.save: failed to write auth file: open /auths/opendesign-k1.json: permission denied",
+              "state": "failed"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    }
+  ]
+}

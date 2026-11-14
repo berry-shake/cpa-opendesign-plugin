@@ -1,0 +1,110 @@
+{
+  "case": "count_tokens",
+  "description": "Token counting and raw HTTP requests are not supported (501)",
+  "setup": {
+    "version": "9.9.9-snapshot",
+    "config": {
+      "base-url": "{{UPSTREAM}}",
+      "data-dir": "{{DATA_DIR}}",
+      "model-prefix": "opendesign"
+    },
+    "credentials": [
+      {
+        "name": "opendesign-k1.json",
+        "fields": {
+          "api_key": "sk-amr-snap-key-one-0001",
+          "label": "Key One",
+          "proxy_url": "direct",
+          "type": "opendesign"
+        }
+      }
+    ]
+  },
+  "upstream_script": [],
+  "steps": [
+    {
+      "rpc": {
+        "method": "executor.count_tokens",
+        "request": {
+          "Alt": "",
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k1.json"
+          },
+          "AuthID": "opendesign-k1.json",
+          "AuthMetadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "AuthProvider": "opendesign",
+          "Format": "claude",
+          "Headers": {
+            "Authorization": [
+              "Bearer sk-client-snapshot"
+            ],
+            "Content-Type": [
+              "application/json"
+            ],
+            "User-Agent": [
+              "snapshot-client/1.0"
+            ]
+          },
+          "Metadata": {
+            "request_path": "/v1/messages",
+            "requested_model": "opendesign/model-a",
+            "selected_auth_id": "opendesign-k1.json",
+            "selected_auth_index": "idx-1"
+          },
+          "Model": "model-a",
+          "OriginalRequest": "{\"model\":\"opendesign/model-a\",\"max_tokens\":1024,\"thinking\":{\"type\":\"enabled\",\"budget_tokens\":2048},\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}",
+          "Payload": "{\"model\":\"model-a\",\"max_tokens\":1024,\"thinking\":{\"type\":\"enabled\",\"budget_tokens\":2048},\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}",
+          "Query": null,
+          "SourceFormat": "claude",
+          "StorageJSON": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "Stream": false,
+          "host_callback_id": "cb-exec"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "error": {
+            "code": "unsupported_operation",
+            "http_status": 501,
+            "message": "opendesign: OpenDesign has no token counting endpoint"
+          },
+          "ok": false
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "executor.http_request",
+        "request": {
+          "AuthID": "opendesign-k1.json",
+          "Method": "GET",
+          "URL": "https://example.invalid/v1/models"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "error": {
+            "code": "unsupported_operation",
+            "http_status": 501,
+            "message": "opendesign: raw HTTP requests are not supported"
+          },
+          "ok": false
+        }
+      }
+    }
+  ]
+}

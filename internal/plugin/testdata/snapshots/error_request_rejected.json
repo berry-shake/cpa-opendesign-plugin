@@ -1,0 +1,302 @@
+{
+  "case": "error_request_rejected",
+  "description": "Requests rejected before calling OpenDesign: no api_key, an unsupported format, a payload that is not an object",
+  "setup": {
+    "version": "9.9.9-snapshot",
+    "config": {
+      "base-url": "{{UPSTREAM}}",
+      "data-dir": "{{DATA_DIR}}",
+      "model-prefix": "opendesign"
+    },
+    "credentials": [
+      {
+        "name": "opendesign-k1.json",
+        "fields": {
+          "api_key": "sk-amr-snap-key-one-0001",
+          "label": "Key One",
+          "proxy_url": "direct",
+          "type": "opendesign"
+        }
+      }
+    ]
+  },
+  "upstream_script": [],
+  "steps": [
+    {
+      "rpc": {
+        "method": "executor.execute",
+        "request": {
+          "Alt": "",
+          "AuthAttributes": {
+            "path": "/auths/opendesign-nokey.json"
+          },
+          "AuthID": "opendesign-nokey.json",
+          "AuthMetadata": {
+            "label": "no key",
+            "type": "opendesign"
+          },
+          "AuthProvider": "opendesign",
+          "Format": "openai",
+          "Headers": {
+            "Authorization": [
+              "Bearer sk-client-snapshot"
+            ],
+            "Content-Type": [
+              "application/json"
+            ],
+            "User-Agent": [
+              "snapshot-client/1.0"
+            ]
+          },
+          "Metadata": {
+            "request_path": "/v1/chat/completions",
+            "requested_model": "opendesign/model-a",
+            "selected_auth_id": "opendesign-nokey.json",
+            "selected_auth_index": "idx-1"
+          },
+          "Model": "model-a",
+          "OriginalRequest": "{\"model\":\"opendesign/model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"reasoning_effort\":\"low\"}",
+          "Payload": "{\"model\":\"model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"reasoning_effort\":\"low\"}",
+          "Query": null,
+          "SourceFormat": "openai",
+          "StorageJSON": {
+            "label": "no key",
+            "type": "opendesign"
+          },
+          "Stream": false,
+          "host_callback_id": "cb-exec"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "error": {
+            "code": "invalid_credential",
+            "http_status": 401,
+            "message": "opendesign: credential has no api_key"
+          },
+          "ok": false
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "executor.execute",
+        "request": {
+          "Alt": "",
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k1.json"
+          },
+          "AuthID": "opendesign-k1.json",
+          "AuthMetadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "AuthProvider": "opendesign",
+          "Format": "gemini",
+          "Headers": {
+            "Authorization": [
+              "Bearer sk-client-snapshot"
+            ],
+            "Content-Type": [
+              "application/json"
+            ],
+            "User-Agent": [
+              "snapshot-client/1.0"
+            ]
+          },
+          "Metadata": {
+            "request_path": "",
+            "requested_model": "opendesign/model-a",
+            "selected_auth_id": "opendesign-k1.json",
+            "selected_auth_index": "idx-1"
+          },
+          "Model": "model-a",
+          "OriginalRequest": "{\"model\":\"opendesign/model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"reasoning_effort\":\"low\"}",
+          "Payload": "{\"model\":\"model-a\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}],\"reasoning_effort\":\"low\"}",
+          "Query": null,
+          "SourceFormat": "gemini",
+          "StorageJSON": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "Stream": false,
+          "host_callback_id": "cb-exec"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "error": {
+            "code": "unsupported_format",
+            "http_status": 400,
+            "message": "opendesign: unsupported executor format gemini"
+          },
+          "ok": false
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "executor.execute",
+        "request": {
+          "Alt": "",
+          "AuthAttributes": {
+            "path": "/auths/opendesign-k1.json"
+          },
+          "AuthID": "opendesign-k1.json",
+          "AuthMetadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "AuthProvider": "opendesign",
+          "Format": "openai",
+          "Headers": {
+            "Authorization": [
+              "Bearer sk-client-snapshot"
+            ],
+            "Content-Type": [
+              "application/json"
+            ],
+            "User-Agent": [
+              "snapshot-client/1.0"
+            ]
+          },
+          "Metadata": {
+            "request_path": "/v1/chat/completions",
+            "requested_model": "opendesign/model-a",
+            "selected_auth_id": "opendesign-k1.json",
+            "selected_auth_index": "idx-1"
+          },
+          "Model": "model-a",
+          "OriginalRequest": "[\"not\",\"an\",\"object\"]",
+          "Payload": "[\"not\",\"an\",\"object\"]",
+          "Query": null,
+          "SourceFormat": "openai",
+          "StorageJSON": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "Stream": false,
+          "host_callback_id": "cb-exec"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "error": {
+            "code": "invalid_request",
+            "http_status": 400,
+            "message": "opendesign: payload is not a JSON object"
+          },
+          "ok": false
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/logs",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "items": [
+                {
+                  "attempts": 1,
+                  "auth_id": "opendesign-k1.json",
+                  "auth_index": "idx-1",
+                  "cached_tokens": 0,
+                  "client_path": "/v1/chat/completions",
+                  "duration_ms": "<volatile>",
+                  "endpoint": "/v1/chat/completions",
+                  "error": "opendesign: payload is not a JSON object",
+                  "error_code": "invalid_request",
+                  "error_phase": "request",
+                  "http_status": 400,
+                  "id": "2",
+                  "input_tokens": 0,
+                  "model": "opendesign/model-a",
+                  "output_tokens": 0,
+                  "status": "error",
+                  "stream": false,
+                  "time": "<volatile>",
+                  "user_agent": "snapshot-client/1.0"
+                },
+                {
+                  "attempts": 1,
+                  "auth_id": "opendesign-nokey.json",
+                  "auth_index": "idx-1",
+                  "cached_tokens": 0,
+                  "client_path": "/v1/chat/completions",
+                  "duration_ms": "<volatile>",
+                  "endpoint": "/v1/chat/completions",
+                  "error": "opendesign: credential has no api_key",
+                  "error_code": "invalid_credential",
+                  "error_phase": "request",
+                  "http_status": 401,
+                  "id": "1",
+                  "input_tokens": 0,
+                  "model": "opendesign/model-a",
+                  "output_tokens": 0,
+                  "status": "error",
+                  "stream": false,
+                  "time": "<volatile>",
+                  "user_agent": "snapshot-client/1.0"
+                }
+              ],
+              "offset": 0,
+              "retention": 100000,
+              "retention_days": 30,
+              "summary": {
+                "cache_hit_rate": null,
+                "cached_tokens": 0,
+                "failed": 2,
+                "input_tokens": 0,
+                "output_tokens": 0,
+                "requests": 2,
+                "success": 0
+              },
+              "total": 2
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    }
+  ]
+}

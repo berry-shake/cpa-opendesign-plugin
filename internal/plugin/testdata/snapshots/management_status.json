@@ -1,0 +1,376 @@
+{
+  "case": "management_status",
+  "description": "The status view with a signed-in key, a key with its own prefix and selection, and another provider's file; then with CPA's global proxy and force-model-prefix known",
+  "setup": {
+    "version": "9.9.9-snapshot",
+    "config": {
+      "base-url": "{{UPSTREAM}}",
+      "data-dir": "{{DATA_DIR}}",
+      "model-prefix": "opendesign"
+    },
+    "credentials": [
+      {
+        "name": "opendesign-k1.json",
+        "fields": {
+          "account_api_url": "{{UPSTREAM}}",
+          "account_control_key": "ck-snap-old",
+          "account_control_key_id": "ck-snap-old-id",
+          "account_email": "me@example.com",
+          "account_logged_in_at": "2025-12-31T00:00:00Z",
+          "account_name": "Me",
+          "account_user_id": "user-1",
+          "account_workspace_id": "ws-me",
+          "account_workspace_name": "Personal",
+          "api_key": "sk-amr-snap-key-one-0001",
+          "label": "Key One",
+          "proxy_url": "direct",
+          "type": "opendesign"
+        }
+      },
+      {
+        "name": "opendesign-k2.json",
+        "fields": {
+          "api_key": "sk-amr-snap-key-two-0002",
+          "models": [
+            "model-b",
+            "model-z"
+          ],
+          "note": "second key",
+          "prefix": "od2",
+          "priority": 2,
+          "type": "opendesign"
+        }
+      },
+      {
+        "name": "codex-user.json",
+        "fields": {
+          "email": "user@example.com",
+          "type": "codex"
+        }
+      }
+    ]
+  },
+  "upstream_script": [],
+  "steps": [
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/status",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [
+          {
+            "method": "host.auth.list",
+            "request": {}
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-2"
+            }
+          },
+          {
+            "method": "host.auth.models",
+            "request": {}
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "catalog": {
+                "count": 0,
+                "keys": 0
+              },
+              "config": {
+                "base_url": "{{UPSTREAM}}",
+                "default_prefix": "opendesign",
+                "models_refresh_minutes": 60,
+                "request_timeout_seconds": 600,
+                "stream_idle_timeout_seconds": 300
+              },
+              "credentials": [
+                {
+                  "account": {
+                    "email": "me@example.com",
+                    "logged_in_at": "2025-12-31T00:00:00Z",
+                    "name": "Me",
+                    "workspace_name": "Personal"
+                  },
+                  "all_models": true,
+                  "auth_index": "idx-1",
+                  "disabled": false,
+                  "effective_prefix": "opendesign",
+                  "failed": 0,
+                  "id": "opendesign-k1.json",
+                  "key_id": "89a142c2e7",
+                  "key_masked": "sk-amr…0001",
+                  "label": "Key One",
+                  "models": [],
+                  "name": "opendesign-k1.json",
+                  "prefix": null,
+                  "priority": 0,
+                  "proxy_url": "direct",
+                  "registered_known": true,
+                  "registered_models": 0,
+                  "success": 0,
+                  "unavailable": false
+                },
+                {
+                  "all_models": false,
+                  "auth_index": "idx-2",
+                  "disabled": false,
+                  "effective_prefix": "od2",
+                  "failed": 0,
+                  "id": "opendesign-k2.json",
+                  "key_id": "9687cdae8c",
+                  "key_masked": "sk-amr…0002",
+                  "label": "",
+                  "models": [
+                    "model-b",
+                    "model-z"
+                  ],
+                  "name": "opendesign-k2.json",
+                  "note": "second key",
+                  "prefix": "od2",
+                  "priority": 2,
+                  "registered_known": true,
+                  "registered_models": 0,
+                  "success": 0,
+                  "unavailable": false
+                }
+              ],
+              "now": "2026-01-01T00:00:00Z",
+              "plugin": "opendesign",
+              "version": "9.9.9-snapshot"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "auth.parse",
+        "request": {
+          "FileName": "opendesign-k2.json",
+          "Host": {
+            "AuthDir": "/auths",
+            "ExcludedModels": null,
+            "ForceModelPrefix": true,
+            "OAuthModelAlias": null,
+            "ProxyURL": "socks5://cpa:secret@127.0.0.1:1080"
+          },
+          "Path": "/auths/opendesign-k2.json",
+          "Provider": "opendesign",
+          "RawJSON": {
+            "api_key": "sk-amr-snap-key-two-0002",
+            "models": [
+              "model-b",
+              "model-z"
+            ],
+            "note": "second key",
+            "prefix": "od2",
+            "priority": 2,
+            "type": "opendesign"
+          }
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Auth": {
+              "Attributes": null,
+              "Disabled": false,
+              "FileName": "opendesign-k2.json",
+              "ID": "",
+              "Label": "opendesign-k2",
+              "Metadata": {
+                "api_key": "sk-amr-snap-key-two-0002",
+                "models": [
+                  "model-b",
+                  "model-z"
+                ],
+                "note": "second key",
+                "prefix": "od2",
+                "priority": 2,
+                "type": "opendesign"
+              },
+              "NextRefreshAfter": "2027-01-01T00:00:00Z",
+              "Prefix": "od2",
+              "Provider": "opendesign",
+              "ProxyURL": "",
+              "StorageJSON": {
+                "api_key": "sk-amr-snap-key-two-0002",
+                "models": [
+                  "model-b",
+                  "model-z"
+                ],
+                "note": "second key",
+                "prefix": "od2",
+                "priority": 2,
+                "type": "opendesign"
+              }
+            },
+            "Auths": null,
+            "Handled": true
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/status",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [
+          {
+            "method": "host.auth.list",
+            "request": {}
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-2"
+            }
+          },
+          {
+            "method": "host.auth.models",
+            "request": {}
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "catalog": {
+                "count": 0,
+                "keys": 0
+              },
+              "config": {
+                "base_url": "{{UPSTREAM}}",
+                "default_prefix": "opendesign",
+                "force_model_prefix": true,
+                "global_proxy": "socks5://cpa:xxxxx@127.0.0.1:1080",
+                "models_refresh_minutes": 60,
+                "request_timeout_seconds": 600,
+                "stream_idle_timeout_seconds": 300
+              },
+              "credentials": [
+                {
+                  "account": {
+                    "email": "me@example.com",
+                    "logged_in_at": "2025-12-31T00:00:00Z",
+                    "name": "Me",
+                    "workspace_name": "Personal"
+                  },
+                  "all_models": true,
+                  "auth_index": "idx-1",
+                  "disabled": false,
+                  "effective_prefix": "opendesign",
+                  "failed": 0,
+                  "id": "opendesign-k1.json",
+                  "key_id": "89a142c2e7",
+                  "key_masked": "sk-amr…0001",
+                  "label": "Key One",
+                  "models": [],
+                  "name": "opendesign-k1.json",
+                  "prefix": null,
+                  "priority": 0,
+                  "proxy_url": "direct",
+                  "registered_known": true,
+                  "registered_models": 0,
+                  "success": 0,
+                  "unavailable": false
+                },
+                {
+                  "all_models": false,
+                  "auth_index": "idx-2",
+                  "disabled": false,
+                  "effective_prefix": "od2",
+                  "failed": 0,
+                  "id": "opendesign-k2.json",
+                  "key_id": "9687cdae8c",
+                  "key_masked": "sk-amr…0002",
+                  "label": "",
+                  "models": [
+                    "model-b",
+                    "model-z"
+                  ],
+                  "name": "opendesign-k2.json",
+                  "note": "second key",
+                  "prefix": "od2",
+                  "priority": 2,
+                  "registered_known": true,
+                  "registered_models": 0,
+                  "success": 0,
+                  "unavailable": false
+                }
+              ],
+              "now": "2026-01-01T00:00:00Z",
+              "plugin": "opendesign",
+              "version": "9.9.9-snapshot"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    }
+  ]
+}

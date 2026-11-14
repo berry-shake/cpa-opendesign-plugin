@@ -1,0 +1,330 @@
+{
+  "case": "account_login_replace_pending",
+  "description": "A new sign-in on the same card cancels the pending one",
+  "setup": {
+    "version": "9.9.9-snapshot",
+    "config": {
+      "base-url": "{{UPSTREAM}}",
+      "data-dir": "{{DATA_DIR}}",
+      "model-prefix": "opendesign"
+    },
+    "credentials": [
+      {
+        "name": "opendesign-k1.json",
+        "fields": {
+          "api_key": "sk-amr-snap-key-one-0001",
+          "label": "Key One",
+          "proxy_url": "direct",
+          "type": "opendesign"
+        }
+      }
+    ]
+  },
+  "upstream_script": [
+    {
+      "method": "POST",
+      "path": "/api/v1/cli/device-authorizations",
+      "status": 201,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": "{\"deviceId\":\"dev-1\",\"userCode\":\"WXYZ-1234\",\"deviceSecret\":\"secret-dev-1\",\"activationUrl\":\"https://open-design.ai/cli/activate?deviceId=dev-1\",\"pollIntervalSeconds\":600,\"status\":\"pending\",\"expiresAt\":\"2026-01-01T00:10:00Z\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/cli/device-authorizations",
+      "status": 201,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": "{\"deviceId\":\"dev-2\",\"userCode\":\"WXYZ-1234\",\"deviceSecret\":\"secret-dev-2\",\"activationUrl\":\"https://open-design.ai/cli/activate?deviceId=dev-2\",\"pollIntervalSeconds\":600,\"status\":\"pending\",\"expiresAt\":\"2026-01-01T00:10:00Z\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/cli/device-authorizations/dev-1/cancel",
+      "status": 200,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": "{\"status\":\"cancelled\"}"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/cli/device-authorizations/dev-2/cancel",
+      "status": 200,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": "{\"status\":\"cancelled\"}"
+    }
+  ],
+  "steps": [
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": {
+            "auth_index": "idx-1"
+          },
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/account/login",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [
+          {
+            "method": "POST",
+            "path": "/api/v1/cli/device-authorizations",
+            "query": "",
+            "header": {
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Content-Length": [
+                "109"
+              ],
+              "Content-Type": [
+                "application/json"
+              ],
+              "User-Agent": [
+                "Go-http-client/1.1"
+              ]
+            },
+            "body": "{\"capabilities\":{\"completionReceipt\":true},\"cliVersion\":\"0.1.10\",\"host\":\"cpa-snapshot-host\",\"profile\":\"prod\"}"
+          }
+        ],
+        "host_calls": [
+          {
+            "method": "host.auth.list",
+            "request": {}
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          },
+          {
+            "method": "host.log",
+            "request": {
+              "fields": {
+                "auth_index": "idx-1"
+              },
+              "level": "info",
+              "message": "opendesign: account sign-in started"
+            }
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "activation_url": "https://open-design.ai/cli/activate?deviceId=dev-1",
+              "auth_index": "idx-1",
+              "expires_at": "2026-01-01T00:10:00Z",
+              "id": "<volatile>",
+              "state": "pending",
+              "user_code": "WXYZ-1234"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 201
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": {
+            "auth_index": "idx-1"
+          },
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "POST",
+          "Path": "/v0/management/plugins/opendesign/account/login",
+          "Query": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [
+          {
+            "method": "POST",
+            "path": "/api/v1/cli/device-authorizations",
+            "query": "",
+            "header": {
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Content-Length": [
+                "109"
+              ],
+              "Content-Type": [
+                "application/json"
+              ],
+              "User-Agent": [
+                "Go-http-client/1.1"
+              ]
+            },
+            "body": "{\"capabilities\":{\"completionReceipt\":true},\"cliVersion\":\"0.1.10\",\"host\":\"cpa-snapshot-host\",\"profile\":\"prod\"}"
+          },
+          {
+            "method": "POST",
+            "path": "/api/v1/cli/device-authorizations/dev-1/cancel",
+            "query": "",
+            "header": {
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Content-Length": [
+                "31"
+              ],
+              "Content-Type": [
+                "application/json"
+              ],
+              "User-Agent": [
+                "Go-http-client/1.1"
+              ]
+            },
+            "body": "{\"deviceSecret\":\"secret-dev-1\"}"
+          }
+        ],
+        "host_calls": [
+          {
+            "method": "host.auth.list",
+            "request": {}
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          },
+          {
+            "method": "host.log",
+            "request": {
+              "fields": {
+                "auth_index": "idx-1"
+              },
+              "level": "info",
+              "message": "opendesign: account sign-in started"
+            }
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "activation_url": "https://open-design.ai/cli/activate?deviceId=dev-2",
+              "auth_index": "idx-1",
+              "expires_at": "2026-01-01T00:10:00Z",
+              "id": "<volatile>",
+              "state": "pending",
+              "user_code": "WXYZ-1234"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 201
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Body": null,
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Method": "DELETE",
+          "Path": "/v0/management/plugins/opendesign/account/login",
+          "Query": {
+            "id": [
+              "{{login_id}}"
+            ]
+          },
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [
+          {
+            "method": "POST",
+            "path": "/api/v1/cli/device-authorizations/dev-2/cancel",
+            "query": "",
+            "header": {
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Content-Length": [
+                "31"
+              ],
+              "Content-Type": [
+                "application/json"
+              ],
+              "User-Agent": [
+                "Go-http-client/1.1"
+              ]
+            },
+            "body": "{\"deviceSecret\":\"secret-dev-2\"}"
+          }
+        ],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": {
+              "auth_index": "idx-1",
+              "id": "<volatile>",
+              "state": "cancelled"
+            },
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "StatusCode": 200
+          }
+        }
+      }
+    }
+  ]
+}

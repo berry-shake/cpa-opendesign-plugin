@@ -1,0 +1,478 @@
+{
+  "case": "management_plugin_lifecycle",
+  "description": "plugin.reconfigure (new prefix; its catalog refresh re-saves the file), identifiers, quiesce, and the after-auth interceptor stamping CPA's request ID",
+  "setup": {
+    "version": "9.9.9-snapshot",
+    "config": {
+      "base-url": "{{UPSTREAM}}",
+      "data-dir": "{{DATA_DIR}}",
+      "model-prefix": "opendesign"
+    },
+    "credentials": [
+      {
+        "name": "opendesign-k1.json",
+        "fields": {
+          "api_key": "sk-amr-snap-key-one-0001",
+          "label": "Key One",
+          "proxy_url": "direct",
+          "type": "opendesign"
+        }
+      }
+    ]
+  },
+  "upstream_script": [
+    {
+      "method": "GET",
+      "path": "/v1/models",
+      "status": 200,
+      "header": {
+        "Content-Type": [
+          "application/json"
+        ]
+      },
+      "body": "{\"object\":\"list\",\"data\":[{\"id\":\"model-a\",\"object\":\"model\",\"created\":1767000000,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\",\"image\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"Low\",\"capability\":\"standard\",\"context_limit\":200000,\"context_budget\":160000,\"output_budget\":32000},\"default\":true,\"enabled\":true},{\"id\":\"model-b\",\"object\":\"model\",\"created\":1767000001,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"text\"]},\"metadata\":{\"cost\":\"high\",\"capability\":\"reasoning\",\"context_limit\":128000,\"context_budget\":100000,\"output_budget\":16000},\"enabled\":true},{\"id\":\"image-gen\",\"object\":\"model\",\"created\":1767000002,\"owned_by\":\"opendesign\",\"architecture\":{\"input_modalities\":[\"text\"],\"output_modalities\":[\"image\"]},\"metadata\":{\"cost\":\"medium\"},\"enabled\":true}]}"
+    }
+  ],
+  "steps": [
+    {
+      "rpc": {
+        "method": "plugin.reconfigure",
+        "request": {
+          "config_yaml": {
+            "base-url": "{{UPSTREAM}}",
+            "data-dir": "{{DATA_DIR}}",
+            "log-retention": 500,
+            "model-prefix": "od/",
+            "models-refresh-minutes": 0,
+            "request-timeout-seconds": -1
+          },
+          "schema_version": 10
+        }
+      },
+      "output": {
+        "upstream_requests": [
+          {
+            "method": "GET",
+            "path": "/v1/models",
+            "query": "",
+            "header": {
+              "Accept": [
+                "application/json"
+              ],
+              "Accept-Encoding": [
+                "gzip"
+              ],
+              "Authorization": [
+                "Bearer sk-amr-snap-key-one-0001"
+              ],
+              "User-Agent": [
+                "cpa-opendesign-plugin/9.9.9-snapshot"
+              ]
+            },
+            "body": ""
+          }
+        ],
+        "host_calls": [
+          {
+            "method": "host.log",
+            "request": {
+              "level": "warn",
+              "message": "opendesign: ignoring non-positive request-timeout-seconds"
+            }
+          },
+          {
+            "method": "host.auth.list",
+            "request": {}
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          },
+          {
+            "method": "host.auth.save",
+            "request": {
+              "json": {
+                "api_key": "sk-amr-snap-key-one-0001",
+                "label": "Key One",
+                "model_revision": "3623d54cfd5c5c08",
+                "proxy_url": "direct",
+                "type": "opendesign"
+              },
+              "name": "opendesign-k1.json"
+            }
+          },
+          {
+            "method": "host.log",
+            "request": {
+              "fields": {
+                "auth": "opendesign-k1.json",
+                "revision": "3623d54cfd5c5c08"
+              },
+              "level": "info",
+              "message": "opendesign: refreshed registered models"
+            }
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "capabilities": {
+              "auth_provider": true,
+              "executor": true,
+              "executor_input_formats": [
+                "chat-completions",
+                "responses",
+                "anthropic"
+              ],
+              "executor_model_scope": "oauth",
+              "executor_output_formats": [
+                "chat-completions",
+                "responses",
+                "anthropic"
+              ],
+              "management_api": true,
+              "model_provider": true,
+              "quota_provider": true,
+              "request_interceptor": true,
+              "request_interceptor_omit_body_after": true,
+              "request_interceptor_omit_body_before": true
+            },
+            "metadata": {
+              "Author": "berry-shake",
+              "ConfigFields": [
+                {
+                  "Default": "https://amr-link.open-design.ai",
+                  "Description": "OpenDesign inference origin (https://amr-link.open-design.ai). A trailing /v1 is dropped. Auth files may override it with base_url.",
+                  "EnumValues": null,
+                  "Name": "base-url",
+                  "Type": "string"
+                },
+                {
+                  "Default": "opendesign",
+                  "Description": "Default CPA prefix for OpenDesign keys (\"opendesign\" -> opendesign/deepseek-v4-pro). Empty adds no prefix. An auth file's own prefix field wins.",
+                  "EnumValues": null,
+                  "Name": "model-prefix",
+                  "Type": "string"
+                },
+                {
+                  "Default": 60,
+                  "Description": "How often to reload OpenDesign's model list; 0 disables polling.",
+                  "EnumValues": null,
+                  "Name": "models-refresh-minutes",
+                  "Type": "integer"
+                },
+                {
+                  "Default": 600,
+                  "Description": "Timeout for non-streaming requests and for stream response headers.",
+                  "EnumValues": null,
+                  "Name": "request-timeout-seconds",
+                  "Type": "integer"
+                },
+                {
+                  "Default": 300,
+                  "Description": "Abort a stream after this long without upstream bytes.",
+                  "EnumValues": null,
+                  "Name": "stream-idle-timeout-seconds",
+                  "Type": "integer"
+                },
+                {
+                  "Default": "plugins/opendesign-data",
+                  "Description": "Directory for plugin data: the request log database (opendesign.db) and the proxy list (proxies.json), relative to CPA's working directory.",
+                  "EnumValues": null,
+                  "Name": "data-dir",
+                  "Type": "string"
+                },
+                {
+                  "Default": 100000,
+                  "Description": "Most requests the request log keeps; 0 disables it.",
+                  "EnumValues": null,
+                  "Name": "log-retention",
+                  "Type": "integer"
+                },
+                {
+                  "Default": 30,
+                  "Description": "Drop request log entries older than this many days; 0 keeps them until log-retention is reached.",
+                  "EnumValues": null,
+                  "Name": "log-retention-days",
+                  "Type": "integer"
+                }
+              ],
+              "GitHubRepository": "https://github.com/berry-shake/cpa-opendesign-plugin",
+              "Logo": "/v0/resource/plugins/opendesign/logo.svg",
+              "Name": "OpenDesign",
+              "Version": "9.9.9-snapshot"
+            },
+            "schema_version": 7
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "auth.identifier",
+        "request": {}
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "identifier": "opendesign"
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "executor.identifier",
+        "request": {}
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "identifier": "opendesign"
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "plugin.quiesce",
+        "request": {}
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {}
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "request.intercept_before",
+        "request": {}
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": null,
+            "ClearHeaders": null,
+            "Headers": null,
+            "ResponseBody": null,
+            "ResponseHeaders": null,
+            "StatusCode": 0,
+            "Terminate": false
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "request.intercept_after",
+        "request": {
+          "Body": null,
+          "CallerScope": "",
+          "Headers": null,
+          "Metadata": {
+            "selected_auth_id": "someone-else.json"
+          },
+          "Model": "model-a",
+          "RequestID": "exec-1",
+          "RequestedModel": "",
+          "SourceFormat": "",
+          "Stream": false,
+          "ToFormat": "",
+          "TraceID": "trace-1"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": null,
+            "ClearHeaders": null,
+            "Headers": null,
+            "ResponseBody": null,
+            "ResponseHeaders": null,
+            "StatusCode": 0,
+            "Terminate": false
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "auth.refresh",
+        "request": {
+          "Attributes": null,
+          "AuthID": "opendesign-k1.json",
+          "AuthProvider": "opendesign",
+          "Host": {
+            "AuthDir": "/auths",
+            "ExcludedModels": null,
+            "ForceModelPrefix": false,
+            "OAuthModelAlias": null,
+            "ProxyURL": ""
+          },
+          "Metadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "StorageJSON": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          }
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Auth": {
+              "Attributes": null,
+              "Disabled": false,
+              "FileName": "",
+              "ID": "opendesign-k1.json",
+              "Label": "Key One",
+              "Metadata": {
+                "api_key": "sk-amr-snap-key-one-0001",
+                "label": "Key One",
+                "proxy_url": "direct",
+                "type": "opendesign"
+              },
+              "NextRefreshAfter": "2027-01-01T00:00:00Z",
+              "Prefix": "od",
+              "Provider": "opendesign",
+              "ProxyURL": "direct",
+              "StorageJSON": {
+                "api_key": "sk-amr-snap-key-one-0001",
+                "label": "Key One",
+                "proxy_url": "direct",
+                "type": "opendesign"
+              }
+            },
+            "NextRefreshAfter": "2027-01-01T00:00:00Z"
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "request.intercept_after",
+        "request": {
+          "Body": null,
+          "CallerScope": "",
+          "Headers": {
+            "X-OpenDesign-Cpa-Request-Id": [
+              "spoofed"
+            ]
+          },
+          "Metadata": {
+            "selected_auth_id": "opendesign-k1.json"
+          },
+          "Model": "model-a",
+          "RequestID": "exec-2",
+          "RequestedModel": "",
+          "SourceFormat": "",
+          "Stream": false,
+          "ToFormat": "",
+          "TraceID": "trace-2"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": null,
+            "ClearHeaders": null,
+            "Headers": {
+              "X-OpenDesign-Cpa-Request-Id": [
+                "trace-2"
+              ]
+            },
+            "ResponseBody": null,
+            "ResponseHeaders": null,
+            "StatusCode": 0,
+            "Terminate": false
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "request.intercept_after",
+        "request": {
+          "Body": null,
+          "CallerScope": "",
+          "Headers": null,
+          "Metadata": {
+            "selected_auth_id": "opendesign-k1.json"
+          },
+          "Model": "model-a",
+          "RequestID": "exec-3",
+          "RequestedModel": "",
+          "SourceFormat": "",
+          "Stream": false,
+          "ToFormat": "",
+          "TraceID": ""
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Body": null,
+            "ClearHeaders": [
+              "X-OpenDesign-Cpa-Request-Id"
+            ],
+            "Headers": null,
+            "ResponseBody": null,
+            "ResponseHeaders": null,
+            "StatusCode": 0,
+            "Terminate": false
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "plugin.unknown",
+        "request": {}
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "error": {
+            "code": "unknown_method",
+            "message": "unknown method: plugin.unknown"
+          },
+          "ok": false
+        }
+      }
+    }
+  ]
+}
