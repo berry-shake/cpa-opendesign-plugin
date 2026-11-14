@@ -51,7 +51,7 @@ function Facts({ t, cred }: { t: T; cred: CredentialView }) {
   const listed = cred.listed_models !== undefined && cred.listed_models !== null ? t("models.listed", { count: cred.listed_models }) : "";
   const missing = Array.isArray(cred.missing_models) ? cred.missing_models : [];
   const modelsText = cred.all_models ? t("models.all") : t("models.selected", { count: models.length });
-  const prefixText = cred.effective_prefix ? cred.effective_prefix + "/" : t("prefix.none");
+  const prefixText = cred.effective_prefix || t("prefix.none");
   let proxyText = t("proxy.inherit");
   let proxyTip: string | undefined;
   if (cred.proxy_name) {
