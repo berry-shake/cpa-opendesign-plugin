@@ -177,6 +177,8 @@ OpenDesign 文档里 OpenAI 两种协议的地址是 `https://amr-link.open-desi
 - 已经开始输出以后的错误帧原样转给客户端。
 - 流没收到结束帧就断了（Chat 的 `[DONE]` 或 `finish_reason`、Responses 的 `response.completed`、Messages 的 `message_stop`），按失败处理，错误码 `stream_truncated`（502）。CPA 对这个错误码不冷却 Key。
 - 例外：OpenDesign 的 Messages 流在输出停在 `max_tokens` 时，最后一个内容块结束后就直接断开，不发 `message_delta` 和 `message_stop`（自然结束时会发）。插件遇到"流正常结束、所有内容块都已关闭、只缺结束帧"的 Messages 流，并且请求带了 `max_tokens` 时，会补发 `message_delta`（`stop_reason: "max_tokens"`，`output_tokens` 记为 `max_tokens`）和 `message_stop`，让客户端看到正常的截断结束。这种请求在日志里没有输入 Token（OpenDesign 只在缺掉的那一帧里给）。
+- OpenDesign 的 Messages 流在模型思考时，把思考块开成 `redacted_thinking`，后面却发 `thinking_delta` 和 `signature_delta`（非流式返回的是正常的 `thinking` 块）。按协议签名只能落在 `thinking` 块上，Claude Code 遇到这种流会判定无法读取，断开后改用非流式重发（插件日志里是 `client_closed`，同一轮多一条非流式请求）。插件会先扣住 `redacted_thinking` 开块，下一帧是思考文字或签名时改成 `thinking` 开块再转发，否则原样转发。
+- 同样在 Messages 流里，调用了工具的回复结尾 `stop_reason` 是 `end_turn`（非流式是 `tool_use`）。流里出现过 `tool_use` 块时，插件把结尾的 `end_turn` 改成 `tool_use`。
 
 上游错误到 CPA 的映射（流里报的错按错误类型归到同样的状态码）：
 

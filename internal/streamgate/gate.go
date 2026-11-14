@@ -67,6 +67,13 @@ type Gate struct {
 	// MaxTokens is the request's max_tokens (Messages only); see
 	// closeAtMaxTokens.
 	MaxTokens int64
+	// pendingStart is a Messages redacted_thinking block start held until
+	// the next event shows what the block carries (see fixMessagesEvent);
+	// pendingIndex is its index.
+	pendingStart []byte
+	pendingIndex float64
+	// toolUse is set once a Messages tool_use block started.
+	toolUse bool
 }
 
 // New returns a gate for one stream; emit forwards events to the client.
@@ -84,6 +91,121 @@ func (g *Gate) Push(event []byte) error {
 		return g.emit(event)
 	}
 	ev := NewEvent(event)
+	if g.endpoint == opendesign.EndpointMessages {
+		return g.pushMessages(event, ev)
+	}
+	return g.pushEvent(event, ev)
+}
+
+// pushMessages repairs the Messages events OpenDesign gets wrong before they
+// go through the gate.
+//
+// OpenDesign starts a thinking block as redacted_thinking and then streams
+// thinking_delta and signature_delta events into it (seen 2026-11-14; the
+// non-streaming response has a thinking block). A client that follows the
+// protocol rejects a signature for a block that is not thinking: Claude Code
+// drops the stream and asks again without streaming. The start is held back
+// until the next event: thinking text or a signature turn it into the
+// thinking block it is; anything else lets it through as sent.
+//
+// OpenDesign also ends a streamed response that calls a tool with
+// stop_reason end_turn, where its non-streaming response says tool_use; the
+// stop reason of a stream that started a tool_use block is set to tool_use.
+func (g *Gate) pushMessages(event []byte, ev *Event) error {
+	if held := g.pendingStart; held != nil {
+		g.pendingStart = nil
+		if carriesThinking(ev, g.pendingIndex) {
+			held = thinkingBlockStart(held)
+		}
+		if errPush := g.pushEvent(held, NewEvent(held)); errPush != nil {
+			return errPush
+		}
+	}
+	switch ev.stringMember("type") {
+	case "content_block_start":
+		payload := ev.Payload()
+		block, _ := payload["content_block"].(map[string]any)
+		switch jsonfield.Text(block["type"]) {
+		case "redacted_thinking":
+			if index, ok := payload["index"].(float64); ok {
+				g.pendingStart, g.pendingIndex = bytes.Clone(event), index
+				return nil
+			}
+		case "tool_use", "server_tool_use":
+			g.toolUse = true
+		}
+	case "message_delta":
+		if g.toolUse {
+			if fixed := toolUseStop(ev); fixed != nil {
+				event, ev = fixed, NewEvent(fixed)
+			}
+		}
+	}
+	return g.pushEvent(event, ev)
+}
+
+// carriesThinking reports whether ev streams thinking text or a signature
+// into the block at index.
+func carriesThinking(ev *Event, index float64) bool {
+	if ev.stringMember("type") != "content_block_delta" {
+		return false
+	}
+	payload := ev.Payload()
+	if at, ok := payload["index"].(float64); !ok || at != index {
+		return false
+	}
+	delta, _ := payload["delta"].(map[string]any)
+	switch jsonfield.Text(delta["type"]) {
+	case "signature_delta":
+		return true
+	case "thinking_delta":
+		_, text := delta["thinking"].(string)
+		return text
+	}
+	return false
+}
+
+// thinkingBlockStart turns a redacted_thinking block start into a thinking
+// one with empty thinking and signature, which the deltas fill in.
+func thinkingBlockStart(raw []byte) []byte {
+	ev := NewEvent(raw)
+	payload := ev.Payload()
+	block, _ := payload["content_block"].(map[string]any)
+	if block == nil {
+		return raw
+	}
+	payload["content_block"] = map[string]any{"type": "thinking", "thinking": "", "signature": ""}
+	return sseEvent(ev.Name(), payload, raw)
+}
+
+// toolUseStop returns ev with stop_reason tool_use when it ends the message
+// with end_turn, or nil.
+func toolUseStop(ev *Event) []byte {
+	payload := ev.Payload()
+	delta, _ := payload["delta"].(map[string]any)
+	if delta == nil || jsonfield.Text(delta["stop_reason"]) != "end_turn" {
+		return nil
+	}
+	delta["stop_reason"] = "tool_use"
+	return sseEvent(ev.Name(), payload, nil)
+}
+
+// sseEvent writes an event with the given name and data; fallback is
+// returned when the data cannot be encoded.
+func sseEvent(name string, payload map[string]any, fallback []byte) []byte {
+	data, errMarshal := json.Marshal(payload)
+	if errMarshal != nil {
+		return fallback
+	}
+	var out []byte
+	if name != "" {
+		out = append(append(append(out, "event: "...), name...), '\n')
+	}
+	return append(append(append(out, "data: "...), data...), "\n\n"...)
+}
+
+// pushEvent is Push for one parsed SSE event.
+func (g *Gate) pushEvent(event []byte, ev *Event) error {
 	kind, detail := classifyStreamEvent(g.endpoint, ev)
 	if g.endpoint == opendesign.EndpointMessages {
 		switch ev.stringMember("type") {
@@ -140,6 +262,14 @@ func (g *Gate) flush() error {
 // Finish reports how the stream ended: nil when the response is complete,
 // otherwise the error to close the host stream with.
 func (g *Gate) Finish(ctx context.Context, errPump error) *pluginabi.Error {
+	if held := g.pendingStart; held != nil && errPump == nil && g.failure == nil {
+		// The stream ended right after a held block start: send it as it
+		// came, and the open block marks the stream truncated.
+		g.pendingStart = nil
+		if errPush := g.pushEvent(held, NewEvent(held)); errPush != nil {
+			errPump = errPush
+		}
+	}
 	switch {
 	case g.failure != nil:
 		return g.failure
