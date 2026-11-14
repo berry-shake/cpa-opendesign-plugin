@@ -1,7 +1,8 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import type { T } from "../../i18n";
-import { credentialsOf } from "../../lib/credentials";
-import { store, type AccountLoginState, type State } from "../../state/store";
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import type { T } from "@core/i18n";
+import { credentialsOf } from "@core/lib/credentials";
+import type { State } from "@core/state/store";
+import { account, type AccountLoginState } from "./account";
 
 function remaining(expiresAt: string | undefined, now: number): string {
   const end = expiresAt ? Date.parse(expiresAt) : NaN;
@@ -70,7 +71,7 @@ function Body({ t, login, now }: { t: T; login: AccountLoginState; now: number }
  */
 export function AccountLoginDialog({ t, s }: { t: T; s: State }) {
   const dialog = useRef<HTMLDialogElement>(null);
-  const login = s.accountLogin;
+  const login = useSyncExternalStore(account.subscribe, account.getSnapshot);
   const seq = login ? login.seq : 0;
   const [now, setNow] = useState(() => Date.now());
 
@@ -88,7 +89,7 @@ export function AccountLoginDialog({ t, s }: { t: T; s: State }) {
     const box = dialog.current;
     if (!box) return;
     const onClose = () => {
-      if (!box.open) store.closeAccountLogin();
+      if (!box.open) account.closeLogin();
     };
     box.addEventListener("close", onClose);
     return () => box.removeEventListener("close", onClose);
@@ -111,18 +112,18 @@ export function AccountLoginDialog({ t, s }: { t: T; s: State }) {
             <h2 id="signin-title">{t("signin.title")}</h2>
             <p className="sub">{t("signin.sub", { name: login ? login.name : "" })}</p>
           </div>
-          <button className="icon-btn" type="button" aria-label={t("form.close")} title={t("form.close")} onClick={() => store.closeAccountLogin()}>
+          <button className="icon-btn" type="button" aria-label={t("form.close")} title={t("form.close")} onClick={() => account.closeLogin()}>
             ×
           </button>
         </div>
         <div className="modal-body">{login ? <Body t={t} login={login} now={now} /> : null}</div>
         <div className="modal-foot">
           {ended && cred ? (
-            <button className="btn btn-secondary" type="button" onClick={() => void store.startAccountLogin(cred)}>
+            <button className="btn btn-secondary" type="button" onClick={() => void account.startLogin(cred)}>
               {t("signin.retry")}
             </button>
           ) : null}
-          <button className={"btn " + (login && login.view && login.view.state === "approved" ? "btn-primary" : "btn-secondary")} type="button" onClick={() => store.closeAccountLogin()}>
+          <button className={"btn " + (login && login.view && login.view.state === "approved" ? "btn-primary" : "btn-secondary")} type="button" onClick={() => account.closeLogin()}>
             {t(pending ? "signin.cancel" : login && login.view && login.view.state === "approved" ? "signin.done" : "signin.close")}
           </button>
         </div>

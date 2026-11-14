@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { CredentialView, ModelView, QuotaView, UsageWindow } from "../api/types";
-import { listedFor, modelUsage, quotaKeys, summarizeKeys, windowTokens, barView, planWindows } from "./credentials";
-import { pickerRows } from "./editor";
+import type { CredentialView, QuotaView } from "@core/api/types";
+import { modelUsage, quotaGroups } from "@core/lib/credentials";
+import { newEditor, pickableModels, pickerRows } from "@core/lib/editor";
+import { listedFor, planWindows, summarizeKeys, windowTokens } from "./lib";
+import { plugin } from "./plugin";
+import type { ModelView, UsageWindow } from "./types";
 
 function cred(over: Partial<CredentialView>): CredentialView {
   return {
@@ -37,10 +40,16 @@ describe("per-key model lists", () => {
   });
 
   it("scopes the picker to the edited key and keeps selected models outside it", () => {
-    const rows = pickerRows(models, ["claude-top-5"], "", { key_id: "k1", listed_models: 1 });
+    const ed = newEditor(1, "edit", cred({ key_id: "k1", listed_models: 1 }), "opendesign");
+    expect(ed.scope).toEqual({ key_id: "k1", listed_models: 1 });
+    const rows = pickerRows(pickableModels(models, ed), ["claude-top-5"], "");
     expect(rows.map((r) => r.id)).toEqual(["claude-top-5", "deepseek-v4-pro", "embed"]);
     expect(rows[0].missing).toBe(true);
-    expect(pickerRows(models, [], "").length).toBe(3);
+    const adding = newEditor(2, "add", null, "opendesign");
+    expect(adding.scope).toBeUndefined();
+    expect(pickerRows(pickableModels(models, adding), [], "").length).toBe(3);
+    // A key whose list is not loaded yet is not scoped.
+    expect(newEditor(3, "edit", cred({ key_id: "k1" }), "opendesign").scope).toBeUndefined();
   });
 });
 
@@ -64,18 +73,12 @@ describe("usage", () => {
     expect(windowTokens(sum.windows.month)).toBe(2000);
   });
 
-  it("loads every readable key, or only the missing ones", () => {
+  it("loads every readable key side by side, or only the missing ones", () => {
     const creds = [cred({ auth_index: "a1" }), cred({ auth_index: "a2", read_error: "bad" }), cred({ auth_index: "a3" })];
-    expect(quotaKeys(creds, {}, false)).toEqual(["a1", "a3"]);
-    expect(quotaKeys(creds, { a1: { state: "ok" } }, false)).toEqual(["a3"]);
-    expect(quotaKeys(creds, { a1: { state: "ok" } }, true)).toEqual(["a1", "a3"]);
-  });
-
-  it("colours a remaining bar by the share left", () => {
-    expect(barView(620, 1000)).toEqual({ fraction: 0.62, level: "", width: "62.0%" });
-    expect(barView(180, 1000).level).toBe(" warn");
-    expect(barView(50, 1000).level).toBe(" bad");
-    expect(barView(5, 0)).toEqual({ fraction: 0, level: " bad", width: "0.0%" });
+    expect(quotaGroups(creds, {}, false)).toEqual([["a1"], ["a3"]]);
+    expect(quotaGroups(creds, { a1: { state: "ok" } }, false)).toEqual([["a3"]]);
+    expect(quotaGroups(creds, { a1: { state: "ok" } }, true)).toEqual([["a1"], ["a3"]]);
+    expect(plugin.quotaRefresh).toBe(true);
   });
 
   it("lists the account's windows with a limit, shortest first", () => {
