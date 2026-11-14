@@ -1,8 +1,9 @@
-// Package opendesign holds what the plugin knows about the OpenDesign Go API
-// itself: endpoints, error mapping and egress (proxies and HTTP clients).
+// Package opendesign is the OpenDesign provider for cpa-provider-core: what
+// the plugin knows about the OpenDesign Go API itself (endpoints, the model
+// lists of each key, the stream repairs, the errors it words its own way)
+// and the OpenDesign account a key card can sign in to read the plan's
+// windows (vela device authorization).
 package opendesign
-
-import "strings"
 
 // ProviderID is the CPA provider key and the auth file type.
 const ProviderID = "opendesign"
@@ -18,17 +19,3 @@ const (
 	// key.
 	EndpointModels = "/v1/models"
 )
-
-// EndpointForFormat maps a CPA executor format to the OpenDesign endpoint.
-func EndpointForFormat(format string) (string, bool) {
-	switch strings.ToLower(strings.TrimSpace(format)) {
-	case "openai", "chat-completions", "chat_completions", "openai-chat-completions":
-		return EndpointChat, true
-	case "openai-response", "openai-responses", "responses":
-		return EndpointResponses, true
-	case "claude", "anthropic":
-		return EndpointMessages, true
-	default:
-		return "", false
-	}
-}
