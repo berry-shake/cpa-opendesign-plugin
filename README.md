@@ -205,6 +205,8 @@ Key 卡片上的「登录账号」按钮走的是官方命令行工具 `vela log
 
 之后卡片读取 `GET /api/v1/workspaces/{id}/billing/funding-check`（套餐等级、5 小时 / 7 天窗口的已用 / 上限 / 剩余 credits 和重置时间、余额）和 `GET /api/v1/workspaces/{id}/billing/snapshot`（本期到期时间，读不到不影响额度显示），结果缓存 30 秒，「刷新用量」会强制重新读取。只有账号接口自己返回 401 / 403（JSON 报错）时卡片才提示登录失效，悬停能看到原始原因；Cloudflare 拦截返回的 HTML 页面按网页标题报读取失败，不算登录失效。插件不调用 `/api/v1/billing/summary`：这个接口在 Cloudflare 上拦截 Go 默认的 User-Agent，而 vela 本身发的就是这个 UA。「退出账号」会调用 `/api/v1/cli/logout` 吊销凭据，再从认证文件里删掉这些字段；吊销失败时字段照样删掉，可以到 OpenDesign 网站的设备列表手动移除。
 
+CPA 管理面板「认证文件」页的 OpenDesign 卡片也能看这份额度：插件注册为 CPA 的额度提供方（quota provider），面板点「刷新额度」时插件现读一次，显示套餐（如 `Go (Monthly)`）、余额和 5 小时 / 7 天两条剩余比例和重置时间；没登录账号的 Key 会提示去插件页登录，登录失效时提示重新登录。
+
 注意：账号凭据是账号级的，比 API Key 权限大（能查询账单、发起付款等），和 API Key 一样存在 CPA 的认证文件里。账号凭据只发给 OpenDesign 的账号接口，走这个 Key 的出口代理，管理页拿不到它。
 
 ### 请求日志统计

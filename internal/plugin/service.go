@@ -171,6 +171,11 @@ type rpcRegistration struct {
 	Capabilities  rpcCapabilities    `json:"capabilities"`
 }
 
+type rpcQuotaFetchRequest struct {
+	pluginapi.QuotaFetchRequest
+	HostCallbackID string `json:"host_callback_id,omitempty"`
+}
+
 type rpcIdentifierResponse struct {
 	Identifier string `json:"identifier"`
 }
@@ -273,10 +278,21 @@ func (s *Service) Call(method string, request []byte) []byte {
 		}
 		return okEnvelope(s.interceptAfterAuth(req.RequestInterceptRequest))
 
-	case pluginabi.MethodQuotaDescribe, pluginabi.MethodQuotaFetch, pluginabi.MethodQuotaReset:
-		// OpenDesign reports no quota to API keys; the management page sums
-		// the request log instead.
-		return errorEnvelopeFrom(&pluginabi.Error{Code: "unsupported_operation", Message: "opendesign: OpenDesign reports no quota to API keys", HTTPStatus: http.StatusNotImplemented})
+	case pluginabi.MethodQuotaDescribe:
+		return okEnvelope(pluginapi.QuotaDescribeResponse{SupportedProviders: []string{ProviderID}, DisplayName: displayName, SupportsReset: false})
+	case pluginabi.MethodQuotaFetch:
+		var req rpcQuotaFetchRequest
+		if errUnmarshal := json.Unmarshal(request, &req); errUnmarshal != nil {
+			return ErrorEnvelope("invalid_request", "decode quota fetch request: "+errUnmarshal.Error())
+		}
+		s.rememberHost(req.Host)
+		resp, errFetch := s.fetchQuota(req.QuotaFetchRequest)
+		if errFetch != nil {
+			return errorEnvelopeFrom(errFetch)
+		}
+		return okEnvelope(resp)
+	case pluginabi.MethodQuotaReset:
+		return okEnvelope(pluginapi.QuotaResetResponse{Success: false, Message: "OpenDesign plan allowance cannot be reset"})
 
 	default:
 		return ErrorEnvelope("unknown_method", "unknown method: "+method)
@@ -329,7 +345,7 @@ func (s *Service) register(request []byte) rpcRegistration {
 			ExecutorInputFormats:  executorFormats,
 			ExecutorOutputFormats: executorFormats,
 			ManagementAPI:         true,
-			QuotaProvider:         false,
+			QuotaProvider:         true,
 
 			RequestInterceptor:               intercept,
 			RequestInterceptorOmitBodyBefore: intercept,

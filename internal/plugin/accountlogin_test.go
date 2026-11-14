@@ -58,6 +58,15 @@ func (h *fakeHost) call(method string, request []byte) ([]byte, error) {
 	return ok(struct{}{})
 }
 
+// newTestService keeps the request log in a temporary directory.
+func newTestService(t *testing.T, host *fakeHost) *Service {
+	t.Helper()
+	svc := New("test", host.call)
+	cfg := svc.config()
+	svc.reqlog.Configure(t.TempDir(), cfg.LogRetention, cfg.LogRetentionDays)
+	return svc
+}
+
 func (h *fakeHost) fields(index string) map[string]any {
 	h.mu.Lock()
 	defer h.mu.Unlock()
@@ -143,7 +152,7 @@ func TestAccountSignInSavesKeysAndShowsWindows(t *testing.T) {
 		files: map[string]map[string]any{"idx-1": {"type": ProviderID, "api_key": "sk-amr-test", "proxy_url": "direct", "label": "mine"}},
 		names: map[string]string{"idx-1": "opendesign-test.json"},
 	}
-	svc := New("test", host.call)
+	svc := newTestService(t, host)
 	defer svc.Close()
 	svc.velaAPIURL = srv.URL
 	svc.hostname = func() (string, error) { return "cpa-test-host", nil }
@@ -248,7 +257,7 @@ func TestAccountSignInCancel(t *testing.T) {
 		files: map[string]map[string]any{"idx-1": {"type": ProviderID, "api_key": "sk-amr-test", "proxy_url": "direct"}},
 		names: map[string]string{"idx-1": "opendesign-test.json"},
 	}
-	svc := New("test", host.call)
+	svc := newTestService(t, host)
 	defer svc.Close()
 	svc.velaAPIURL = srv.URL
 	svc.hostname = func() (string, error) { return "cpa-test-host", nil }
@@ -285,7 +294,7 @@ func signedIn(t *testing.T, api *fakeAccountAPI) *Service {
 		}},
 		names: map[string]string{"idx-1": "opendesign-test.json"},
 	}
-	svc := New("test", host.call)
+	svc := newTestService(t, host)
 	t.Cleanup(svc.Close)
 	svc.velaAPIURL = srv.URL
 	return svc
@@ -337,5 +346,77 @@ func TestAccountRejectedKeyIsExpired(t *testing.T) {
 	a := accountOf(t, svc)
 	if !a.Expired || !strings.Contains(a.Error, "control key revoked") {
 		t.Fatalf("account = %+v", a)
+	}
+}
+
+// CPA's auth file page reads the windows through quota.fetch.
+func TestQuotaProviderReportsWindows(t *testing.T) {
+	svc := signedIn(t, &fakeAccountAPI{})
+	var reg rpcRegistration
+	var env pluginabi.Envelope
+	register, _ := json.Marshal(rpcLifecycleRequest{SchemaVersion: 6, ConfigYAML: []byte("data-dir: " + t.TempDir() + "\n")})
+	_ = json.Unmarshal(svc.Call(pluginabi.MethodPluginRegister, register), &env)
+	_ = json.Unmarshal(env.Result, &reg)
+	if !reg.Capabilities.QuotaProvider {
+		t.Fatal("the plugin must register as a quota provider")
+	}
+	_ = json.Unmarshal(svc.Call(pluginabi.MethodQuotaDescribe, []byte(`{}`)), &env)
+	if !env.OK || !strings.Contains(string(env.Result), `"supported_providers":["opendesign"]`) {
+		t.Fatalf("describe = %+v %s", env.Error, env.Result)
+	}
+
+	raw := svc.Call(pluginabi.MethodQuotaFetch, []byte(`{"auth_index":"idx-1","auth_id":"opendesign-test.json","provider":"opendesign","host_callback_id":"cb-1"}`))
+	env = pluginabi.Envelope{}
+	_ = json.Unmarshal(raw, &env)
+	if !env.OK {
+		t.Fatalf("fetch = %s", raw)
+	}
+	var quota pluginapi.QuotaFetchResponse
+	_ = json.Unmarshal(env.Result, &quota)
+	if quota.Subscription == nil || quota.Subscription.Plan != "Go (Monthly)" {
+		t.Fatalf("subscription = %s", env.Result)
+	}
+	if len(quota.Summary) != 1 || quota.Summary[0].Value != 1.25 || quota.Summary[0].Currency != "USD" {
+		t.Fatalf("summary = %s", env.Result)
+	}
+	if len(quota.Groups) != 1 || len(quota.Groups[0].Buckets) != 2 {
+		t.Fatalf("groups = %s", env.Result)
+	}
+	five, seven := quota.Groups[0].Buckets[0], quota.Groups[0].Buckets[1]
+	if five.Window != "5h" || five.RemainingFraction != 0.75 || five.ResetTime != "2026-11-13T20:00:00Z" || seven.Window != "7d" || seven.RemainingFraction != 0.2 {
+		t.Fatalf("buckets = %s", env.Result)
+	}
+	if strings.Contains(string(raw), "ck-secret") {
+		t.Fatal("the control key must not reach CPA's quota response")
+	}
+}
+
+// A key with no account signed in, or whose login the API rejects, says why
+// instead of showing empty windows.
+func TestQuotaProviderErrors(t *testing.T) {
+	host := &fakeHost{
+		files: map[string]map[string]any{"idx-2": {"type": ProviderID, "api_key": "sk-amr-test", "proxy_url": "direct"}},
+		names: map[string]string{"idx-2": "opendesign-plain.json"},
+	}
+	plain := newTestService(t, host)
+	defer plain.Close()
+	var env pluginabi.Envelope
+	_ = json.Unmarshal(plain.Call(pluginabi.MethodQuotaFetch, []byte(`{"auth_index":"idx-2","provider":"opendesign"}`)), &env)
+	if env.OK || env.Error == nil || env.Error.Code != "account_not_signed_in" {
+		t.Fatalf("unsigned fetch = %+v", env)
+	}
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnauthorized)
+		_, _ = io.WriteString(w, `{"error":{"code":"invalid_control_key","message":"control key revoked"}}`)
+	}))
+	defer srv.Close()
+	svc := signedIn(t, &fakeAccountAPI{})
+	svc.velaAPIURL = srv.URL
+	env = pluginabi.Envelope{}
+	_ = json.Unmarshal(svc.Call(pluginabi.MethodQuotaFetch, []byte(`{"auth_index":"idx-1","provider":"opendesign"}`)), &env)
+	if env.OK || env.Error == nil || env.Error.Code != "account_login_expired" || env.Error.HTTPStatus != http.StatusUnauthorized || !strings.Contains(env.Error.Message, "control key revoked") {
+		t.Fatalf("expired fetch = %+v", env.Error)
 	}
 }

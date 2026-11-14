@@ -63,8 +63,10 @@ type accountUsageView struct {
 	// The subscription from the billing snapshot; empty when it could not
 	// be read, which leaves the windows as they are.
 	SubscriptionStatus string `json:"subscription_status,omitempty"`
-	PeriodEnd          string `json:"period_end,omitempty"`
-	CancelAtPeriodEnd  bool   `json:"cancel_at_period_end,omitempty"`
+	// Interval is the billing period (month, year).
+	Interval          string `json:"interval,omitempty"`
+	PeriodEnd         string `json:"period_end,omitempty"`
+	CancelAtPeriodEnd bool   `json:"cancel_at_period_end,omitempty"`
 
 	FetchedAt string `json:"fetched_at,omitempty"`
 	// Error says why the windows could not be read; Expired is set when the
@@ -205,6 +207,7 @@ func (s *Service) readAccount(ctx context.Context, client vela.Client, authIndex
 		return
 	}
 	view.SubscriptionStatus = strings.TrimSpace(snapshot.Plan.Status)
+	view.Interval = strings.TrimSpace(snapshot.Plan.Interval)
 	view.PeriodEnd = strings.TrimSpace(snapshot.Plan.CurrentPeriodEnd)
 	view.CancelAtPeriodEnd = snapshot.Plan.CancelAtPeriodEnd
 	if view.Tier == "" {
