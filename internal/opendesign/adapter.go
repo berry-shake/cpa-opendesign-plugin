@@ -87,11 +87,6 @@ func (a *Adapter) Spec() provider.Spec {
 		},
 		// StreamFix reads max_tokens.
 		RequestMembers: []string{"max_tokens"},
-		QuotaRPC: provider.QuotaRPC{
-			DecodeError:  "decode quota fetch request",
-			RememberHost: true,
-			Reset:        &pluginapi.QuotaResetResponse{Success: false, Message: "OpenDesign plan allowance cannot be reset"},
-		},
 	}
 }
 

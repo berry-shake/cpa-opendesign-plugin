@@ -1,0 +1,241 @@
+{
+  "case": "quota_fetch_keeps_host_summary",
+  "description": "quota.fetch without a host summary keeps the global proxy and force-model-prefix an auth request cached",
+  "setup": {
+    "version": "9.9.9-snapshot",
+    "config": {
+      "base-url": "{{UPSTREAM}}",
+      "data-dir": "{{DATA_DIR}}",
+      "model-prefix": "opendesign"
+    },
+    "credentials": [
+      {
+        "name": "opendesign-k1.json",
+        "fields": {
+          "api_key": "sk-amr-snap-key-one-0001",
+          "label": "Key One",
+          "proxy_url": "direct",
+          "type": "opendesign"
+        }
+      }
+    ]
+  },
+  "upstream_script": [],
+  "steps": [
+    {
+      "rpc": {
+        "method": "auth.parse",
+        "request": {
+          "Provider": "opendesign",
+          "Path": "/auths/opendesign-k2.json",
+          "FileName": "opendesign-k2.json",
+          "RawJSON": {
+            "api_key": "sk-amr-snap-key-two-0002",
+            "models": [
+              "model-b",
+              "model-z"
+            ],
+            "note": "second key",
+            "prefix": "od2",
+            "priority": 2,
+            "type": "opendesign"
+          },
+          "Host": {
+            "AuthDir": "/auths",
+            "ProxyURL": "socks5://cpa:secret@127.0.0.1:1080",
+            "ForceModelPrefix": true,
+            "OAuthModelAlias": null,
+            "ExcludedModels": null
+          }
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [],
+        "response": {
+          "ok": true,
+          "result": {
+            "Handled": true,
+            "Auth": {
+              "Provider": "opendesign",
+              "ID": "",
+              "FileName": "opendesign-k2.json",
+              "Label": "opendesign-k2",
+              "Prefix": "od2",
+              "ProxyURL": "",
+              "Disabled": false,
+              "StorageJSON": {
+                "api_key": "sk-amr-snap-key-two-0002",
+                "models": [
+                  "model-b",
+                  "model-z"
+                ],
+                "note": "second key",
+                "prefix": "od2",
+                "priority": 2,
+                "type": "opendesign"
+              },
+              "Metadata": {
+                "api_key": "sk-amr-snap-key-two-0002",
+                "models": [
+                  "model-b",
+                  "model-z"
+                ],
+                "note": "second key",
+                "prefix": "od2",
+                "priority": 2,
+                "type": "opendesign"
+              },
+              "Attributes": null,
+              "NextRefreshAfter": "2027-01-02T03:04:05Z"
+            },
+            "Auths": null
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "quota.fetch",
+        "request": {
+          "auth_index": "idx-1",
+          "auth_id": "opendesign-k1.json",
+          "provider": "opendesign",
+          "storage_json": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "metadata": {
+            "api_key": "sk-amr-snap-key-one-0001",
+            "label": "Key One",
+            "proxy_url": "direct",
+            "type": "opendesign"
+          },
+          "host": {
+            "AuthDir": "",
+            "ProxyURL": "",
+            "ForceModelPrefix": false,
+            "OAuthModelAlias": null,
+            "ExcludedModels": null
+          },
+          "host_callback_id": "cb-quota"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [
+          {
+            "method": "host.auth.list",
+            "request": {}
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          }
+        ],
+        "response": {
+          "ok": false,
+          "error": {
+            "code": "account_not_signed_in",
+            "message": "OpenDesign API keys report no allowance; sign an OpenDesign account in on this key's card on the OpenDesign plugin page to show the plan's 5-hour and 7-day windows",
+            "http_status": 404
+          }
+        }
+      }
+    },
+    {
+      "rpc": {
+        "method": "management.handle",
+        "request": {
+          "Method": "GET",
+          "Path": "/v0/management/plugins/opendesign/status",
+          "Headers": {
+            "Accept": [
+              "application/json"
+            ]
+          },
+          "Query": null,
+          "Body": null,
+          "host_callback_id": "cb-mgmt"
+        }
+      },
+      "output": {
+        "upstream_requests": [],
+        "host_calls": [
+          {
+            "method": "host.auth.list",
+            "request": {}
+          },
+          {
+            "method": "host.auth.get",
+            "request": {
+              "auth_index": "idx-1"
+            }
+          },
+          {
+            "method": "host.auth.models",
+            "request": {}
+          }
+        ],
+        "response": {
+          "ok": true,
+          "result": {
+            "StatusCode": 200,
+            "Headers": {
+              "Cache-Control": [
+                "no-store"
+              ],
+              "Content-Type": [
+                "application/json; charset=utf-8"
+              ]
+            },
+            "Body": {
+              "plugin": "opendesign",
+              "version": "9.9.9-snapshot",
+              "now": "2026-01-02T03:04:05Z",
+              "config": {
+                "base_url": "{{UPSTREAM}}",
+                "default_prefix": "opendesign",
+                "force_model_prefix": true,
+                "models_refresh_minutes": 60,
+                "request_timeout_seconds": 600,
+                "stream_idle_timeout_seconds": 300,
+                "global_proxy": "socks5://cpa:xxxxx@127.0.0.1:1080"
+              },
+              "catalog": {
+                "count": 0,
+                "keys": 0
+              },
+              "credentials": [
+                {
+                  "auth_index": "idx-1",
+                  "id": "opendesign-k1.json",
+                  "name": "opendesign-k1.json",
+                  "label": "Key One",
+                  "key_masked": "sk-amr…0001",
+                  "key_id": "89a142c2e7",
+                  "disabled": false,
+                  "unavailable": false,
+                  "priority": 0,
+                  "proxy_url": "direct",
+                  "prefix": null,
+                  "effective_prefix": "opendesign",
+                  "all_models": true,
+                  "models": [],
+                  "registered_models": 0,
+                  "registered_known": true,
+                  "success": 0,
+                  "failed": 0
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

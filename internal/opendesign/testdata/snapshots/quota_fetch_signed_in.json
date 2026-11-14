@@ -425,7 +425,7 @@
           "ok": true,
           "result": {
             "success": false,
-            "message": "OpenDesign plan allowance cannot be reset"
+            "message": "opendesign: quota reset is not supported"
           }
         }
       }
