@@ -282,7 +282,7 @@
             "Body": {
               "items": [
                 {
-                  "id": "2",
+                  "id": "3",
                   "time": "<volatile>",
                   "endpoint": "/v1/chat/completions",
                   "model": "opendesign/model-a",
@@ -298,6 +298,26 @@
                   "error": "opendesign: payload is not a JSON object",
                   "error_phase": "request",
                   "client_path": "/v1/chat/completions",
+                  "user_agent": "snapshot-client/1.0",
+                  "auth_index": "idx-1",
+                  "attempts": 1
+                },
+                {
+                  "id": "2",
+                  "time": "<volatile>",
+                  "endpoint": "",
+                  "model": "opendesign/model-a",
+                  "stream": false,
+                  "status": "error",
+                  "http_status": 400,
+                  "auth_id": "opendesign-k1.json",
+                  "duration_ms": "<volatile>",
+                  "input_tokens": 0,
+                  "output_tokens": 0,
+                  "cached_tokens": 0,
+                  "error_code": "unsupported_format",
+                  "error": "opendesign: unsupported executor format gemini",
+                  "error_phase": "request",
                   "user_agent": "snapshot-client/1.0",
                   "auth_index": "idx-1",
                   "attempts": 1
@@ -324,14 +344,14 @@
                   "attempts": 1
                 }
               ],
-              "total": 2,
+              "total": 3,
               "offset": 0,
               "retention": 100000,
               "retention_days": 30,
               "summary": {
-                "requests": 2,
+                "requests": 3,
                 "success": 0,
-                "failed": 2,
+                "failed": 3,
                 "input_tokens": 0,
                 "output_tokens": 0,
                 "cached_tokens": 0,
