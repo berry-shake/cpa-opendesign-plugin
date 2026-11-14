@@ -86,8 +86,7 @@ func (a *Adapter) Spec() provider.Spec {
 			QuotaRoute:          "Requests and tokens of one credential over the last 5 hours, 24 hours, 7 days and 30 days, summed from the request log, and the plan windows of the OpenDesign account signed in on it (?auth_index=&refresh=1).",
 		},
 		// StreamFix reads max_tokens.
-		RequestMembers:     []string{"max_tokens"},
-		CountTokensRefusal: "OpenDesign has no token counting endpoint",
+		RequestMembers: []string{"max_tokens"},
 		QuotaRPC: provider.QuotaRPC{
 			DecodeError:  "decode quota fetch request",
 			RememberHost: true,

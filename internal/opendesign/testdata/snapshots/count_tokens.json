@@ -104,7 +104,7 @@
           "ok": false,
           "error": {
             "code": "unsupported_operation",
-            "message": "opendesign: OpenDesign has no token counting endpoint",
+            "message": "opendesign: count_tokens is not supported by OpenDesign",
             "http_status": 501
           }
         }
