@@ -18,6 +18,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -55,6 +56,11 @@ type Error struct {
 	Status  int
 	Code    string
 	Message string
+	// Blocked is set when the answer is an HTML page rather than the API's
+	// JSON: Cloudflare in front of the API refused the request before it
+	// reached the API. Cloudflare refuses Go's User-Agent on
+	// /api/v1/billing/summary, for one.
+	Blocked bool
 }
 
 func (e *Error) Error() string {
@@ -65,14 +71,18 @@ func (e *Error) Error() string {
 	if e.Code != "" && !strings.Contains(text, e.Code) {
 		text = e.Code + ": " + text
 	}
+	if e.Blocked {
+		return fmt.Sprintf("blocked before reaching the OpenDesign account API (HTTP %d: %s)", e.Status, text)
+	}
 	return fmt.Sprintf("OpenDesign account API HTTP %d: %s", e.Status, text)
 }
 
-// Unauthorized reports whether err is the account API rejecting the control
-// key (HTTP 401 or 403): the login expired or was revoked.
+// Unauthorized reports whether err is the account API itself rejecting the
+// control key (HTTP 401 or 403 with the API's JSON body): the login expired
+// or was revoked. A page Cloudflare answers with is not.
 func Unauthorized(err error) bool {
 	var apiErr *Error
-	return errors.As(err, &apiErr) && (apiErr.Status == http.StatusUnauthorized || apiErr.Status == http.StatusForbidden)
+	return errors.As(err, &apiErr) && !apiErr.Blocked && (apiErr.Status == http.StatusUnauthorized || apiErr.Status == http.StatusForbidden)
 }
 
 func (c Client) origin() string {
@@ -140,10 +150,22 @@ func unwrapURLError(err error) error {
 	return err
 }
 
+var htmlTitle = regexp.MustCompile(`(?is)<title>\s*(.*?)\s*</title>`)
+
 // apiError reads {"error":{"code","message"}}, {"code","message"} or
-// {"error":"..."} bodies; anything else is kept as text.
+// {"error":"..."} bodies; an HTML page is a block in front of the API and
+// is named by its title; anything else is kept as text.
 func apiError(status int, raw []byte) *Error {
 	out := &Error{Status: status}
+	if trimmed := bytes.TrimSpace(raw); len(trimmed) > 0 && trimmed[0] == '<' {
+		out.Blocked = true
+		if m := htmlTitle.FindSubmatch(trimmed); m != nil {
+			out.Message = strings.Join(strings.Fields(string(m[1])), " ")
+		} else {
+			out.Message = "HTML page"
+		}
+		return out
+	}
 	var body map[string]any
 	if json.Unmarshal(raw, &body) == nil {
 		out.Code, out.Message = text(body["code"]), text(body["message"])
@@ -413,34 +435,47 @@ func (c Client) FundingCheck(ctx context.Context, controlKey, workspaceID string
 	return out, errDo
 }
 
-// SummaryBalances are the account's credits.
-type SummaryBalances struct {
-	TotalAvailableCredits json.Number `json:"totalAvailableCredits"`
-	SubscriptionCredits   json.Number `json:"subscriptionCredits"`
-	RechargeCredits       json.Number `json:"rechargeCredits"`
+// SnapshotPlan is the workspace's subscription.
+type SnapshotPlan struct {
+	Tier               string `json:"tier"`
+	Interval           string `json:"interval"`
+	CurrentPeriodStart string `json:"currentPeriodStart"`
+	CurrentPeriodEnd   string `json:"currentPeriodEnd"`
+	CancelAtPeriodEnd  bool   `json:"cancelAtPeriodEnd"`
+	Status             string `json:"status"`
 }
 
-// Summary is the account's membership, credits and spending
-// (vela billing summary).
-type Summary struct {
-	BalanceUSD                     string          `json:"balanceUsd"`
-	CreditsPerUSD                  json.Number     `json:"creditsPerUsd"`
-	Balances                       SummaryBalances `json:"balances"`
-	MembershipTier                 *string         `json:"membershipTier"`
-	BillingInterval                *string         `json:"billingInterval"`
-	SubscriptionStatus             *string         `json:"subscriptionStatus"`
-	SubscriptionCancelAtPeriodEnd  bool            `json:"subscriptionCancelAtPeriodEnd"`
-	SubscriptionCurrentPeriodStart *string         `json:"subscriptionCurrentPeriodStart"`
-	SubscriptionCurrentPeriodEnd   *string         `json:"subscriptionCurrentPeriodEnd"`
-	TotalConsumedUSD               string          `json:"totalConsumedUsd"`
-	TodayConsumedUSD               string          `json:"todayConsumedUsd"`
-	UsageCount                     int64           `json:"usageCount"`
-	UpdatedAt                      *string         `json:"updatedAt"`
+// SnapshotWallet is the workspace's wallet.
+type SnapshotWallet struct {
+	BalanceUSD string  `json:"balanceUsd"`
+	ExpiresAt  *string `json:"expiresAt"`
 }
 
-// Summary reads the account's billing summary.
-func (c Client) Summary(ctx context.Context, controlKey string) (Summary, error) {
-	var out Summary
-	errDo := c.do(ctx, http.MethodGet, "/api/v1/billing/summary", controlKey, "", nil, &out)
+// DesignPlanWindow is a plan window as the snapshot reports it.
+type DesignPlanWindow struct {
+	Kind             string  `json:"kind"`
+	WindowStart      *string `json:"windowStart"`
+	ResetsAt         *string `json:"resetsAt"`
+	RemainingCredits string  `json:"remainingCredits"`
+	LimitCredits     string  `json:"limitCredits"`
+}
+
+// Snapshot is the workspace's billing state: plan, wallet and windows
+// (vela billing workspace-snapshot).
+type Snapshot struct {
+	SchemaVersion     int                `json:"schemaVersion"`
+	WorkspaceID       string             `json:"workspaceId"`
+	Plan              *SnapshotPlan      `json:"plan"`
+	Wallet            SnapshotWallet     `json:"wallet"`
+	DesignPlanWindows []DesignPlanWindow `json:"designPlanWindows"`
+}
+
+// Snapshot reads the workspace's billing snapshot.
+func (c Client) Snapshot(ctx context.Context, controlKey, workspaceID string) (Snapshot, error) {
+	var out Snapshot
+	if strings.TrimSpace(workspaceID) == "" {
+		return out, errors.New("workspaceId is required")
+	}
+	errDo := c.do(ctx, http.MethodGet, "/api/v1/workspaces/"+url.PathEscape(workspaceID)+"/billing/snapshot", controlKey, workspaceID, nil, &out)
 	return out, errDo
 }

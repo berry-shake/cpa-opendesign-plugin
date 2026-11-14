@@ -15,7 +15,7 @@ import (
 
 // The plan windows of the OpenDesign account signed in on a key card, read
 // with its control key from the account API (vela billing funding-check and
-// summary).
+// workspace-snapshot).
 
 // accountCacheTTL is how long a read of the account's windows is reused.
 const accountCacheTTL = 30 * time.Second
@@ -48,7 +48,7 @@ type planWindowView struct {
 	ResetsAt        string  `json:"resets_at,omitempty"`
 }
 
-// accountUsageView is the account's plan, windows and spending.
+// accountUsageView is the account's plan and windows.
 type accountUsageView struct {
 	Email         string `json:"email,omitempty"`
 	WorkspaceName string `json:"workspace_name,omitempty"`
@@ -60,17 +60,16 @@ type accountUsageView struct {
 	BalanceUSD string           `json:"balance_usd,omitempty"`
 	Windows    []planWindowView `json:"windows"`
 
-	MembershipTier     string `json:"membership_tier,omitempty"`
+	// The subscription from the billing snapshot; empty when it could not
+	// be read, which leaves the windows as they are.
 	SubscriptionStatus string `json:"subscription_status,omitempty"`
 	PeriodEnd          string `json:"period_end,omitempty"`
-	TodayConsumedUSD   string `json:"today_consumed_usd,omitempty"`
-	TotalConsumedUSD   string `json:"total_consumed_usd,omitempty"`
-	UsageCount         int64  `json:"usage_count,omitempty"`
+	CancelAtPeriodEnd  bool   `json:"cancel_at_period_end,omitempty"`
 
 	FetchedAt string `json:"fetched_at,omitempty"`
 	// Error says why the windows could not be read; Expired is set when the
-	// account API rejected the control key, so the card asks to sign in
-	// again.
+	// account API itself rejected the control key, so the card asks to sign
+	// in again.
 	Error   string `json:"error,omitempty"`
 	Expired bool   `json:"expired,omitempty"`
 }
@@ -162,10 +161,7 @@ func (s *Service) accountUsage(entry opendesignAuth, force bool) *accountUsageVi
 func (s *Service) readAccount(ctx context.Context, client vela.Client, authIndex string, account credential.Account, view *accountUsageView) {
 	fail := func(err error) {
 		view.Error = err.Error()
-		if vela.Unauthorized(err) {
-			view.Expired = true
-			view.Error = "the OpenDesign account login expired or was revoked; sign in again"
-		}
+		view.Expired = vela.Unauthorized(err)
 	}
 	workspaceID := account.WorkspaceID
 	if workspaceID == "" {
@@ -202,22 +198,17 @@ func (s *Service) readAccount(ctx context.Context, client vela.Client, authIndex
 		view.Windows = append(view.Windows, planWindowViewOf(w))
 	}
 
-	// The summary adds membership and spending; the windows stand without it.
-	summary, errSummary := client.Summary(ctx, account.ControlKey)
-	if errSummary != nil {
-		if vela.Unauthorized(errSummary) {
-			fail(errSummary)
-		}
+	// The snapshot adds when the subscription renews; the windows stand
+	// without it, so a failure here is not reported.
+	snapshot, errSnapshot := client.Snapshot(ctx, account.ControlKey, workspaceID)
+	if errSnapshot != nil || snapshot.Plan == nil {
 		return
 	}
-	view.MembershipTier = deref(summary.MembershipTier)
-	view.SubscriptionStatus = deref(summary.SubscriptionStatus)
-	view.PeriodEnd = deref(summary.SubscriptionCurrentPeriodEnd)
-	view.TodayConsumedUSD = summary.TodayConsumedUSD
-	view.TotalConsumedUSD = summary.TotalConsumedUSD
-	view.UsageCount = summary.UsageCount
-	if view.BalanceUSD == "" {
-		view.BalanceUSD = summary.BalanceUSD
+	view.SubscriptionStatus = strings.TrimSpace(snapshot.Plan.Status)
+	view.PeriodEnd = strings.TrimSpace(snapshot.Plan.CurrentPeriodEnd)
+	view.CancelAtPeriodEnd = snapshot.Plan.CancelAtPeriodEnd
+	if view.Tier == "" {
+		view.Tier = strings.TrimSpace(snapshot.Plan.Tier)
 	}
 }
 

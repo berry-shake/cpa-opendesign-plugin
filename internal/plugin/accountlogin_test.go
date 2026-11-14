@@ -69,14 +69,18 @@ func (h *fakeHost) fields(index string) map[string]any {
 }
 
 // fakeAccountAPI is the account API: the token stays pending for the first
-// poll, then is approved.
+// poll, then is approved. blocked names paths Cloudflare answers with its
+// HTML 403 page instead of the API.
 type fakeAccountAPI struct {
 	mu        sync.Mutex
 	polls     int
 	completed bool
 	revoked   []string
 	agents    []string
+	blocked   map[string]bool
 }
+
+const cloudflareBlock = "<!DOCTYPE html>\n<html><head><title>Attention Required! | Cloudflare</title></head><body>Sorry, you have been blocked</body></html>"
 
 func (a *fakeAccountAPI) handler(t *testing.T) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -84,6 +88,12 @@ func (a *fakeAccountAPI) handler(t *testing.T) http.Handler {
 		a.mu.Lock()
 		defer a.mu.Unlock()
 		a.agents = append(a.agents, r.Header.Get("User-Agent"))
+		if a.blocked[r.URL.Path] {
+			w.Header().Set("Content-Type", "text/html; charset=UTF-8")
+			w.WriteHeader(http.StatusForbidden)
+			_, _ = io.WriteString(w, cloudflareBlock)
+			return
+		}
 		w.Header().Set("Content-Type", "application/json")
 		switch r.Method + " " + r.URL.Path {
 		case "POST /api/v1/cli/device-authorizations":
@@ -109,8 +119,12 @@ func (a *fakeAccountAPI) handler(t *testing.T) http.Handler {
 				return
 			}
 			_, _ = io.WriteString(w, `{"schemaVersion":1,"workspaceId":"ws-me","balanceUsd":"1.25","funding":"coding_plan","codingPlan":{"eligible":true,"tier":"go","windows":[{"policyId":"p5","durationSeconds":18000,"resetMode":"activity_triggered","usedCredits":"250","limitCredits":"1000","remainingCredits":"750","resetsAt":"2026-11-13T20:00:00Z"},{"policyId":"p7","durationSeconds":604800,"resetMode":"anchored_recurring","usedCredits":"4000","limitCredits":"5000","remainingCredits":"1000"}]}}`)
-		case "GET /api/v1/billing/summary":
-			_, _ = io.WriteString(w, `{"balanceUsd":"1.25","membershipTier":"go","todayConsumedUsd":"0.40","usageCount":12,"balances":{}}`)
+		case "GET /api/v1/workspaces/ws-me/billing/snapshot":
+			if r.Header.Get("Authorization") != "Bearer ck-secret" || r.Header.Get("X-Vela-Workspace-Id") != "ws-me" {
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			_, _ = io.WriteString(w, `{"schemaVersion":1,"workspaceId":"ws-me","plan":{"tier":"go","interval":"month","currentPeriodStart":"2026-11-13T16:06:05Z","currentPeriodEnd":"2026-12-13T16:06:05Z","cancelAtPeriodEnd":false,"status":"active"},"wallet":{"balanceUsd":"1.25"},"designPlanWindows":[]}`)
 		case "POST /api/v1/cli/logout":
 			a.revoked = append(a.revoked, string(body))
 			_, _ = io.WriteString(w, `{}`)
@@ -184,7 +198,7 @@ func TestAccountSignInSavesKeysAndShowsWindows(t *testing.T) {
 	if w := usage.Account.Windows[0]; w.Kind != "5h" || w.Remaining != 750 || w.Limit != 1000 {
 		t.Fatalf("5h window = %+v", w)
 	}
-	if usage.Account.Windows[1].Kind != "7d" || usage.Account.TodayConsumedUSD != "0.40" {
+	if usage.Account.Windows[1].Kind != "7d" || usage.Account.PeriodEnd != "2026-12-13T16:06:05Z" || usage.Account.SubscriptionStatus != "active" {
 		t.Fatalf("account usage = %s", quota.Body)
 	}
 	status, _ := json.Marshal(svc.status())
@@ -255,5 +269,73 @@ func TestAccountSignInCancel(t *testing.T) {
 	}
 	if _, saved := host.fields("idx-1")["account_control_key"]; saved {
 		t.Fatal("a cancelled sign-in saved keys")
+	}
+}
+
+// signedIn is a service whose card idx-1 already has an account signed in.
+func signedIn(t *testing.T, api *fakeAccountAPI) *Service {
+	t.Helper()
+	srv := httptest.NewServer(api.handler(t))
+	t.Cleanup(srv.Close)
+	host := &fakeHost{
+		files: map[string]map[string]any{"idx-1": {
+			"type": ProviderID, "api_key": "sk-amr-test", "proxy_url": "direct",
+			"account_control_key": "ck-secret", "account_control_key_id": "ck-1", "account_user_id": "user-1",
+			"account_email": "me@example.com", "account_workspace_id": "ws-me", "account_workspace_name": "Personal",
+		}},
+		names: map[string]string{"idx-1": "opendesign-test.json"},
+	}
+	svc := New("test", host.call)
+	t.Cleanup(svc.Close)
+	svc.velaAPIURL = srv.URL
+	return svc
+}
+
+func accountOf(t *testing.T, svc *Service) *accountUsageView {
+	t.Helper()
+	var usage usageView
+	quota := svc.credentialQuota("idx-1", true)
+	_ = json.Unmarshal(quota.Body, &usage)
+	if usage.Account == nil {
+		t.Fatalf("no account in %s", quota.Body)
+	}
+	return usage.Account
+}
+
+// Cloudflare refusing an optional read leaves the windows; it is not a
+// sign-in that expired.
+func TestAccountBlockedSnapshotKeepsWindows(t *testing.T) {
+	svc := signedIn(t, &fakeAccountAPI{blocked: map[string]bool{"/api/v1/workspaces/ws-me/billing/snapshot": true}})
+	a := accountOf(t, svc)
+	if a.Expired || a.Error != "" || len(a.Windows) != 2 || a.PeriodEnd != "" {
+		t.Fatalf("account = %+v", a)
+	}
+}
+
+// Cloudflare refusing the windows is reported as a block by name, and the
+// card does not ask to sign in again.
+func TestAccountBlockedWindowsIsNotExpired(t *testing.T) {
+	svc := signedIn(t, &fakeAccountAPI{blocked: map[string]bool{"/api/v1/workspaces/ws-me/billing/funding-check": true}})
+	a := accountOf(t, svc)
+	if a.Expired || !strings.Contains(a.Error, "Attention Required! | Cloudflare") || strings.Contains(a.Error, "<html") {
+		t.Fatalf("account = %+v", a)
+	}
+}
+
+// The API rejecting the control key asks to sign in again and keeps the
+// API's reason.
+func TestAccountRejectedKeyIsExpired(t *testing.T) {
+	api := &fakeAccountAPI{}
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnauthorized)
+		_, _ = io.WriteString(w, `{"error":{"code":"invalid_control_key","message":"control key revoked"}}`)
+	}))
+	defer srv.Close()
+	svc := signedIn(t, api)
+	svc.velaAPIURL = srv.URL
+	a := accountOf(t, svc)
+	if !a.Expired || !strings.Contains(a.Error, "control key revoked") {
+		t.Fatalf("account = %+v", a)
 	}
 }

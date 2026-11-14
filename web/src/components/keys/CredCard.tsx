@@ -120,18 +120,15 @@ function windowLabel(t: T, w: PlanWindow, locale: string): string {
 function AccountParts({ t, cred, a, locale }: { t: T; cred: CredentialView; a: AccountUsage | undefined; locale: string }) {
   if (!cred.account) return null;
   if (!a) return null;
-  if (a.expired) return <div className="usage-note warn-text">{t("account.expired")}</div>;
+  if (a.expired) return <div className="usage-note warn-text" title={a.error}>{t("account.expired")}</div>;
   const facts = [
     t("account.line", { email: a.email || cred.account.email || "—" }),
     a.tier ? t("account.tier", { tier: a.tier.charAt(0).toUpperCase() + a.tier.slice(1) }) : "",
     a.balance_usd ? t("account.balance", { v: fmtUSD(a.balance_usd) }) : "",
-    a.today_consumed_usd ? t("account.today", { v: fmtUSD(a.today_consumed_usd) }) : "",
   ].filter(Boolean).join(" · ");
   const tip = [
     a.workspace_name ? t("account.workspace", { name: a.workspace_name }) : "",
-    a.membership_tier ? t("account.membership", { tier: a.membership_tier }) : "",
-    a.period_end ? t("account.periodEnd", { time: formatShort(a.period_end, locale) }) : "",
-    a.total_consumed_usd ? t("account.total", { v: fmtUSD(a.total_consumed_usd), n: fmtCount(a.usage_count || 0) }) : "",
+    a.period_end ? t(a.cancel_at_period_end ? "account.periodCancel" : "account.periodEnd", { time: formatShort(a.period_end, locale) }) : "",
     a.fetched_at ? t("usage.fetched", { time: formatTime(a.fetched_at, locale) }) : "",
   ].filter(Boolean).join("\n");
   const windows = planWindows(a);

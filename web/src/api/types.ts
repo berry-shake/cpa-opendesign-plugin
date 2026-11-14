@@ -78,7 +78,7 @@ export interface PlanWindow {
   resets_at?: string;
 }
 
-/** The account's plan windows and spending, read with its login. */
+/** The account's plan windows and balance, read with its login. */
 export interface AccountUsage {
   email?: string;
   workspace_name?: string;
@@ -88,12 +88,9 @@ export interface AccountUsage {
   funding?: string;
   balance_usd?: string;
   windows: PlanWindow[];
-  membership_tier?: string;
   subscription_status?: string;
   period_end?: string;
-  today_consumed_usd?: string;
-  total_consumed_usd?: string;
-  usage_count?: number;
+  cancel_at_period_end?: boolean;
   fetched_at?: string;
   error?: string;
   /** The login expired or was revoked. */

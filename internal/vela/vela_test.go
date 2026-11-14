@@ -128,7 +128,7 @@ func TestErrorsAndUnauthorized(t *testing.T) {
 		_, _ = io.WriteString(w, `{"error":{"code":"invalid_control_key","message":"control key revoked"}}`)
 	}))
 	defer srv.Close()
-	_, err := (Client{HTTP: srv.Client(), APIURL: srv.URL}).Summary(context.Background(), "ck")
+	_, err := (Client{HTTP: srv.Client(), APIURL: srv.URL}).FundingCheck(context.Background(), "ck", "ws")
 	if !Unauthorized(err) {
 		t.Fatalf("err = %v, want unauthorized", err)
 	}
@@ -183,5 +183,38 @@ func TestFundingCheckDecodes(t *testing.T) {
 	raw, _ := json.Marshal(got.CodingPlan)
 	if got.CodingPlan.Tier == nil || *got.CodingPlan.Tier != "go" || len(got.CodingPlan.Windows) != 1 || got.CodingPlan.Windows[0].RemainingCredits != "880" {
 		t.Fatalf("decoded %s", raw)
+	}
+}
+
+// Cloudflare's HTML 403 page is a block in front of the API, not the API
+// rejecting the key; the error names the page by its title.
+func TestCloudflareBlockIsNotUnauthorized(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
+		w.WriteHeader(http.StatusForbidden)
+		_, _ = io.WriteString(w, "<!DOCTYPE html>\n<!--[if lt IE 7]> <html class=\"no-js\"> <![endif]-->\n<head>\n<title>Attention Required! |\n Cloudflare</title>\n</head><body>Sorry, you have been blocked</body></html>")
+	}))
+	defer srv.Close()
+	_, err := (Client{HTTP: srv.Client(), APIURL: srv.URL}).Snapshot(context.Background(), "ck", "ws")
+	if err == nil || Unauthorized(err) {
+		t.Fatalf("err = %v, want a block that is not unauthorized", err)
+	}
+	if msg := err.Error(); !strings.Contains(msg, "Attention Required! | Cloudflare") || !strings.Contains(msg, "HTTP 403") || strings.Contains(msg, "<") {
+		t.Fatalf("message = %q", msg)
+	}
+}
+
+func TestSnapshotDecodes(t *testing.T) {
+	srv, requests := recorder(t, map[string]string{"GET /api/v1/workspaces/ws/billing/snapshot": `{"schemaVersion":1,"workspaceId":"ws","plan":{"tier":"go","interval":"month","currentPeriodStart":"2026-11-13T16:06:05Z","currentPeriodEnd":"2026-12-13T16:06:05Z","cancelAtPeriodEnd":true,"status":"active"},"wallet":{"balanceUsd":"1.0000","expiresAt":null},"designPlanWindows":[{"kind":"5h","windowStart":null,"resetsAt":null,"remainingCredits":"50000","limitCredits":"50000"}]}`})
+	got, err := (Client{HTTP: srv.Client(), APIURL: srv.URL}).Snapshot(context.Background(), "ck", "ws")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got.Plan == nil || got.Plan.CurrentPeriodEnd != "2026-12-13T16:06:05Z" || !got.Plan.CancelAtPeriodEnd || got.Wallet.BalanceUSD != "1.0000" || len(got.DesignPlanWindows) != 1 {
+		t.Fatalf("decoded %+v", got)
+	}
+	r := requests()[0]
+	if r.header.Get("Authorization") != "Bearer ck" || r.header.Get("X-Vela-Workspace-Id") != "ws" || r.header.Get("Content-Type") != "" {
+		t.Fatalf("headers = %v", r.header)
 	}
 }
