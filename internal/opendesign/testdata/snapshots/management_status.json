@@ -119,6 +119,7 @@
                 "count": 0,
                 "keys": 0
               },
+              "runtime": "<volatile>",
               "credentials": [
                 {
                   "auth_index": "idx-1",
@@ -316,6 +317,7 @@
                 "count": 0,
                 "keys": 0
               },
+              "runtime": "<volatile>",
               "credentials": [
                 {
                   "auth_index": "idx-1",
